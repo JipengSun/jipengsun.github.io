@@ -1821,7 +1821,7 @@ input, select, textarea {
 
 	.blurb h2 {
 		font-size: 0.8em;
-		margin: 0 0 1.5em 0;
+		margin: 0 0 0.5em 0;
 	}
 
 	.blurb h3 {
@@ -1830,6 +1830,8 @@ input, select, textarea {
 
 	.blurb p {
 		font-size: 0.9em;
+		margin-top: 1em ;
+  		margin-bottom: 1em ;
 	}
 
 /* Box */
@@ -3379,9 +3381,9 @@ input, select, textarea {
 /* Sidebar */
 
 	#sidebar {
-		margin-right: 3em;
-		min-width: 22em;
-		width: 22em;
+		margin-right: 2em;
+		min-width: 24em;
+		width: 24em;
 	}
 
 		#sidebar > * {
@@ -3425,7 +3427,7 @@ input, select, textarea {
 			display: block;
 			border-radius: 50%;
 			/*margin-left: -0.25em;*/
-			width: 10em;
+			width: 14em;
 		}
 
 	#intro header h2 {
@@ -3434,7 +3436,7 @@ input, select, textarea {
 	}
 
 	#intro header p {
-		font-size: 0.8em;
+		font-size: 0.7em;
 	}
 
 	@media screen and (max-width: 1280px) {
