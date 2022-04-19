@@ -3436,7 +3436,7 @@ input, select, textarea {
 	}
 
 	#intro header p {
-		font-size: 0.7em;
+		font-size: 0.9em;
 	}
 
 	@media screen and (max-width: 1280px) {
