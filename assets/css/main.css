@@ -1985,6 +1985,31 @@ input, select, textarea {
 			.button:disabled:before {
 				color: rgba(160, 160, 160, 0.3) !important;
 			}
+/* Features */
+
+	#features {
+	position: relative;
+	overflow: hidden;
+	background: #fff;
+	text-align: center;
+	padding: 6em 0;
+	}
+
+	#features p {
+		text-align: center;
+	}
+
+	#features ul.actions {
+		margin-top: 1.25em;
+	}
+
+	#feature {
+	position: relative;
+	overflow: hidden;
+	background: #fff;
+	text-align: center;
+	padding: 2em 3em;
+	}
 
 /* Form */
 
@@ -2290,6 +2315,9 @@ input, select, textarea {
 		display: inline-block;
 		position: relative;
 	}
+		.image:hover {
+			opacity: 0.9;
+		}
 
 		.image img {
 			display: block;
