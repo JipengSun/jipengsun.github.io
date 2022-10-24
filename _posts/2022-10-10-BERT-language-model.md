@@ -1,3 +1,9 @@
+---
+layout: post
+title: "BERT Language Model"
+date: 2022-10-10
+---
+
 ## BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding
 Jacob Devlin Ming-Wei Chang Kenton Lee Kristina Toutanova
 2019 NAACL
