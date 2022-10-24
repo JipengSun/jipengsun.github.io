@@ -1,9 +1,3 @@
----
-layout: post
-title: "Seq2Seq Paper Review Notes"
-date: 2022-09-25
----
-
 ## Sequence to Sequence Learning with Neural Networks
 Ilya Sutskever, Oriol Vinyals, Quoc V. Le
 Neural Information Processing Systems (NIPS 2014)
