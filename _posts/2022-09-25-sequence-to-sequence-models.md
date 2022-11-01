@@ -7,6 +7,7 @@ By the time when the paper was published, the DNN limits its application with fi
 
 ### Strength:
 The paper claims three important improvements for overperforming the previous methods. 
+
 First is using separated LSTMs for encoder and decoder rather than a straight end to end design. This indirect idea makes it possible to train multiple language pairs simultaneously since the tasks for encoder is decoupling from the decoder part. 
 
 Second it stacks multiple LSTM layers rather than one by having multiple hidden states for a single timestep. The increase of the parameter numbers help the NN to have better fitting power. 
