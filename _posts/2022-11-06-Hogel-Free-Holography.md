@@ -4,7 +4,6 @@ title: "Hogel-free Holography"
 date: 2022-11-06
 ---
 
-# Hogel-free Holography
 Praneeth Chakravarthula, Ethan Tseng, Henry Fuchs, Felix Heide
 
 ACM Transactions on Graphics 2022
