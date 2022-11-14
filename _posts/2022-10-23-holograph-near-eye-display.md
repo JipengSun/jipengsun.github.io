@@ -1,0 +1,46 @@
+---
+layout: post
+title: "Holographic Glasses for Virtual Reality"
+date: 2022-10-23
+---
+
+Jonghyun Kim, Manu Gopakumar, Suyeon Choi, Yifan Peng, Ward Lopes, Gordon Wetzstein 
+
+SIGGRAPH 2022
+
+## Summary:
+
+Since holography directly aims to reconstruct the original 3D irradiance field, it naturally provides depth cues to overcome the dizzy problem binocular VR struggling. However, due to the complicated optical setting, large physical occupancy, and difficult phase mask optimization, there is still no holographic display for near-eye usage. This paper first proposes and builds up a near-eye holographic display VR prototype.
+
+The system is composed of several components for its hardware.
+
+**Pupil-replicating waveguide:**
+
+Normal holographic settings require (partially) coherent light and often use a beam splitter cube or off-axis illumination, which take a lot space. This prototype adopts a pupil-replicating waveguide for conventional AR display and overcomes the non-planer/spherical wavefront issue by deep-learning CGH methods.
+
+**Holographic near-eye display**
+
+A phase-only SLM creates 2D/3D image at small distance and mounted directly on the wavefront without air gap to shrink down the size.
+
+**Geometric phase lens and polarization control**
+
+The geometric phase lens can act as a positive lens for a specific circular polarized light using diffraction. Since it is flat, it could make the system thinner. The polarization control (Quarter Wave Plate) could transform the linear polarized light used in SLM to circular polarized light.  
+
+## Why Good:
+1.	This work is the first near-eye VR prototype adopting holographic technology.
+
+2.	This work is a huge step toward ultra-thin all-day-wearable VR which is obviously the next generation of the smart devices everyone would have.
+
+3.	Obviously, without this pioneer work, exploration on near-eye display using holography won’t be so flourished.
+
+## Possible Follow-On:
+
+There is a tradeoff between the SLM size and the field of view, SLM pixel pitch size with the eye box size. So the key limit for this system is the SLM’s manufacture. Also the paper hasn’t covered the design of the following aspects:
+
+1.	Real-time phase pattern calculation is impossible without good GPU which is not included in the prototype.
+
+2.	Speckle could be reduced by using partial-coherent light
+
+3.	Eye tracking and pupil diameter measurement system is not included in the prototype.
+
+4.	The 3-color coherent light can be formed in a more compact form to shrink down the size.
