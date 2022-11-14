@@ -10,7 +10,7 @@ SIGGRAPH 2022
 
 ## Summary:
 
-Since holography directly aims to reconstruct the original 3D irradiance field, it naturally provides depth cues to overcome the dizzy problem binocular VR struggling. However, due to the complicated optical setting, large physical occupancy, and difficult phase mask optimization, there is still no holographic display for near-eye usage. This paper first proposes and builds up a near-eye holographic display VR prototype.
+Since holography directly aims to reconstruct the original 3D irradiance field, it naturally provides depth cues to overcome the dizzy problem binocular VR struggling. However, due to the complicated optical setting, large physical occupancy, and difficult phase mask optimization, there is still no public holographic display for near-eye usage. This paper proposes and builds up a near-eye holographic display VR prototype in publicly. Even though the final prototye only covered monocular results.
 
 The system is composed of several components for its hardware.
 
@@ -26,12 +26,13 @@ A phase-only SLM creates 2D/3D image at small distance and mounted directly on t
 
 The geometric phase lens can act as a positive lens for a specific circular polarized light using diffraction. Since it is flat, it could make the system thinner. The polarization control (Quarter Wave Plate) could transform the linear polarized light used in SLM to circular polarized light.  
 
+The light path inside a monocular glass would be:
+
+Coherent light enters the waveguide and go coupled out with a angle of theta_c. It then passes through the linear polarizer to polarize its phase. The coherent light is then modulated by the SLM with the pattern we defined. The light then reflects back to the waveguide. Only small portion of the light will etner into the waveguide but most of the light will go out and hit the Quater Wave Plate to make the light right circularly polarized (RCP). The geometric phase lens will focus the RCP to the eye.
 ## Why Good:
-1.	This work is the first near-eye VR prototype adopting holographic technology.
+1.	This work is a pioneer exploration on near-eye VR prototype adopting holographic technology.
 
 2.	This work is a huge step toward ultra-thin all-day-wearable VR which is obviously the next generation of the smart devices everyone would have.
-
-3.	Obviously, without this pioneer work, exploration on near-eye display using holography won’t be so flourished.
 
 ## Possible Follow-On:
 
