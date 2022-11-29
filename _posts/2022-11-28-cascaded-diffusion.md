@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Cascaded Diffusion for Super-resolution"
+title: "Cascaded Diffusion for Super-resolution Image Generation"
 date: 2022-11-28
 ---
 
