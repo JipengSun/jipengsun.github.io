@@ -1,0 +1,132 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<title>Neural Proximal Operators — Knowledge Share — Jipeng Sun</title>
+	<link rel="stylesheet" href="../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="(function(){var b=document.querySelector('.kn-body');if(!b)return;b.querySelectorAll('span').forEach(function(s){if(s.children.length)return;var t=s.textContent.trim();if(/^\\\([\s\S]*\\\)$/.test(t)||/^\\\[[\s\S]*\\\]$/.test(t))s.replaceWith(document.createTextNode(t));});renderMathInElement(b,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false,ignoredTags:['script','noscript','style','textarea','pre','code']});})();"></script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-LCC4R0HD24"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'G-LCC4R0HD24');
+	</script>
+	<script src="../../assets/js/ga-events.js"></script>
+</head>
+<body class="is-preload kn-page">
+	<div id="wrapper">
+		<header id="header">
+			<h1><a href="../../index.html">Jipeng Sun</a></h1>
+			<nav class="links">
+				<ul>
+					<li><a href="../../index.html">Home</a></li>
+					<li><a href="../../research.html">Research</a></li>
+					<li class="active"><a href="../../knowledge-share.html">Knowledge Share</a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course">VR/AR Course</a></li>
+				</ul>
+			</nav>
+			<nav class="main">
+				<ul>
+					<li class="search"><a class="fa-search" href="#search">Search</a><form id="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></li>
+					<li class="menu"><a class="fa-bars" href="#menu">Menu</a></li>
+				</ul>
+			</nav>
+		</header>
+		<section id="menu">
+			<section><form class="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></section>
+			<section>
+				<ul class="links">
+					<li><a href="../../index.html"><h3>Home</h3><p>Jipeng Sun's Homepage</p></a></li>
+					<li><a href="../../research.html"><h3>Research</h3><p>Publications &amp; Papers</p></a></li>
+					<li><a href="../../knowledge-share.html"><h3>Knowledge Share</h3><p>Study notes</p></a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course"><h3>Teaching</h3><p>VR Summer Course</p></a></li>
+				</ul>
+			</section>
+		</section>
+		<div id="main">
+			<article class="post">
+				<header><div class="title"><h2>Neural Proximal Operators</h2></div></header>
+				<p class="kn-back"><a href="../../knowledge-share.html">&larr; Back to Knowledge Share</a></p>
+				<div class="kn-body">
+				<p>This is the exact conceptual leap that birthed the <strong>Plug-and-Play (PnP)</strong> and <strong>Regularization by Denoising (RED)</strong> frameworks, revolutionizing how we solve general noisy inverse problems.</p>
+				<p>To understand why a generative model can seamlessly replace a line of math in an optimization algorithm, we have to look at the \(z\)-update through a Bayesian lens. It all hinges on the mathematical definition of a <strong>Proximal Operator</strong>.</p>
+				<h3>1. The \(z\)-update is a Proximal Operator</h3>
+				<p>Let's look at the standard ADMM \(z\)-update step again. To make it cleaner, let's define our incoming, frozen data as \(v = x^{k+1} + u^k\).</p>
+				<p>Assuming \(B = -I\) (meaning our constraint is \(x = z\)), the update is:</p>
+				<p class="kn-math-display">\[z^{k+1} = \underset{z}{\text{argmin}} \left( g(z) + \frac{\rho}{2}\|z - v\|_2^2 \right)\]</p>
+				<p>In optimization, this specific structure—minimizing a function plus a squared distance to a point \(v\)—is called the <strong>Proximal Operator</strong> of the function \(g\), scaled by \(\frac{1}{\rho}\).</p>
+				<p class="kn-math-display">\[z^{k+1} = \text{prox}_{g/\rho}(v)\]</p>
+				<h3>2. The Bayesian Translation: MAP Denoising</h3>
+				<p>Now, let's look at that exact same equation from the perspective of Bayesian probability and <strong>Maximum A Posteriori (MAP)</strong> estimation.</p>
+				<p>Imagine I hand you a noisy image \(v\), and I tell you it was created by taking a clean image \(z\) and adding Additive White Gaussian Noise (AWGN) with a variance of \(\sigma^2\). I ask you to find the most likely clean image \(z\).</p>
+				<p>Using Bayes' theorem, you want to maximize the posterior probability \(p(z|v)\). Taking the negative logarithm to turn it into a minimization problem, you get two terms:</p>
+				<ol><li><strong>The Likelihood (</strong>\(-\log p(v|z)\)<strong>):</strong> For Gaussian noise, this is exactly proportional to \(\frac{1}{2\sigma^2}\|z - v\|_2^2\).</li><li><strong>The Prior (</strong>\(-\log p(z)\)<strong>):</strong> This is the probability distribution of clean images.</li></ol>
+				<p>So, the MAP denoising problem is mathematically written as:</p>
+				<p class="kn-math-display">\[z_{clean} = \underset{z}{\text{argmin}} \left( -\log p(z) + \frac{1}{2\sigma^2}\|z - v\|_2^2 \right)\]</p>
+				<h3>3. The Leap: Math Equals Denoising</h3>
+				<p>Look closely at the ADMM \(z\)-update and the MAP Denoising equation. <strong>They are completely identical.</strong></p>
+				<ul><li>\(g(z)\) is mathematically equivalent to \(-\log p(z)\) (the negative log-likelihood of your data manifold).</li><li>\(\rho\) is mathematically equivalent to \(\frac{1}{\sigma^2}\) (the inverse of the noise variance).</li></ul>
+				<p>This means that evaluating the proximal operator mathematically is <strong>literally the exact same thing as running a Gaussian denoiser</strong> on the image \(v\).</p>
+				<p>For decades, researchers had to manually invent analytical formulas for \(g(z)\) so they could calculate the derivative—like Total Variation (which assumes images are piecewise flat) or L1-wavelet sparsity. But these hand-crafted math formulas are terrible at describing the complex, highly non-linear manifold of natural images.</p>
+				<h3>4. Enter Generative Models</h3>
+				<p>If the \(z\)-update is just a "denoise this image" step, we don't need an analytical math formula for \(g(z)\) at all. We can implicitly define the prior by using whatever state-of-the-art tool is best at mapping a noisy vector back to the clean data manifold.</p>
+				<p>This is where modern generative models fit perfectly:</p>
+				<ul><li><strong>Diffusion Models &amp; Score Matching:</strong> By Tweedie's Formula, a denoiser is fundamentally estimating the score function \(\nabla_z \log p(z)\). Diffusion models are explicitly trained to estimate this exact score vector at varying noise levels. Placed inside the \(z\)-update, a single reverse-diffusion step acts as a vastly superior proximal operator.</li><li><strong>Flow Matching:</strong> Similarly, flow matching models learn continuous normalizing flows (vector fields) that transport probability mass from a simple base distribution (like Gaussian noise) to the complex data distribution. This learned transport acts as the ultimate data-driven regularizer.</li><li><strong>VAEs:</strong> A VAE projects the noisy input \(v\) into a learned, constrained latent space and decodes it, effectively forcing the output \(z\) to lie entirely on the manifold of "realistic" data, acting as a powerful implicit projection operator.</li></ul>
+				<p><strong>In short:</strong> You don't plug a denoiser in because it's a heuristic hack. You plug it in because the ADMM algorithm mathematically *asks* for a denoiser, and a generative neural network is simply the best denoiser humanity has built so far.</p>
+				<hr />
+				<h1>Proof: Why \(-\log p(v|z) \propto \frac{1}{2\sigma^2} \|z - v\|_2^2\)</h1>
+				<p>This relationship is one of the most fundamental connections in machine learning and optimization. It proves that <strong>minimizing the Mean Squared Error (or L2 norm) is mathematically identical to assuming your noise is Gaussian.</strong></p>
+				<p>Here is the step-by-step derivation of exactly how the multivariate Gaussian probability density function (PDF) turns into that simple quadratic penalty.</p>
+				<h3>1. The Forward Model</h3>
+				<p>Assume we have a clean signal \(z\) (e.g., a vector of \(N\) pixels). We measure a noisy version of it, \(v\). We assume the noise added to the signal is Additive White Gaussian Noise (AWGN).</p>
+				<p>We can write this as:</p>
+				<p class="kn-math-display">\[v = z + \eta\]</p>
+				<p>Where the noise vector \(\eta\) is drawn from a normal distribution with a mean of \(0\) and a variance of \(\sigma^2\) for every pixel. In multidimensional terms, its covariance matrix is \(\Sigma = \sigma^2 I\) (where \(I\) is the identity matrix).</p>
+				<p>Because \(v\) is just \(z\) shifted by this noise, the probability distribution of \(v\) given a specific \(z\) is also a Gaussian distribution:</p>
+				<p class="kn-math-display">\[p(v|z) \sim \mathcal{N}(z, \sigma^2 I)\]</p>
+				<h3>2. The Multivariate Gaussian PDF</h3>
+				<p>The standard formula for the Probability Density Function of an \(N\)-dimensional multivariate Gaussian is:</p>
+				<p class="kn-math-display">\[p(v|z) = \frac{1}{(2\pi)^{N/2} |\Sigma|^{1/2}} \exp\left( -\frac{1}{2} (v - z)^T \Sigma^{-1} (v - z) \right)\]</p>
+				<p>Let's plug in our specific covariance matrix, \(\Sigma = \sigma^2 I\):</p>
+				<ul><li>The determinant \(|\Sigma|\) becomes \((\sigma^2)^N\).</li><li>The inverse \(\Sigma^{-1}\) becomes \(\frac{1}{\sigma^2} I\).</li></ul>
+				<p>Substituting these into the PDF:</p>
+				<p class="kn-math-display">\[p(v|z) = \frac{1}{(2\pi \sigma^2)^{N/2}} \exp\left( -\frac{1}{2\sigma^2} (v - z)^T (v - z) \right)\]</p>
+				<p>In linear algebra, the dot product of a vector with itself, \((v - z)^T (v - z)\), is the exact definition of the squared L2 norm, \(\|v - z\|_2^2\). (And since we are squaring it, \(\|v - z\|_2^2\) is identical to \(\|z - v\|_2^2\)).</p>
+				<p>So, the PDF simplifies to:</p>
+				<p class="kn-math-display">\[p(v|z) = \frac{1}{(2\pi \sigma^2)^{N/2}} \exp\left( -\frac{1}{2\sigma^2} \|z - v\|_2^2 \right)\]</p>
+				<h3>3. Taking the Negative Logarithm</h3>
+				<p>In Maximum A Posteriori (MAP) estimation, we want to maximize this probability. However, computers hate multiplying tiny probabilities together (it causes mathematical underflow), and dealing with exponentials is difficult.</p>
+				<p>Because the logarithm is a strictly increasing function, finding the maximum of \(\log(f(x))\) yields the exact same \(x\) as finding the maximum of \(f(x)\). To turn it into a *minimization* problem (which algorithms like ADMM require), we take the <strong>negative natural logarithm</strong> (\(-\log\)).</p>
+				<p>Let's apply \(-\log\) to our PDF:</p>
+				<p class="kn-math-display">\[-\log p(v|z) = -\log \left( \frac{1}{(2\pi \sigma^2)^{N/2}} \exp\left( -\frac{1}{2\sigma^2} \|z - v\|_2^2 \right) \right)\]</p>
+				<p>Using the logarithm rule \(\log(a \cdot b) = \log(a) + \log(b)\), we can split the equation into two parts: the normalization constant and the exponential term.</p>
+				<p class="kn-math-display">\[-\log p(v|z) = -\log \left( \frac{1}{(2\pi \sigma^2)^{N/2}} \right) - \log \left( \exp\left( -\frac{1}{2\sigma^2} \|z - v\|_2^2 \right) \right)\]</p>
+				<p>Because \(\log(\exp(x)) = x\), the exponential function perfectly cancels out:</p>
+				<p class="kn-math-display">\[-\log p(v|z) = \frac{N}{2}\log(2\pi \sigma^2) + \frac{1}{2\sigma^2} \|z - v\|_2^2\]</p>
+				<h3>4. Dropping the Constants</h3>
+				<p>Remember the goal: we are going to use this equation inside an \(\text{argmin}\) function to solve for the best \(z\).</p>
+				<p class="kn-math-display">\[z^{k+1} = \underset{z}{\text{argmin}} \left( -\log p(v|z) \right)\]</p>
+				<p>Look at the first term of our result: \(\frac{N}{2}\log(2\pi \sigma^2)\). <strong>There is no </strong>\(z\)<strong> in this term.</strong> It is entirely composed of constants (\(N\), \(\pi\), \(\sigma\)).</p>
+				<p>When you are trying to find the minimum of a function with respect to \(z\), adding or subtracting a constant shifts the whole curve up or down, but it *does not change the horizontal coordinate where the bottom of the bowl is located*. Therefore, the optimization algorithm can completely ignore it.</p>
+				<p>When we drop the constant term, we are left with the exact proportionality:</p>
+				<p class="kn-math-display">\[-\log p(v|z) \propto \frac{1}{2\sigma^2} \|z - v\|_2^2\]</p>
+				<h3>The Takeaway</h3>
+				<p>This is why the \(\frac{\rho}{2}\|Ax + Bz - c\|_2^2\) penalty in the Augmented Lagrangian is so elegant. When you set up ADMM, you are mathematically enforcing the assumption that the "disagreement" (the residual) between your variables acts like Gaussian noise.</p>
+				<hr />
+				<p>Would you like to see how this equation completely changes if we assume our sensor data is corrupted by Poisson noise (shot noise) instead of Gaussian noise, and how that alters the optimization step?</p>
+				</div>
+			</article>
+		</div>
+	</div>
+	<script src="../../assets/js/jquery.min.js"></script>
+	<script src="../../assets/js/browser.min.js"></script>
+	<script src="../../assets/js/breakpoints.min.js"></script>
+	<script src="../../assets/js/util.js"></script>
+	<script src="../../assets/js/main.js"></script>
+</body>
+</html>

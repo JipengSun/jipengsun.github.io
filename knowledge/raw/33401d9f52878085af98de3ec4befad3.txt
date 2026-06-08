@@ -1,0 +1,85 @@
+Here is the result of "view" for the Page with URL https://www.notion.so/33401d9f52878085af98de3ec4befad3 as of 2026-03-31T20:41:18.612Z:
+<page url="https://www.notion.so/33401d9f52878085af98de3ec4befad3">
+<ancestor-path></ancestor-path>
+<properties>
+{"title":"Lucas-Kanade Method Example"}
+</properties>
+<content>
+To see exactly how the Lucas-Kanade (LK) method solves for optical flow, we need to walk through the **least-squares approximation**.
+Because the LK method assumes all pixels in a small window move together, we end up with more equations than unknowns (an overdetermined system). We cannot solve it perfectly, so we use linear algebra to find the "best fit" solution.
+In digital images, we cannot calculate continuous derivatives like we do in calculus because pixels are discrete blocks of data. Instead, we calculate $`I_x`$ (how much the image changes horizontally) and $`I_y`$ (how much the image changes vertically) using a method called **finite differences**.
+Simply put, to find the gradient at a specific pixel, we look at the pixels immediately next to it and subtract their values.
+Here is a concrete image example to show exactly how these numbers are derived.
+### 1. Calculating $`I_x`$, $`I_y`$, and $`I_t`$
+Let's look at a tiny $`3 \times 3`$ patch of pixels. Imagine this is a picture of a dark object on a light background. In grayscale, 0 is black and 255 is white.
+**Frame 1:**
+$`\begin{bmatrix} 50 & 50 & 150 \\ 50 & \mathbf{50} & 150 \\ 50 & 50 & 150  \end{bmatrix}`$
+We want to calculate the gradients for our **target pixel in the center** (currently at value $`50`$).
+- **Calculating **$`I_x`$** (Horizontal Gradient):** We subtract the pixel to the left from the pixel to the right (central difference).
+	$`I_x = \frac{I_{right} - I_{left}}{2} = \frac{150 - 50}{2} = 50`$
+- **Calculating **$`I_y`$** (Vertical Gradient):** We subtract the pixel above from the pixel below.
+	$`I_y = \frac{I_{bottom} - I_{top}}{2} = \frac{50 - 50}{2} = 0`$
+Now, let's say the camera captures the next frame, and the lighter background has shifted one pixel to the left.
+**Frame 2:**
+$`\begin{bmatrix} 50 & 150 & 150 \\ 50 & \textbf{150} & 150 \\ 50 & 150 & 150 \end{bmatrix}`$
+- **Calculating **$`I_t`$** (Temporal Gradient):** We subtract the center pixel's value in Frame 1 from its new value in Frame 2.
+	$`I_t = I_{Frame 2} - I_{Frame 1} = 150 - 50 = 100`$
+If we plug these into our standard optical flow equation ($`I_x u + I_y v = -I_t`$), we get:
+$`50u + 0v = -100`$
+$`50u = -100 \implies u = -2`$
+The math correctly tells us the object appears to be moving to the left along the x-axis!
+---
+### 1. The Scenario and Raw Data
+Imagine we are looking at a tiny $`2 \times 2`$** pixel window** (4 pixels total) on an image. For each of these 4 pixels, our image processing algorithms have already calculated the spatial gradients ($`I_x`$, $`I_y`$) and the temporal gradient ($`I_t`$).
+Let's assume the raw data for our 4 pixels is:
+- **Pixel 1:** $`I_x = 1`$, $`I_y = 0`$, $`I_t = -2`$
+- **Pixel 2:** $`I_x = 1`$, $`I_y = 1`$, $`I_t = -3`$
+- **Pixel 3:** $`I_x = 0`$, $`I_y = 1`$, $`I_t = -1`$
+- **Pixel 4:** $`I_x = 2`$, $`I_y = 0`$, $`I_t = -4`$
+### 2. Setting Up the Matrices
+Recall the standard optical flow equation for a single pixel: $`I_x u + I_y v = -I_t`$.
+We stack the equations for all 4 pixels to create our system, $`A\mathbf{v} = \mathbf{b}`$:
+$`A = \begin{bmatrix} 1 & 0 \\ 1 & 1 \\ 0 & 1 \\ 2 & 0 \end{bmatrix}, \quad \mathbf{v} = \begin{bmatrix} u \\ v \end{bmatrix}, \quad \mathbf{b} = \begin{bmatrix} 2 \\ 3 \\ 1 \\ 4 \end{bmatrix}`$
+Notice that Matrix $`A`$ is $`4 \times 2`$. Because it is not a square matrix, we cannot simply invert it to solve for $`\mathbf{v}`$.
+### 3. The Least Squares Trick
+To make this solvable, we multiply both sides of the equation by the transpose of $`A`$, denoted as $`A^T`$. This is the standard way to find the least-squares solution.
+Our new equation becomes:
+$`A^T A \mathbf{v} = A^T \mathbf{b}`$
+Let's calculate the transpose of $`A`$:
+$`A^T = \begin{bmatrix} 1 & 1 & 0 & 2 \\ 0 & 1 & 1 & 0 \end{bmatrix}`$
+### 4. Matrix Multiplication
+Now we multiply the matrices.
+**First, calculate **$`A^T A`$ (often called the *structure tensor*):
+$`A^T A = \begin{bmatrix} 1 & 1 & 0 & 2 \\ 0 & 1 & 1 & 0 \end{bmatrix} \begin{bmatrix} 1 & 0 \\ 1 & 1 \\ 0 & 1 \\ 2 & 0 \end{bmatrix} = \begin{bmatrix} (1+1+0+4) & (0+1+0+0) \\ (0+1+0+0) & (0+1+1+0) \end{bmatrix}`$
+$`A^T A = \begin{bmatrix} 6 & 1 \\ 1 & 2 \end{bmatrix}`$
+Notice that $`A^T A`$ is now a neat $`2 \times 2`$ square matrix.
+**Next, calculate **$`A^T \mathbf{b}`$**:**
+$`A^T \mathbf{b} = \begin{bmatrix} 1 & 1 & 0 & 2 \\ 0 & 1 & 1 & 0 \end{bmatrix} \begin{bmatrix} 2 \\ 3 \\ 1 \\ 4 \end{bmatrix} = \begin{bmatrix} (2+3+0+8) \\ (0+3+1+0) \end{bmatrix}`$
+$`A^T \mathbf{b} = \begin{bmatrix} 13 \\ 4 \end{bmatrix}`$
+### 5. Solving for the Velocity Vector ($`u, v`$)
+Our complex overdetermined system has been reduced to a simple $`2 \times 2`$ system:
+$`\begin{bmatrix} 6 & 1 \\ 1 & 2 \end{bmatrix} \begin{bmatrix} u \\ v \end{bmatrix} = \begin{bmatrix} 13 \\ 4 \end{bmatrix}`$
+To isolate $`\mathbf{v}`$, we multiply both sides by the inverse of $`A^T A`$.
+First, find the determinant of $`A^T A`$: $`(6 \times 2) - (1 \times 1) = 11`$.
+Then, find the inverse matrix:
+$`(A^T A)^{-1} = \frac{1}{11} \begin{bmatrix} 2 & -1 \\ -1 & 6 \end{bmatrix}`$
+Finally, we multiply the inverse by our $`A^T \mathbf{b}`$ vector:
+$`\begin{bmatrix} u \\ v \end{bmatrix} = \frac{1}{11} \begin{bmatrix} 2 & -1 \\ -1 & 6 \end{bmatrix} \begin{bmatrix} 13 \\ 4 \end{bmatrix}`$
+$`\begin{bmatrix} u \\ v \end{bmatrix} = \frac{1}{11} \begin{bmatrix} (2 \times 13) + (-1 \times 4) \\ (-1 \times 13) + (6 \times 4) \end{bmatrix} = \frac{1}{11} \begin{bmatrix} 26 - 4 \\ -13 + 24 \end{bmatrix} = \frac{1}{11} \begin{bmatrix} 22 \\ 11 \end{bmatrix}`$
+$`\begin{bmatrix} u \\ v \end{bmatrix} = \begin{bmatrix} 2 \\ 1 \end{bmatrix}`$
+### The Final Result
+Through the least-squares calculation, the Lucas-Kanade method determined that $`u = 2`$ and $`v = 1`$.
+In the context of optical flow, this means that the entire $`2 \times 2`$ pixel window we tracked has moved **2 pixels to the right** (positive x-direction) and **1 pixel down** (positive y-direction) between the first frame and the second frame.
+### Intuitively: How does Lucas-Kanade actually work?
+To understand the genius of the Lucas-Kanade (LK) method, you first have to understand the optical illusion it was built to solve: **The Aperture Problem**.
+Imagine looking through a tiny pinhole (an aperture) at a straight, diagonal black line painted on a piece of paper. If someone slides that paper horizontally to the right, the line appears to move down and to the right through your pinhole. If they slide it vertically downward, it *also* looks like it's moving down and to the right.
+Because you are zoomed in so far that you only see a straight edge, **you cannot tell which way the object is actually moving**. You can only detect the motion perpendicular to the edge itself.
+When a computer looks at a single pixel and its immediate neighbors, it is looking through a tiny pinhole. It suffers from the aperture problem.
+### The "Neighborhood Watch" Solution
+Lucas and Kanade realized that an isolated pixel doesn't have enough information to solve its own motion. Their intuitive solution was to force teamwork.
+1. **The Window Assumption:** LK draws a window (e.g., $`3 \times 3`$ or $`5 \times 5`$ pixels) around the target pixel and assumes **every pixel in that window is moving in the exact same direction at the exact same speed**.
+2. **Gathering Perspectives:** Inside that window, you might have a horizontal edge, a vertical edge, and maybe a corner. Each of these pixels has different $`I_x`$ and $`I_y`$ gradients.
+3. **The Consensus:** By throwing all these different gradient equations into the least-squares matrix (the $`A^T A`$ calculation from the previous example), the algorithm effectively says: *"Pixel A thinks we are moving Left. Pixel B thinks we are moving Up. What single 2D motion vector satisfies both of them?"* The method works intuitively because it finds the mathematical intersection of different edge orientations. This is also why **optical flow algorithms track corners and highly textured areas very well**, but struggle to track large, featureless areas (like a blank white wall) or single, infinitely straight lines where no consensus can be drawn.
+<empty-block/>
+</content>
+</page>

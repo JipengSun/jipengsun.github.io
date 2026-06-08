@@ -1,0 +1,263 @@
+{
+  "pages": {
+    "31701d9f5287800389c5d2da8aa83874": {
+      "slug": "robotics",
+      "title": "Robotics",
+      "notion_fetched_at": "2026-03-02T20:58:29.646000+00:00",
+      "synced_at": "2026-06-07T14:31:44.830834+00:00"
+    },
+    "31701d9f52878046a137f3a1df660d09": {
+      "slug": "world-models",
+      "title": "World Models",
+      "notion_fetched_at": "2026-03-26T15:02:39.038000+00:00",
+      "synced_at": "2026-06-07T14:31:44.831751+00:00"
+    },
+    "31701d9f5287804d82e1fa6fb1a684f7": {
+      "slug": "flow-matching",
+      "title": "Flow Matching",
+      "notion_fetched_at": "2026-03-02T18:25:19.347000+00:00",
+      "synced_at": "2026-06-07T14:31:44.832909+00:00"
+    },
+    "31701d9f5287807c9ee3cc590ab568e1": {
+      "slug": "math",
+      "title": "Math",
+      "notion_fetched_at": "2026-03-23T02:11:05.595000+00:00",
+      "synced_at": "2026-06-07T14:31:44.833766+00:00"
+    },
+    "31701d9f528780deb467c76c3b117c63": {
+      "slug": "machine-learning",
+      "title": "Machine Learning",
+      "notion_fetched_at": "2026-04-21T17:19:00.083000+00:00",
+      "synced_at": "2026-06-07T14:31:44.839197+00:00"
+    },
+    "31801d9f52878017a966fe9c0b3fb4dd": {
+      "slug": "generative-methods-for-deconv",
+      "title": "Generative Methods for Deconv",
+      "notion_fetched_at": "2026-03-03T19:16:58.346000+00:00",
+      "synced_at": "2026-06-07T14:31:44.840080+00:00"
+    },
+    "31a01d9f528780459aa0dd0527ab6873": {
+      "slug": "computational-imaging",
+      "title": "Computational Imaging",
+      "notion_fetched_at": "2026-04-21T17:21:07.144000+00:00",
+      "synced_at": "2026-06-07T14:31:44.840831+00:00"
+    },
+    "31a01d9f52878048ae50fab695d977cb": {
+      "slug": "pnp-with-diffusion",
+      "title": "PnP with Diffusion",
+      "notion_fetched_at": "2026-03-05T19:12:29.873000+00:00",
+      "synced_at": "2026-06-07T14:31:44.841346+00:00"
+    },
+    "31a01d9f5287804cb1baea8ce98a4d71": {
+      "slug": "diffusion-from-sdes",
+      "title": "Diffusion from Stochastic Differential Equations (SDEs) Perspective",
+      "notion_fetched_at": "2026-03-05T20:03:01.051000+00:00",
+      "synced_at": "2026-06-07T14:31:44.841994+00:00"
+    },
+    "32b01d9f5287801499f9f5a715df87b1": {
+      "slug": "diffusion-model",
+      "title": "Diffusion Model",
+      "notion_fetched_at": "2026-03-23T14:13:48.297000+00:00",
+      "synced_at": "2026-06-07T14:31:44.842868+00:00"
+    },
+    "32c01d9f52878006a8e4dee9db27dd3d": {
+      "slug": "ddpms-ddims-amp-score-based",
+      "title": "DDPMs, DDIMs, and Score-Based Methods",
+      "notion_fetched_at": "2026-03-23T15:53:44.182000+00:00",
+      "synced_at": "2026-06-07T14:31:44.843381+00:00"
+    },
+    "32c01d9f528780238102c422cb28845c": {
+      "slug": "kl-divergence",
+      "title": "KL Divergence",
+      "notion_fetched_at": "2026-03-23T02:09:19.548000+00:00",
+      "synced_at": "2026-06-07T14:31:44.844132+00:00"
+    },
+    "32c01d9f5287804792e1da18a5b91188": {
+      "slug": "elbo",
+      "title": "ELBO (**Evidence Lower Bound**)",
+      "notion_fetched_at": "2026-03-23T00:58:03.131000+00:00",
+      "synced_at": "2026-06-07T14:31:44.844575+00:00"
+    },
+    "32c01d9f52878062a470f201d04b52b8": {
+      "slug": "classifier-free-guidance",
+      "title": "Classifier-Free Guidance",
+      "notion_fetched_at": "2026-03-26T20:05:11.300000+00:00",
+      "synced_at": "2026-06-07T14:31:44.845172+00:00"
+    },
+    "32c01d9f528780789c4ff2887d8083bf": {
+      "slug": "ddim",
+      "title": "DDIM (Denoising Diffusion Implicit Models)",
+      "notion_fetched_at": "2026-03-23T15:37:28.233000+00:00",
+      "synced_at": "2026-06-07T14:31:44.846230+00:00"
+    },
+    "32c01d9f528780c998eeffe7cf6a3ee9": {
+      "slug": "vae-vs-diffusion-elbo",
+      "title": "VAE vs. Diffusion from ELBO Perspective",
+      "notion_fetched_at": "2026-03-23T02:56:31.906000+00:00",
+      "synced_at": "2026-06-07T14:31:44.846903+00:00"
+    },
+    "33001d9f5287801ba5ccd81fa27b4263": {
+      "slug": "optimization",
+      "title": "Optimization",
+      "notion_fetched_at": "2026-03-30T17:30:11.927000+00:00",
+      "synced_at": "2026-06-07T14:31:44.848692+00:00"
+    },
+    "33001d9f5287806db4bef231ce5d0355": {
+      "slug": "admm",
+      "title": "ADMM (Alternating Direction Method of Multipliers)",
+      "notion_fetched_at": "2026-03-30T15:36:26.088000+00:00",
+      "synced_at": "2026-06-07T14:31:44.849873+00:00"
+    },
+    "33001d9f528780c19fd8c8afabbc1edc": {
+      "slug": "geometry-generation",
+      "title": "Geometry Generation (todo)",
+      "notion_fetched_at": "2026-03-27T15:30:28.250000+00:00",
+      "synced_at": "2026-06-07T14:31:44.849973+00:00"
+    },
+    "33301d9f52878014b40ff77d90d4ae7b": {
+      "slug": "proximal-algorithms",
+      "title": "Proximal Algorithms",
+      "notion_fetched_at": "2026-03-30T17:46:46.723000+00:00",
+      "synced_at": "2026-06-07T14:31:44.850419+00:00"
+    },
+    "33301d9f52878038a6f0d88e61ba2406": {
+      "slug": "hqs",
+      "title": "HQS (Half-Quadratic Splitting)",
+      "notion_fetched_at": "2026-05-06T01:29:57.900000+00:00",
+      "synced_at": "2026-06-07T14:31:44.850845+00:00"
+    },
+    "33301d9f5287806d911bd48dbf8729cf": {
+      "slug": "analytical-proximal-operators",
+      "title": "Analytical Proximal Operators",
+      "notion_fetched_at": "2026-03-30T17:10:37.064000+00:00",
+      "synced_at": "2026-06-07T14:31:44.851350+00:00"
+    },
+    "33301d9f5287807dbac3cc0b43950e45": {
+      "slug": "neural-proximal-operators",
+      "title": "Neural Proximal Operators",
+      "notion_fetched_at": "2026-03-30T16:52:41.283000+00:00",
+      "synced_at": "2026-06-07T14:31:44.852120+00:00"
+    },
+    "33301d9f5287808b81ace1893b7a4282": {
+      "slug": "lagrangian-method",
+      "title": "Lagrangian Method",
+      "notion_fetched_at": "2026-03-30T03:31:37.069000+00:00",
+      "synced_at": "2026-06-07T14:31:44.852474+00:00"
+    },
+    "33401d9f52878085af98de3ec4befad3": {
+      "slug": "lucas-kanade-example",
+      "title": "Lucas-Kanade Method Example",
+      "notion_fetched_at": "2026-03-31T20:41:18.612000+00:00",
+      "synced_at": "2026-06-07T14:31:44.853129+00:00"
+    },
+    "33401d9f528780b6905cfccf8865e1ce": {
+      "slug": "raft",
+      "title": "RAFT**(Recurrent All-Pairs Field Transforms)**",
+      "notion_fetched_at": "2026-03-31T21:22:09.905000+00:00",
+      "synced_at": "2026-06-07T14:31:44.854198+00:00"
+    },
+    "33401d9f528780b996e0fb59323b447f": {
+      "slug": "optical-flow",
+      "title": "Optical Flow",
+      "notion_fetched_at": "2026-03-31T20:16:32.250000+00:00",
+      "synced_at": "2026-06-07T14:31:44.854625+00:00"
+    },
+    "33401d9f528780c695b4db4ec21ea13a": {
+      "slug": "computer-vision",
+      "title": "Computer Vision",
+      "notion_fetched_at": "2026-05-04T01:28:37.223000+00:00",
+      "synced_at": "2026-06-07T14:31:44.857231+00:00"
+    },
+    "33601d9f5287804f95a7fed3efafb131": {
+      "slug": "mean-flow",
+      "title": "Mean Flow",
+      "notion_fetched_at": "2026-04-05T16:41:56.055000+00:00",
+      "synced_at": "2026-06-07T14:31:44.858605+00:00"
+    },
+    "33901d9f52878061b15ce12ba00b5a33": {
+      "slug": "improved-mean-flow-imf",
+      "title": "Improved Mean Flow (iMF)",
+      "notion_fetched_at": "2026-04-08T18:20:30.703000+00:00",
+      "synced_at": "2026-06-07T14:31:44.859173+00:00"
+    },
+    "33b01d9f52878023ae1fdd9460f81992": {
+      "slug": "self-attention",
+      "title": "Self Attention",
+      "notion_fetched_at": "2026-06-07T15:15:00.667000+00:00",
+      "synced_at": "2026-06-07T15:22:47.715288+00:00"
+    },
+    "33b01d9f5287806f9ce5f06def87d02a": {
+      "slug": "vision-transformer-vit",
+      "title": "Vision Transformer (ViT)",
+      "notion_fetched_at": "2026-04-07T19:28:57.859000+00:00",
+      "synced_at": "2026-06-07T14:31:44.860335+00:00"
+    },
+    "33b01d9f528780809920d77feccea568": {
+      "slug": "classifier-free-guidance-cfg",
+      "title": "Classifier-Free Guidance (CFG)",
+      "notion_fetched_at": "2026-04-07T15:15:30.236000+00:00",
+      "synced_at": "2026-06-07T14:31:44.860888+00:00"
+    },
+    "33b01d9f52878094a2f1d26eeebe0983": {
+      "slug": "diffusion-transformer-dit",
+      "title": "Diffusion Transformer (DiT)",
+      "notion_fetched_at": "2026-04-07T20:09:29.064000+00:00",
+      "synced_at": "2026-06-07T14:31:44.862011+00:00"
+    },
+    "34901d9f5287801981a7e6a7eab9ddc5": {
+      "slug": "backpropagation",
+      "title": "Backpropagation",
+      "notion_fetched_at": "2026-04-21T14:12:37.519000+00:00",
+      "synced_at": "2026-06-07T14:31:44.862504+00:00"
+    },
+    "34901d9f528780b8a125f62ee430ac4d": {
+      "slug": "camera-intrinsic-matrix",
+      "title": "Camera Intrinsic Matrix",
+      "notion_fetched_at": "2026-04-21T17:49:14.990000+00:00",
+      "synced_at": "2026-06-07T14:31:44.863036+00:00"
+    },
+    "34901d9f528780e69a8fe7e6a50c7fa9": {
+      "slug": "autodiff",
+      "title": "AutoDiff",
+      "notion_fetched_at": "2026-04-21T17:18:23.064000+00:00",
+      "synced_at": "2026-06-07T14:31:44.863613+00:00"
+    },
+    "34a01d9f5287803f9dd9c7b0fe8b759b": {
+      "slug": "bundle-adjustment",
+      "title": "Bundle Adjustment (todo)",
+      "notion_fetched_at": "2026-05-04T01:08:45.812000+00:00",
+      "synced_at": "2026-06-07T14:31:44.864340+00:00"
+    },
+    "35501d9f5287801e9a5ce5862e81f512": {
+      "slug": "nerf",
+      "title": "NeRF",
+      "notion_fetched_at": "2026-05-05T17:54:09.890000+00:00",
+      "synced_at": "2026-06-07T14:31:44.865019+00:00"
+    },
+    "35501d9f528780ab9d0efc6831a5611e": {
+      "slug": "camera-extrinsic-matrix",
+      "title": "Camera Extrinsic Matrix",
+      "notion_fetched_at": "2026-05-04T01:20:29.121000+00:00",
+      "synced_at": "2026-06-07T14:31:44.865583+00:00"
+    },
+    "35501d9f528780dabe98fe56ccb15d78": {
+      "slug": "3d-gaussian-splatting",
+      "title": "3D Gaussian Splatting",
+      "notion_fetched_at": "2026-05-03T23:51:41.198000+00:00",
+      "synced_at": "2026-06-07T14:31:44.866875+00:00"
+    },
+    "35501d9f528780ddafd2dcb09d9a6cb7": {
+      "slug": "computer-graphics",
+      "title": "Computer Graphics",
+      "notion_fetched_at": "2026-05-05T17:55:00.425000+00:00",
+      "synced_at": "2026-06-07T14:31:44.867907+00:00"
+    },
+    "35601d9f528780b1bebcdb71d1a4286a": {
+      "slug": "colmap",
+      "title": "COLMAP",
+      "notion_fetched_at": "2026-05-04T00:59:03.305000+00:00",
+      "synced_at": "2026-06-07T14:31:44.868723+00:00"
+    }
+  },
+  "updated_at": "2026-06-07T15:22:47.715969+00:00"
+}

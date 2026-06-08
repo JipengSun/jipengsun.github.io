@@ -1,0 +1,48 @@
+Here is the result of "view" for the Page with URL https://www.notion.so/32c01d9f52878062a470f201d04b52b8 as of 2026-03-26T20:05:11.300Z:
+<page url="https://www.notion.so/32c01d9f52878062a470f201d04b52b8">
+<ancestor-path></ancestor-path>
+<properties>
+{"title":"Classifier-Free Guidance"}
+</properties>
+<content>
+To push a diffusion model to generate something specific—like generating an image from a text prompt or conditioning a robotic control policy on egocentric sensor data—we need to alter the vector field so it points toward a specific semantic sub-manifold of the data.
+Before Classifier-Free Guidance (CFG), researchers used **Classifier Guidance**. This required training an entirely separate, noise-robust image classifier, $`p(\mathbf{c}|\mathbf{x}_t)`$, and using its gradients to physically push the diffusion generation toward the target class $`\mathbf{c}`$. It was mathematically elegant but practically cumbersome to train a massive classifier on noisy data.
+CFG (introduced by Ho & Salimans, 2021) revolutionized this by eliminating the external classifier. It forces the diffusion U-Net to learn both the conditional and unconditional distributions simultaneously.
+Here is the mathematical formulation of how we inject this condition during training and exploit it during sampling.
+## 1. The Conditional Training Objective
+To condition the model, we introduce a conditioning variable $`\mathbf{c}`$ (such as a CLIP text embedding or a class label). We feed $`\mathbf{c}`$ directly into the neural network, typically using cross-attention layers.
+The standard loss function is simply updated to depend on this condition:
+$`L_{cond} = \mathbb{E}_{\mathbf{x}_0, \boldsymbol{\epsilon}, t, \mathbf{c}} \left[ \| \boldsymbol{\epsilon} - \boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t, \mathbf{c}) \|^2 \right]`$
+If we train the model *only* on this objective, it learns $`p(\mathbf{x}_t|\mathbf{c})`$. However, a strictly conditional model often suffers from weak adherence to the prompt. It learns the correlation, but it doesn't "push" hard enough in the semantic direction.
+## 2. The CFG Training Trick: Joint Learning
+To implement CFG, the model must know the difference between a conditioned prediction and a completely unguided prediction. Therefore, it must also learn the unconditional distribution $`p(\mathbf{x}_t)`$.
+During training, we achieve this by randomly dropping out the condition $`\mathbf{c}`$ with a certain probability $`p_{uncond}`$ (usually between 10% and 20%). When dropped, we replace the condition with a fixed, learnable null token, denoted as $`\emptyset`$.
+The training objective becomes a joint loss:
+$`L_{CFG} = \mathbb{E}_{\mathbf{x}_0, \boldsymbol{\epsilon}, t, \mathbf{c}} \left[ \| \boldsymbol{\epsilon} - \boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t, \tilde{\mathbf{c}}) \|^2 \right]`$
+where:
+- $`\tilde{\mathbf{c}} = \mathbf{c}`$ with probability $`1 - p_{uncond}`$
+- $`\tilde{\mathbf{c}} = \emptyset`$ with probability $`p_{uncond}`$
+By sharing the exact same network weights $`\theta`$ for both tasks, the U-Net implicitly learns the gradient difference between "generating an image of a dog" and "generating any generic image."
+## 3. The Math of Inference: Implicit Classifier Gradients
+The true genius of CFG is revealed during sampling (inference). We want to push the generation process in the direction of the condition $`\mathbf{c}`$, but we want to amplify that push using a scalar weight $`w`$ (the guidance scale).
+Using Bayes' rule, the log-probability of an implicit classifier can be written as:
+$`\log p(\mathbf{c}|\mathbf{x}_t) \propto \log p(\mathbf{x}_t|\mathbf{c}) - \log p(\mathbf{x}_t)`$
+Taking the gradient with respect to the noisy data $`\mathbf{x}_t`$, we get the score of our implicit classifier:
+$`\nabla_{\mathbf{x}_t} \log p(\mathbf{c}|\mathbf{x}_t) = \nabla_{\mathbf{x}_t} \log p(\mathbf{x}_t|\mathbf{c}) - \nabla_{\mathbf{x}_t} \log p(\mathbf{x}_t)`$
+From Tweedie's formula (discussed previously), we know that the score is directly proportional to the negative noise prediction: $`\nabla_{\mathbf{x}_t} \log p(\mathbf{x}_t) \propto -\boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t)`$. Substituting our U-Net's noise predictions into this equation yields:
+$`\text{Implicit Classifier Gradient} \propto \boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t, \emptyset) - \boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t, \mathbf{c})`$
+## 4. The CFG Extrapolation Formula
+To sample with CFG, we evaluate the U-Net **twice** at every single timestep $`t`$:
+1. **Unconditional pass:** Predict $`\boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t, \emptyset)`$
+2. **Conditional pass:** Predict $`\boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t, \mathbf{c})`$
+We then construct a newly modified noise prediction, $`\tilde{\boldsymbol{\epsilon}}_\theta`$, by taking the unconditional prediction and adding the implicit classifier gradient, scaled by our guidance weight $`w`$:
+$`\tilde{\boldsymbol{\epsilon}}_\theta = \boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t, \emptyset) + w \cdot \left( \boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t, \mathbf{c}) - \boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t, \emptyset) \right)`$
+This is a **vector extrapolation**.
+- The term $`(\boldsymbol{\epsilon}_{cond} - \boldsymbol{\epsilon}_{uncond})`$ is a vector pointing exactly from generic data toward our specific semantic condition.
+- If $`w = 1`$, the formula collapses to standard conditional generation.
+- If $`w > 1`$ (e.g., $`w = 7.5`$ in Stable Diffusion), we actively push the noise prediction *past* the conditional score, forcing the resulting image to heavily align with the prompt at the cost of some natural diversity.
+We then plug this modified $`\tilde{\boldsymbol{\epsilon}}_\theta`$ into our standard DDPM or DDIM sampling equations to compute $`\mathbf{x}_{t-1}`$.
+---
+<empty-block/>
+</content>
+</page>

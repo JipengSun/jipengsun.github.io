@@ -1,0 +1,13 @@
+Here is the result of "view" for the Page with URL https://app.notion.com/p/31701d9f5287807c9ee3cc590ab568e1 as of 2026-03-23T02:11:05.595Z:
+<page url="https://app.notion.com/p/31701d9f5287807c9ee3cc590ab568e1">
+<ancestor-path></ancestor-path>
+<properties>
+{"title":"Math"}
+</properties>
+<content>
+Euler Equation
+Fourier Transform
+<mention-page url="https://app.notion.com/p/32c01d9f528780238102c422cb28845c"/> 
+<mention-page url="https://app.notion.com/p/32c01d9f5287804792e1da18a5b91188"/>
+</content>
+</page>

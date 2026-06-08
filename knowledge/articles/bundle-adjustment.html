@@ -1,0 +1,102 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<title>Bundle Adjustment (todo) — Knowledge Share — Jipeng Sun</title>
+	<link rel="stylesheet" href="../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="(function(){var b=document.querySelector('.kn-body');if(!b)return;b.querySelectorAll('span').forEach(function(s){if(s.children.length)return;var t=s.textContent.trim();if(/^\\\([\s\S]*\\\)$/.test(t)||/^\\\[[\s\S]*\\\]$/.test(t))s.replaceWith(document.createTextNode(t));});renderMathInElement(b,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false,ignoredTags:['script','noscript','style','textarea','pre','code']});})();"></script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-LCC4R0HD24"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'G-LCC4R0HD24');
+	</script>
+	<script src="../../assets/js/ga-events.js"></script>
+</head>
+<body class="is-preload kn-page">
+	<div id="wrapper">
+		<header id="header">
+			<h1><a href="../../index.html">Jipeng Sun</a></h1>
+			<nav class="links">
+				<ul>
+					<li><a href="../../index.html">Home</a></li>
+					<li><a href="../../research.html">Research</a></li>
+					<li class="active"><a href="../../knowledge-share.html">Knowledge Share</a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course">VR/AR Course</a></li>
+				</ul>
+			</nav>
+			<nav class="main">
+				<ul>
+					<li class="search"><a class="fa-search" href="#search">Search</a><form id="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></li>
+					<li class="menu"><a class="fa-bars" href="#menu">Menu</a></li>
+				</ul>
+			</nav>
+		</header>
+		<section id="menu">
+			<section><form class="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></section>
+			<section>
+				<ul class="links">
+					<li><a href="../../index.html"><h3>Home</h3><p>Jipeng Sun's Homepage</p></a></li>
+					<li><a href="../../research.html"><h3>Research</h3><p>Publications &amp; Papers</p></a></li>
+					<li><a href="../../knowledge-share.html"><h3>Knowledge Share</h3><p>Study notes</p></a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course"><h3>Teaching</h3><p>VR Summer Course</p></a></li>
+				</ul>
+			</section>
+		</section>
+		<div id="main">
+			<article class="post">
+				<header><div class="title"><h2>Bundle Adjustment (todo)</h2></div></header>
+				<p class="kn-back"><a href="../../knowledge-share.html">&larr; Back to Knowledge Share</a></p>
+				<div class="kn-body">
+				<p>Bundle adjustment is the cornerstone of 3D reconstruction, Structure from Motion (SfM), and visual SLAM. At its core, it is a large-scale, non-linear least squares optimization problem. The goal is to simultaneously refine the 3D coordinates of scene points and the parameters of the cameras that observe them, minimizing the discrepancy between the observed 2D image locations and the predicted 2D locations.</p>
+				<p>Here is the rigorous mathematical formulation.</p>
+				<h3>1. The Projection Model</h3>
+				<p>Let’s define the elements of the system:</p>
+				<ul><li>\(N\)<strong> 3D Points:</strong> Let the 3D coordinates of the \(j\)-th point be \(\mathbf{X}_j \in \mathbb{R}^3\), for \(j \in {1, \dots, N}\).</li><li>\(M\)<strong> Cameras:</strong> Let the parameters of the \(i\)-th camera be denoted by vector \(\mathbf{P}_i\), for \(i \in {1, \dots, M}\). This vector encapsulates:</li><li><strong>Extrinsics:</strong> The rotation matrix \(\mathbf{R}_i \in SO(3)\) and translation vector \(\mathbf{t}_i \in \mathbb{R}^3\) (camera pose).</li><li><strong>Intrinsics:</strong> The internal camera matrix \(\mathbf{K}_i\) (focal length, principal point) and distortion coefficients.</li><li><strong>Observations:</strong> Let \(\mathbf{x}_{ij} \in \mathbb{R}^2\) be the observed 2D pixel coordinates of the \(j\)-th 3D point in the \(i\)-th camera.</li><li><strong>Visibility:</strong> Let \(v_{ij} \in {0, 1}\) be an indicator variable where \(v_{ij} = 1\) if point \(j\) is visible in camera \(i\), and \(v_{ij} = 0\) otherwise.</li></ul>
+				<p>The predicted 2D location of a 3D point \(\mathbf{X}_j\) projected onto camera \(i\) is given by a non-linear projection function \(\pi\):</p>
+				<p class="kn-math-display">\[\mathbf{\hat{x}}_{ij} = \pi(\mathbf{P}_i, \mathbf{X}_j)\]</p>
+				<h3>2. The Objective Function</h3>
+				<p>Bundle adjustment seeks to minimize the <strong>reprojection error</strong>, which is the sum of squared Euclidean distances between the observed image points \(\mathbf{x}_{ij}\) and the predicted projections \(\pi(\mathbf{P}_i, \mathbf{X}_j)\).</p>
+				<p>The objective function to be minimized is:</p>
+				<p class="kn-math-display">\[E(\mathbf{P}, \mathbf{X}) = \sum_{i=1}^{M} \sum_{j=1}^{N} v_{ij} \| \mathbf{x}_{ij} - \pi(\mathbf{P}_i, \mathbf{X}_j) \|^2_{\mathbf{\Sigma}_{ij}^{-1}}\]</p>
+				<p>Here, \(\| \mathbf{e} \|^2_{\mathbf{\Sigma}^{-1}} = \mathbf{e}^T \mathbf{\Sigma}^{-1} \mathbf{e}\) represents the Mahalanobis distance, where \(\mathbf{\Sigma}_{ij}\) is the covariance matrix of the measurement noise (often assumed to be isotropic Gaussian noise, reducing the weight to a simple scalar or identity matrix).</p>
+				<p>For robustness against outliers (mismatched feature points), a robust loss function \(\rho\) (such as Huber or Cauchy) is often applied to the squared residuals:</p>
+				<p class="kn-math-display">\[E(\mathbf{P}, \mathbf{X}) = \sum_{i=1}^{M} \sum_{j=1}^{N} v_{ij} \rho \left( \| \mathbf{x}_{ij} - \pi(\mathbf{P}_i, \mathbf{X}_j) \|^2 \right)\]</p>
+				<h3>3. Optimization via Levenberg-Marquardt</h3>
+				<p>Because the projection function \(\pi\) involves perspective division and rotational transformations, the objective function is highly non-linear. This requires iterative solvers, predominantly the <strong>Levenberg-Marquardt (LM)</strong> algorithm, which interpolates between Gauss-Newton and gradient descent.</p>
+				<p>Let \(\theta\) be the concatenated state vector of all camera parameters and 3D points:</p>
+				<p class="kn-math-display">\[\theta = [\mathbf{P}_1^T, \dots, \mathbf{P}_M^T, \mathbf{X}_1^T, \dots, \mathbf{X}_N^T]^T\]</p>
+				<p>Let \(\mathbf{r}(\theta)\) be the stacked residual vector containing all \(v_{ij}(\mathbf{x}_{ij} - \pi(\mathbf{P}_i, \mathbf{X}_j))\). The objective is to minimize \(\frac{1}{2} \|\mathbf{r}(\theta)\|^2\).</p>
+				<p>At each iteration, we linearize the projection function around the current estimate \(\theta\) using a first-order Taylor expansion:</p>
+				<p class="kn-math-display">\[\mathbf{r}(\theta + \Delta \theta) \approx \mathbf{r}(\theta) + \mathbf{J} \Delta \theta\]</p>
+				<p>where \(\mathbf{J} = \frac{\partial \mathbf{r}}{\partial \theta}\) is the Jacobian matrix.</p>
+				<p>To find the optimal update step \(\Delta \theta\), we solve the LM normal equations:</p>
+				<p class="kn-math-display">\[(\mathbf{J}^T \mathbf{J} + \lambda \mathbf{I}) \Delta \theta = -\mathbf{J}^T \mathbf{r}\]</p>
+				<ul><li>\(\mathbf{J}^T \mathbf{J}\) is the approximate Hessian \(\mathbf{H}\).</li><li>\(\lambda\) is the damping factor. When \(\lambda\) is large, the step behaves like gradient descent; when \(\lambda\) is small, it behaves like Gauss-Newton optimization.</li></ul>
+				<h3>4. Exploiting Sparsity (The Schur Complement)</h3>
+				<p>In large-scale reconstructions, computing and inverting \(\mathbf{H} = \mathbf{J}^T \mathbf{J}\) directly is computationally intractable because \(\theta\) can contain millions of parameters. However, the Jacobian \(\mathbf{J}\) is incredibly sparse. A camera parameter \(\mathbf{P}_i\) only affects the residuals of points observed by that camera, and a point \(\mathbf{X}_j\) only affects the residuals in cameras where it is visible.</p>
+				<p>We can partition the Jacobian into camera derivatives and point derivatives: \(\mathbf{J} = [\mathbf{J}_c \quad \mathbf{J}_p]\).</p>
+				<p>The normal equations can be rewritten in block form:</p>
+				<p class="kn-math-display">\[\begin{bmatrix} \mathbf{U} + \lambda \mathbf{I} & \mathbf{W} \ \mathbf{W}^T & \mathbf{V} + \lambda \mathbf{I} \end{bmatrix} \begin{bmatrix} \Delta \mathbf{P} \ \Delta \mathbf{X} \end{bmatrix} = \begin{bmatrix} \mathbf{e}_c \ \mathbf{e}_p \end{bmatrix}\]</p>
+				<ul><li>\(\mathbf{U} = \mathbf{J}_c^T \mathbf{J}_c\) is a block-diagonal matrix (since cameras don't directly couple with each other in the reprojection error).</li><li>\(\mathbf{V} = \mathbf{J}_p^T \mathbf{J}_p\) is also a block-diagonal matrix (since points don't couple with other points).</li><li>\(\mathbf{W} = \mathbf{J}_c^T \mathbf{J}_p\) contains the cross-correlations between cameras and points.</li></ul>
+				<p>Because \(\mathbf{V}\) is block-diagonal, it is trivial and highly efficient to invert. We apply the <strong>Schur Complement</strong> to eliminate the point update variables \(\Delta \mathbf{X}\), reducing the system to solve only for the camera updates \(\Delta \mathbf{P}\):</p>
+				<p class="kn-math-display">\[(\mathbf{U} + \lambda \mathbf{I} - \mathbf{W}(\mathbf{V} + \lambda \mathbf{I})^{-1}\mathbf{W}^T) \Delta \mathbf{P} = \mathbf{e}_c - \mathbf{W}(\mathbf{V} + \lambda \mathbf{I})^{-1}\mathbf{e}_p\]</p>
+				<p>The matrix \(\mathbf{S} = \mathbf{U} + \lambda \mathbf{I} - \mathbf{W}(\mathbf{V} + \lambda \mathbf{I})^{-1}\mathbf{W}^T\) is the <strong>reduced camera matrix</strong> (Schur complement). You solve this much smaller system for \(\Delta \mathbf{P}\) using Cholesky factorization or Preconditioned Conjugate Gradient (PCG), and then back-substitute \(\Delta \mathbf{P}\) to easily solve for the 3D point updates \(\Delta \mathbf{X}\):</p>
+				<p class="kn-math-display">\[\Delta \mathbf{X} = (\mathbf{V} + \lambda \mathbf{I})^{-1} (\mathbf{e}_p - \mathbf{W}^T \Delta \mathbf{P})\]</p>
+				<p>This block-elimination strategy makes bundle adjustment tractable for massive datasets, turning an otherwise impossibly dense matrix inversion into an efficient, sparse problem.</p>
+				</div>
+			</article>
+		</div>
+	</div>
+	<script src="../../assets/js/jquery.min.js"></script>
+	<script src="../../assets/js/browser.min.js"></script>
+	<script src="../../assets/js/breakpoints.min.js"></script>
+	<script src="../../assets/js/util.js"></script>
+	<script src="../../assets/js/main.js"></script>
+</body>
+</html>

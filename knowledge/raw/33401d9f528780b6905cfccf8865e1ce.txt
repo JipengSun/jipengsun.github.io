@@ -1,0 +1,98 @@
+Here is the result of "view" for the Page with URL https://www.notion.so/33401d9f528780b6905cfccf8865e1ce as of 2026-03-31T21:22:09.905Z:
+<page url="https://www.notion.so/33401d9f528780b6905cfccf8865e1ce">
+<ancestor-path></ancestor-path>
+<properties>
+{"title":"RAFT**(Recurrent All-Pairs Field Transforms)**"}
+</properties>
+<content>
+**RAFT (Recurrent All-Pairs Field Transforms)** represents a major paradigm shift from traditional optical flow methods like Lucas-Kanade.
+While Lucas-Kanade relies on local pixel gradients and assumes motion is very small, RAFT uses deep neural networks to compute a global, dense map of visual similarities between two frames, and then iteratively refines the flow field. This allows it to handle massive displacements, heavy occlusion, and featureless regions much more robustly.
+Here is the mathematical and structural breakdown of how RAFT works.
+### 1. Feature Extraction
+Instead of working directly with raw pixel intensities (which are sensitive to lighting changes), RAFT extracts rich representations of the images.
+Given two consecutive RGB images, $`I_1`$ and $`I_2`$, RAFT uses a Convolutional Neural Network (CNN), denoted as $`g_\theta`$, to extract dense feature maps. These feature maps are typically computed at 1/8th the resolution of the original images to save memory.
+Let $`H`$ and $`W`$ be this reduced height and width, and $`D`$ be the number of feature channels (typically 256).
+- **Feature Map 1:** $`F_1 = g_\theta(I_1) \in \mathbb{R}^{H \times W \times D}`$
+- **Feature Map 2:** $`F_2 = g_\theta(I_2) \in \mathbb{R}^{H \times W \times D}`$
+Additionally, a separate context network extracts a context map $`C`$ and a hidden state $`h_0`$ from $`I_1`$ to guide the iterative updates later.
+### 2. The 4D Correlation Volume (All-Pairs)
+This is the core mathematical innovation of RAFT. Instead of searching a small local window, RAFT calculates the visual similarity between **every single pixel** in $`F_1`$ and **every single pixel** in $`F_2`$.
+The similarity is calculated using the dot product of their feature vectors. For a pixel at coordinate $`\mathbf{i} = (u, v)`$ in $`F_1`$ and a pixel at coordinate $`\mathbf{j} = (w, z)`$ in $`F_2`$, the correlation is:
+$`\mathbf{C}(\mathbf{i}, \mathbf{j}) = \sum_{c=1}^{D} F_1(u,v,c) \cdot F_2(w,z,c)`$
+Computing this for all pairs yields a massive **4D Correlation Volume**, $`\mathbf{C} \in \mathbb{R}^{H \times W \times H \times W}`$.
+To make this computationally feasible for large motions, RAFT pools the last two dimensions (the $`F_2`$ dimensions) using average pooling at different scales to create a **Correlation Pyramid**. This allows the network to look at both fine, local details and broad, global features simultaneously.
+### 3. Iterative Updates via GRU (Recurrent Transforms)
+RAFT does not predict the entire optical flow in one shot. It starts with an initial flow field of zeros, $`\mathbf{f}_0 = \mathbf{0}`$, and uses a Gated Recurrent Unit (GRU) to iteratively update the flow field.
+At each iteration $`k`$, the network performs a **Lookup** operation. For a pixel $`\mathbf{x} = (u,v)`$ in $`I_1`$, the current flow estimate $`\mathbf{f}_k(u,v) = (f_u, f_v)`$ maps it to its estimated position in $`I_2`$:
+$`\mathbf{x}' = (u + f_u, v + f_v)`$
+The network then samples a local grid of correlation features around $`\mathbf{x}'`$ from the Correlation Pyramid. Let's call these sampled features $`S_k`$.
+The GRU then takes the sampled correlation features $`S_k`$, the current flow $`\mathbf{f}_k`$, and the context features $`C`$, concatenates them into an input vector $`x_k`$, and updates its hidden state $`h_k`$:
+$`z_k = \sigma(W_z \cdot [h_{k-1}, x_k] + b_z) \quad \text{(Update Gate)}`$
+$`r_k = \sigma(W_r \cdot [h_{k-1}, x_k] + b_r) \quad \text{(Reset Gate)}`$
+$`\tilde{h}_k = \tanh(W_h \cdot [r_k \odot h_{k-1}, x_k] + b_h)`$
+$`h_k = (1 - z_k) \odot h_{k-1} + z_k \odot \tilde{h}_k`$
+Finally, the new hidden state is passed through a convolutional layer to output the flow update, $`\Delta \mathbf{f}_k`$:
+$`\Delta \mathbf{f}_k = W_{out} * h_k`$
+The flow is then updated for the next iteration:
+$`\mathbf{f}_{k+1} = \mathbf{f}_k + \Delta \mathbf{f}_k`$
+This process mimics a learned gradient descent optimization, iteratively shifting the flow vectors until they perfectly align the features of $`I_1`$ with $`I_2`$.
+### 4. The Loss Function (Supervised Learning)
+To train this network, RAFT compares the predicted flow at *every* iteration to the ground truth flow $`\mathbf{f}_{GT}`$.
+It uses an $`L_1`$ distance loss, but weights the later iterations more heavily than the earlier ones. If the network performs $`N`$ total iterations, the sequence loss $`L`$ is:
+$`L = \sum_{i=1}^{N} \gamma^{N-i} ||\mathbf{f}_i - \mathbf{f}_{GT}||_1`$
+Where $`\gamma`$ is a discounting factor (typically set to 0.8). This mathematical formulation forces the GRU to continuously improve its prediction with every recurrent step, converging tightly on the true optical flow.
+<empty-block/>
+### Motivation
+To understand why RAFT is designed the way it is, it helps to look at the exact ways older algorithms like Lucas-Kanade (LK) failed in the real world. RAFT’s architecture is essentially a checklist of brilliant workarounds for those classic failures.
+Here is the intuitive motivation behind each major step of the RAFT architecture.
+### 1. Feature Extraction (Instead of Raw Pixels)
+- **The Problem:** Traditional methods rely on the "Brightness Constancy" assumption—the idea that a pixel’s RGB value doesn't change as it moves. In reality, an object moving through a scene passes through shadows, changes angles to the sun, or reflects different lights. Raw pixels are notoriously unreliable.
+- **The RAFT Motivation:** "Don't track the paint, track the object."
+- **The Intuition:** Instead of trying to match a specific gray value of `150`, RAFT uses a Convolutional Neural Network (CNN) to translate the image into a map of concepts or "features." It learns to recognize edges, textures, and shapes. If a car drives into a shadow, its raw pixel colors change drastically, but its CNN feature vector (representing "a wheel" or "a sharp metallic corner") remains largely the same, allowing the algorithm to keep tracking it.
+### 2. The 4D Correlation Volume (Instead of a Local Window)
+- **The Problem:** LK assumes motion is tiny (e.g., within a $`3 \times 3`$ pixel window). If a dog runs across the screen and moves 50 pixels between Frame 1 and Frame 2, LK looks in its tiny $`3 \times 3`$ window, doesn't see the dog, and completely fails.
+- **The RAFT Motivation:** "Look everywhere at once."
+- **The Intuition:** The 4D Correlation Volume calculates the similarity between *every* pixel in Frame 1 and *every* pixel in Frame 2. Imagine playing "Where's Waldo?". LK looks strictly at the one square inch where Waldo was on the last page. RAFT scans the entire new page and assigns a "Waldo-ness" score to every single coordinate. By building this complete map of similarities up front, RAFT can easily detect massive, sudden movements that sweep across the entire image.
+### 3. Iterative Updates via GRU (Instead of One-Shot Prediction)
+- **The Problem:** Trying to calculate a perfect, high-resolution map of where millions of pixels moved in a single mathematical leap is incredibly difficult. One-shot neural networks often produce blurry or mathematically impossible flow fields because they are trying to guess the final answer all at once.
+- **The RAFT Motivation:** "Sculpt the answer, don't guess it."
+- **The Intuition:** RAFT mimics how a human solves a complex puzzle.
+	1. It starts with a blank slate (zero motion).
+	2. It looks up its current position in the Correlation Volume and sees a better match a little to the right.
+	3. It updates the flow vector.
+	4. It repeats this process.
+	The Gated Recurrent Unit (GRU) acts like an optimizer doing gradient descent. It constantly asks, "Based on where I think the pixel is now, does the visual evidence suggest I should push it further?" This iterative refinement allows the network to nail down tiny, sub-pixel details that a one-shot guess would miss.
+### 4. The Sequence Loss (Instead of Final-Step Loss)
+- **The Problem:** If you only penalize the neural network for getting the final, 10th-iteration answer wrong, the network might learn chaotic, uninterpretable behaviors in iterations 1 through 9, as long as it magically lands on the right answer at the end. This makes the model unstable and hard to train.
+- **The RAFT Motivation:** "Reward the journey, not just the destination."
+- **The Intuition:** Imagine teaching someone to throw a dart. You don't just care if the dart hits the bullseye; you want to correct their stance, their wind-up, and their release. Sequence loss compares *every single step* of the GRU's iterative updates to the ground truth. It forces the network to ensure that iteration 2 is better than iteration 1, and iteration 3 is better than iteration 2. This guides the network to learn a smooth, logical optimization path.
+<empty-block/>
+### More Explanation on 4D Correlation Volume
+To understand the 4D Correlation Volume intuitively, it helps to step away from the calculus and think about it as the ultimate game of **"Where's Waldo?" played by millions of people at the exact same time.**
+Here is the intuitive breakdown of how this specific mathematical step works.
+### 1. The Vectors are "Digital Fingerprints"
+Before RAFT does any math, it runs the images through a convolutional neural network (CNN). The output for a specific pixel coordinate $`(u, v)`$ in Frame 1—written as $`F_1(u,v)`$—is no longer just an RGB color.
+It is now a **feature vector** of length $`D`$ (usually 256 numbers). You can think of this vector as a highly detailed digital fingerprint. It describes the pixel's identity based on its surroundings: *"I am part of a sharp vertical edge, slightly metallic, moving through a shadow."*
+### 2. The Dot Product is the "Match Score"
+The equation you highlighted is the formula for a dot product:
+$`\mathbf{C}(\mathbf{i}, \mathbf{j}) = \sum_{c=1}^{D} F_1(u,v,c) \cdot F_2(w,z,c)`$
+In machine learning, the dot product is the standard way to measure how similar two vectors are.
+- If the fingerprint at coordinate $`\mathbf{i}`$ in Frame 1 and the fingerprint at coordinate $`\mathbf{j}`$ in Frame 2 are nearly identical (they point in the same direction mathematically), the dot product results in a **large positive number**. This is a "Hot!" match.
+- If the fingerprints describe totally different things, the result is near zero or negative. This is a "Cold" match.
+### 3. Why is it 4D? (The Master Cheat Sheet)
+Older algorithms like Lucas-Kanade took one pixel in Frame 1 and only checked its match score against a few neighboring pixels in Frame 2.
+RAFT brute-forces the problem. It takes **Pixel A** in Frame 1 and calculates its match score against **every single pixel** in Frame 2. If Frame 2 is a $`100 \times 100`$ image, Pixel A now has a $`100 \times 100`$ 2D "heatmap" showing exactly where it most likely moved.
+But RAFT doesn't just do this for Pixel A. It does it for *every* pixel in Frame 1.
+- Frame 1 has 2 dimensions (Height $`\times`$ Width).
+- Frame 2 has 2 dimensions (Height $`\times`$ Width).
+- Calculating the match score for every combination creates a massive tensor with 4 dimensions: $`H \times W \times H \times W`$.
+Intuitively, this 4D volume is a **master cheat sheet**. Before the network even tries to figure out where things moved, it has already pre-calculated exactly how much *every part of the first image* looks like *every part of the second image*.
+### 4. The Correlation Pyramid (Squinting to See the Big Picture)
+The 4D volume is incredibly detailed, but it presents a problem: if an object moves really fast and jumps halfway across the screen, finding its exact new location by looking at a million tiny pixel scores is like looking for a needle in a haystack.
+To fix this, RAFT pools (averages together) the scores to create a **Correlation Pyramid**.
+Intuitively, this is exactly what humans do when searching for something.
+1. **Top of the Pyramid (Heavily Pooled):** This is like squinting your eyes. You lose the fine details, but if you are looking for a red car that sped away, you can easily spot a massive "red blob match" in the top-right corner of the image.
+2. **Bottom of the Pyramid (No Pooling):** Once you know to look in the top-right corner, you open your eyes fully to find the exact, pixel-perfect match for the car's door handle.
+By having this pyramid, RAFT's recurrent network can use the broad, blurry levels to confidently track massive, sweeping motions, and use the fine, unpooled levels to track sub-pixel micro-movements simultaneously.
+</content>
+</page>

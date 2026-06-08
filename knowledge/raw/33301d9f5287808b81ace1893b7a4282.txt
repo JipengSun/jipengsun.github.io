@@ -1,0 +1,40 @@
+Here is the result of "view" for the Page with URL https://www.notion.so/33301d9f5287808b81ace1893b7a4282 as of 2026-03-30T03:31:37.069Z:
+<page url="https://www.notion.so/33301d9f5287808b81ace1893b7a4282">
+<ancestor-path></ancestor-path>
+<properties>
+{"title":"Lagrangian Method"}
+</properties>
+<content>
+## 1. The Standard Lagrangian
+The standard Lagrangian is a mathematical trick to turn a *constrained* problem into an *unconstrained* one. It does this by taking the hard rules (constraints) and turning them into a pricing system.
+**The Setup:**
+Imagine you want to minimize a function $`f(x)`$ subject to a strict equality constraint $`h(x) = 0`$.
+**The Equation:**
+The standard Lagrangian function introduces a new variable, $`\lambda`$ (the Lagrange multiplier or "dual variable"), to penalize the constraint:
+$`L(x, \lambda) = f(x) + \lambda^T h(x)`$
+- $`f(x)`$: Your original goal (the objective function).
+- $`h(x)`$: Your constraint (which must equal zero).
+- $`\lambda`$: The "price" you pay for breaking the constraint.
+**What it is used for:**
+The standard Lagrangian is a foundational tool in calculus and physics.
+- **Analytic Solutions:** It allows us to find the exact optimal points using derivatives (the Karush-Kuhn-Tucker or KKT conditions). By setting the gradient of $`L`$ to zero, you find the "saddle point" where the solution is optimal.
+- **Theoretical bounds:** It is used to create "dual problems," which give you a lower bound on how good your optimization can possibly get.
+## 2. The Extended (Augmented) Lagrangian
+While the standard Lagrangian is beautiful in theory, it can be fragile in practice. If you try to write a computer algorithm to solve a standard Lagrangian (like *dual ascent*), the algorithm will often fail to converge if the original function $`f(x)`$ isn't strictly convex (e.g., if it is flat in some places or linear).
+To fix this, mathematicians "augmented" the Lagrangian by adding a quadratic penalty term.
+**The Equation:**
+Using the same setup as before, the Augmented Lagrangian $`L_\rho`$ is written as:
+$`L_\rho(x, \lambda) = f(x) + \lambda^T h(x) + \frac{\rho}{2}\|h(x)\|_2^2`$
+- **The new term **$`\frac{\rho}{2}\|h(x)\|_2^2`$: This is the square of the constraint violation multiplied by a penalty parameter $`\rho > 0`$.
+**What it is used for:**
+The Augmented Lagrangian is the engine behind modern, large-scale computational solvers—including ADMM.
+- **Robust Algorithms:** Because $`y = x^2`$ is a perfectly bowl-shaped (strictly convex) curve, adding this squared penalty forces the entire problem to become strictly convex near the optimal solution.
+- **Guaranteed Convergence:** This "bowl shape" ensures that computer algorithms don't get stuck oscillating or failing to converge, even if your original $`f(x)`$ is highly complex or non-smooth.
+- **Exactness:** Unlike pure penalty methods (which just guess a massive number for the penalty and ruin numerical stability), the Augmented Lagrangian uses the $`\lambda`$ term to guide the system to the *exact* right answer using a moderate, stable $`\rho`$.
+## Summary of the Difference
+Think of it like keeping a dog in a yard:
+- **Standard Lagrangian:** You tell the dog to stay in the yard, and if it leaves, you yell at it (the \$\\lambda\$ penalty). If the dog is very stubborn, yelling might not be enough to keep it inside.
+- **Augmented Lagrangian:** You yell at the dog, *and* you attach it to a bungee cord tied to the center of the yard (the quadratic penalty). The further it tries to run, the exponentially harder it gets pulled back.
+---
+</content>
+</page>

@@ -1,0 +1,103 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<title>NeRF — Knowledge Share — Jipeng Sun</title>
+	<link rel="stylesheet" href="../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="(function(){var b=document.querySelector('.kn-body');if(!b)return;b.querySelectorAll('span').forEach(function(s){if(s.children.length)return;var t=s.textContent.trim();if(/^\\\([\s\S]*\\\)$/.test(t)||/^\\\[[\s\S]*\\\]$/.test(t))s.replaceWith(document.createTextNode(t));});renderMathInElement(b,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false,ignoredTags:['script','noscript','style','textarea','pre','code']});})();"></script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-LCC4R0HD24"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'G-LCC4R0HD24');
+	</script>
+	<script src="../../assets/js/ga-events.js"></script>
+</head>
+<body class="is-preload kn-page">
+	<div id="wrapper">
+		<header id="header">
+			<h1><a href="../../index.html">Jipeng Sun</a></h1>
+			<nav class="links">
+				<ul>
+					<li><a href="../../index.html">Home</a></li>
+					<li><a href="../../research.html">Research</a></li>
+					<li class="active"><a href="../../knowledge-share.html">Knowledge Share</a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course">VR/AR Course</a></li>
+				</ul>
+			</nav>
+			<nav class="main">
+				<ul>
+					<li class="search"><a class="fa-search" href="#search">Search</a><form id="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></li>
+					<li class="menu"><a class="fa-bars" href="#menu">Menu</a></li>
+				</ul>
+			</nav>
+		</header>
+		<section id="menu">
+			<section><form class="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></section>
+			<section>
+				<ul class="links">
+					<li><a href="../../index.html"><h3>Home</h3><p>Jipeng Sun's Homepage</p></a></li>
+					<li><a href="../../research.html"><h3>Research</h3><p>Publications &amp; Papers</p></a></li>
+					<li><a href="../../knowledge-share.html"><h3>Knowledge Share</h3><p>Study notes</p></a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course"><h3>Teaching</h3><p>VR Summer Course</p></a></li>
+				</ul>
+			</section>
+		</section>
+		<div id="main">
+			<article class="post">
+				<header><div class="title"><h2>NeRF</h2></div></header>
+				<p class="kn-back"><a href="../../knowledge-share.html">&larr; Back to Knowledge Share</a></p>
+				<div class="kn-body">
+				<p>Neural Radiance Fields (NeRF) represent a breakthrough approach to synthesizing novel views of complex 3D scenes from a sparse set of 2D images. Instead of using discrete representations like meshes or point clouds, NeRF encodes the geometry and appearance of a scene directly into the weights of a continuous, deep, fully connected neural network (a Multilayer Perceptron, or MLP).</p>
+				<p>Here is the mathematical breakdown of how NeRF works, from the continuous scene representation to the loss function used for training.</p>
+				<figure class="kn-figure"><img src="https://prod-files-secure.s3.us-west-2.amazonaws.com/40d01d9f-5287-81ac-ac6b-00037c8b4f5f/c92444e3-4466-45a4-8bda-f7d5dc3ce9c9/image.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&amp;X-Amz-Credential=ASIAZI2LB466YKQYPSGB%2F20260607%2Fus-west-2%2Fs3%2Faws4_request&amp;X-Amz-Date=20260607T135526Z&amp;X-Amz-Expires=3600&amp;X-Amz-Security-Token=IQoJb3JpZ2luX2VjENT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDVGcAfM9t1iPAJWbWAmw0L6vy7m6lwm2lPZlq4qafW%2FQIgMIhVz165%2FAj1pImW0WP0cFEzY7Vw%2FhSe1lG40HvqDBsqiAQInf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARAAGgw2Mzc0MjMxODM4MDUiDBDh9zIHaVZ5x%2FwUcyrcA1nIk1%2F7eomvMh7icCLRf4oGT1OBe6XRzbj8TioElLCLaODeEvzWHLlJ49%2BN9BUHkM2YYY118NVbapxaxtXpOI4dA%2Bb23hcuzbJncAyLu0eEzEqLw5EBGQbDG%2BZtHXQrj0KJtmyqVTDfLnDMpLAYfOqlgy1Y5GyxABano5PT7viE5apQnaBZu3Dqi7mS7hJEpHCZRezVPJbfx2KP8oUJW%2BqMoCnmKxcbaOk7hbOr2QNv7z%2BEBacqIrEK9j0x1i5WkKEer2fbgskby6SrCuG28uhc3WALu589IJt1DNUjTtf1kHTiqZ0KatyrHXlID%2BmOabRHDsw4uJNpNNhG%2B7TauCRtaSbp3P11shpjOkI%2FOAdtJ6x5J2GY2XbdMgcIx82%2FIYStrFdXA3Cn4qzSPWkvWf%2BxZWz4JorzimiGKG0tQbdI5V2Vpo1c9rNhrts%2B%2F%2FIJsilLGAIGqs8%2B2eMN8S4HbqvCC8sXoEp2ZKaTOov7G5GMatvAX2IC6YMS65vpKyQwMe44qCr2GPCEjAmLfXWDswg1icqhajurO1Ckm7t5gW8L82KTZPTtQ5dKK014j2orOs09CSty2pbLacle%2FO5F8bEIRQIuNet2Ft6niEDyxeziOF2c1xowMIcEBDnWMIOuldEGOqUBHUl1G5Ia9I7kuzFU0O77kH3eYVeMIUuzXBFCFsy7nCTWzAPNNIxOY7%2Fa48UzlHJkiEEnHaWThx75lkSHNNYNmpAZa5BAu7M5PCo81DMHYjrBWuNI8yEDmWA4HuzIeZ9WN4jLDsUuRoCjQMRuTV3MrGJDcAicNbjr3nJX%2Fms3ls4G6tc6pOHrPPrEFDfKnA08weEe0Lo%2Flg%2Bn%2FTK8YyB%2FMamsDaze&amp;X-Amz-Signature=4c8b4e5314f32e13a8ee2d85b3fbc4b580b604cf5d7965e754e1adf695e0fd8e&amp;X-Amz-SignedHeaders=host&amp;x-amz-checksum-mode=ENABLED&amp;x-id=GetObject" alt="" loading="lazy" /></figure>
+				<hr />
+				<h3>1. The Continuous 5D Representation</h3>
+				<p>At its core, a NeRF models a scene as a continuous 5D function. The inputs are a 3D spatial location \(\mathbf{x} = (x, y, z)\) and a 2D viewing direction \(\mathbf{d} = (\theta, \phi)\), which is often represented as a 3D Cartesian unit vector.</p>
+				<p>The output is a 3D color vector \(\mathbf{c} = (r, g, b)\) and a 1D volume density \(\sigma\). The volume density acts like a differential opacity, representing the probability that a ray terminates at that specific 3D point.</p>
+				<p>We can express the neural network \(F_\Theta\) with weights \(\Theta\) as:</p>
+				<p class="kn-math-display">\[F_\Theta : (\mathbf{x}, \mathbf{d}) \rightarrow (\mathbf{c}, \sigma)\]</p>
+				<p>To ensure the representation is multi-view consistent, the density \(\sigma\) is restricted to be a function of the position \(\mathbf{x}\) only, while the color \(\mathbf{c}\) is a function of both position \(\mathbf{x}\) and viewing direction \(\mathbf{d}\) (which allows it to model view-dependent effects like specular reflections).</p>
+				<figure class="kn-figure"><img src="https://prod-files-secure.s3.us-west-2.amazonaws.com/40d01d9f-5287-81ac-ac6b-00037c8b4f5f/36046a63-8a22-468e-8e55-dfdf0160a280/image.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&amp;X-Amz-Credential=ASIAZI2LB466YKQYPSGB%2F20260607%2Fus-west-2%2Fs3%2Faws4_request&amp;X-Amz-Date=20260607T135526Z&amp;X-Amz-Expires=3600&amp;X-Amz-Security-Token=IQoJb3JpZ2luX2VjENT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIQDVGcAfM9t1iPAJWbWAmw0L6vy7m6lwm2lPZlq4qafW%2FQIgMIhVz165%2FAj1pImW0WP0cFEzY7Vw%2FhSe1lG40HvqDBsqiAQInf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARAAGgw2Mzc0MjMxODM4MDUiDBDh9zIHaVZ5x%2FwUcyrcA1nIk1%2F7eomvMh7icCLRf4oGT1OBe6XRzbj8TioElLCLaODeEvzWHLlJ49%2BN9BUHkM2YYY118NVbapxaxtXpOI4dA%2Bb23hcuzbJncAyLu0eEzEqLw5EBGQbDG%2BZtHXQrj0KJtmyqVTDfLnDMpLAYfOqlgy1Y5GyxABano5PT7viE5apQnaBZu3Dqi7mS7hJEpHCZRezVPJbfx2KP8oUJW%2BqMoCnmKxcbaOk7hbOr2QNv7z%2BEBacqIrEK9j0x1i5WkKEer2fbgskby6SrCuG28uhc3WALu589IJt1DNUjTtf1kHTiqZ0KatyrHXlID%2BmOabRHDsw4uJNpNNhG%2B7TauCRtaSbp3P11shpjOkI%2FOAdtJ6x5J2GY2XbdMgcIx82%2FIYStrFdXA3Cn4qzSPWkvWf%2BxZWz4JorzimiGKG0tQbdI5V2Vpo1c9rNhrts%2B%2F%2FIJsilLGAIGqs8%2B2eMN8S4HbqvCC8sXoEp2ZKaTOov7G5GMatvAX2IC6YMS65vpKyQwMe44qCr2GPCEjAmLfXWDswg1icqhajurO1Ckm7t5gW8L82KTZPTtQ5dKK014j2orOs09CSty2pbLacle%2FO5F8bEIRQIuNet2Ft6niEDyxeziOF2c1xowMIcEBDnWMIOuldEGOqUBHUl1G5Ia9I7kuzFU0O77kH3eYVeMIUuzXBFCFsy7nCTWzAPNNIxOY7%2Fa48UzlHJkiEEnHaWThx75lkSHNNYNmpAZa5BAu7M5PCo81DMHYjrBWuNI8yEDmWA4HuzIeZ9WN4jLDsUuRoCjQMRuTV3MrGJDcAicNbjr3nJX%2Fms3ls4G6tc6pOHrPPrEFDfKnA08weEe0Lo%2Flg%2Bn%2FTK8YyB%2FMamsDaze&amp;X-Amz-Signature=06139241112292886f284cc1e3f6aa8af7369cb781089022a6c4389a9552ce6d&amp;X-Amz-SignedHeaders=host&amp;x-amz-checksum-mode=ENABLED&amp;x-id=GetObject" alt="" loading="lazy" /></figure>
+				<h3>2. The Volume Rendering Equation</h3>
+				<p>To render an image, we shoot camera rays through the scene. Let a ray \(\mathbf{r}(t)\) be parameterized by an origin \(\mathbf{o}\) and a direction \(\mathbf{d}\):</p>
+				<p class="kn-math-display">\[\mathbf{r}(t) = \mathbf{o} + t\mathbf{d}\]</p>
+				<p>The expected color \(C(\mathbf{r})\) of a ray traveling from a near bound \(t_n\) to a far bound \(t_f\) is computed using classical volume rendering principles:</p>
+				<p class="kn-math-display">\[C(\mathbf{r}) = \int_{t_n}^{t_f} T(t) \sigma(\mathbf{r}(t)) \mathbf{c}(\mathbf{r}(t), \mathbf{d}) dt\]</p>
+				<p>Where \(T(t)\) is the accumulated transmittance along the ray from \(t_n\) to \(t\):</p>
+				<p class="kn-math-display">\[T(t) = \exp\left(-\int_{t_n}^{t} \sigma(\mathbf{r}(s)) ds\right)\]</p>
+				<p class="kn-math-display">\[T(t)\]</p>
+				<h3>3. Discrete Approximation (Numerical Integration)</h3>
+				<p>Because the continuous integral cannot be evaluated analytically, NeRF uses a discrete approximation via stratified sampling. The range \([t_n, t_f]\) is divided into \(N\) evenly spaced bins, and one sample is drawn uniformly at random from within each bin.</p>
+				<p>Let the sampled distances be \(t_1, t_2, \dots, t_N\). The continuous integral is approximated using the quadrature rule:</p>
+				<p class="kn-math-display">\[\hat{C}(\mathbf{r}) = \sum_{i=1}^{N} T_i (1 - \exp(-\sigma_i \delta_i)) \mathbf{c}_i\]</p>
+				<p>Where:</p>
+				<ul><li>\(\delta_i = t_{i+1} - t_i\) is the distance between adjacent samples.</li><li>\(T_i\) is the discrete accumulated transmittance:</li></ul>
+				<p class="kn-math-display">\[T_i = \exp\left(-\sum_{j=1}^{i-1} \sigma_j \delta_j\right)\]</p>
+				<p>This discrete sum is entirely differentiable, allowing gradients to flow back into the MLP during training.</p>
+				<h3>4. Positional Encoding</h3>
+				<p>Standard neural networks suffer from "spectral bias," meaning they struggle to learn high-frequency functions natively. If you pass raw \((x, y, z)\) and \((\theta, \phi)\) coordinates directly into an MLP, the rendered images will be blurry and lack fine geometric and textural details.</p>
+				<p>To solve this, NeRF maps the continuous input coordinates into a higher-dimensional space using a high-frequency mapping function \\$\\gamma(\\cdot)\\$ before passing them to the network. This is known as positional encoding:</p>
+				<p class="kn-math-display">\[\gamma(p) = (\sin(2^0 \pi p), \cos(2^0 \pi p), \dots, \sin(2^{L-1} \pi p), \cos(2^{L-1} \pi p))\]</p>
+				<p>This function is applied separately to each of the three coordinate values in \(\mathbf{x}\) (normalized to lie in \([-1, 1]\)) and each of the three components of the Cartesian viewing direction unit vector \(\mathbf{d}\). \(L\) determines the number of frequency bands used.</p>
+				<h3>5. The Loss Function</h3>
+				<p>Because the entire rendering pipeline is differentiable, training a NeRF requires only a set of calibrated ground-truth images, their corresponding camera poses, and a photometric loss function.</p>
+				<p>The loss is simply the total squared error (Mean Squared Error) between the rendered colors \(\hat{C}(\mathbf{r})\) and the true pixel colors \(C_{gt}(\mathbf{r})\) for all rays in a given batch \(\mathcal{R}\):</p>
+				<p class="kn-math-display">\[\mathcal{L} = \sum_{\mathbf{r} \in \mathcal{R}} \left\| \hat{C}(\mathbf{r}) - C_{gt}(\mathbf{r}) \right\|_2^2\]</p>
+				<p>By minimizing this loss via gradient descent, the MLP iteratively updates its weights \(\Theta\) so that its internal representation of \(\sigma\) and \(\mathbf{c}\) accurately reconstructs the 3D scene from all provided viewpoints.</p>
+				</div>
+			</article>
+		</div>
+	</div>
+	<script src="../../assets/js/jquery.min.js"></script>
+	<script src="../../assets/js/browser.min.js"></script>
+	<script src="../../assets/js/breakpoints.min.js"></script>
+	<script src="../../assets/js/util.js"></script>
+	<script src="../../assets/js/main.js"></script>
+</body>
+</html>

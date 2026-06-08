@@ -1,0 +1,159 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<title>3D Gaussian Splatting — Knowledge Share — Jipeng Sun</title>
+	<link rel="stylesheet" href="../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="(function(){var b=document.querySelector('.kn-body');if(!b)return;b.querySelectorAll('span').forEach(function(s){if(s.children.length)return;var t=s.textContent.trim();if(/^\\\([\s\S]*\\\)$/.test(t)||/^\\\[[\s\S]*\\\]$/.test(t))s.replaceWith(document.createTextNode(t));});renderMathInElement(b,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false,ignoredTags:['script','noscript','style','textarea','pre','code']});})();"></script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-LCC4R0HD24"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'G-LCC4R0HD24');
+	</script>
+	<script src="../../assets/js/ga-events.js"></script>
+</head>
+<body class="is-preload kn-page">
+	<div id="wrapper">
+		<header id="header">
+			<h1><a href="../../index.html">Jipeng Sun</a></h1>
+			<nav class="links">
+				<ul>
+					<li><a href="../../index.html">Home</a></li>
+					<li><a href="../../research.html">Research</a></li>
+					<li class="active"><a href="../../knowledge-share.html">Knowledge Share</a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course">VR/AR Course</a></li>
+				</ul>
+			</nav>
+			<nav class="main">
+				<ul>
+					<li class="search"><a class="fa-search" href="#search">Search</a><form id="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></li>
+					<li class="menu"><a class="fa-bars" href="#menu">Menu</a></li>
+				</ul>
+			</nav>
+		</header>
+		<section id="menu">
+			<section><form class="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></section>
+			<section>
+				<ul class="links">
+					<li><a href="../../index.html"><h3>Home</h3><p>Jipeng Sun's Homepage</p></a></li>
+					<li><a href="../../research.html"><h3>Research</h3><p>Publications &amp; Papers</p></a></li>
+					<li><a href="../../knowledge-share.html"><h3>Knowledge Share</h3><p>Study notes</p></a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course"><h3>Teaching</h3><p>VR Summer Course</p></a></li>
+				</ul>
+			</section>
+		</section>
+		<div id="main">
+			<article class="post">
+				<header><div class="title"><h2>3D Gaussian Splatting</h2></div></header>
+				<p class="kn-back"><a href="../../knowledge-share.html">&larr; Back to Knowledge Share</a></p>
+				<div class="kn-body">
+				<p>3D Gaussian Splatting (3DGS) is a breakthrough technique in computer graphics and computer vision for novel view synthesis. It emerged as a faster, highly efficient alternative to Neural Radiance Fields (NeRFs). While NeRFs use a neural network to implicitly represent a 3D scene, Gaussian Splatting represents the scene <strong>explicitly</strong> using millions of tiny, transparent, colored blobs—3D Gaussians.</p>
+				<figure class="kn-figure"><img src="https://prod-files-secure.s3.us-west-2.amazonaws.com/40d01d9f-5287-81ac-ac6b-00037c8b4f5f/b944bf98-f721-43b0-a119-4af2e6e696be/image.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&amp;X-Amz-Credential=ASIAZI2LB466WLWTZ7J3%2F20260607%2Fus-west-2%2Fs3%2Faws4_request&amp;X-Amz-Date=20260607T135526Z&amp;X-Amz-Expires=3600&amp;X-Amz-Security-Token=IQoJb3JpZ2luX2VjENT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIHNi2Wa8o6C%2FNBBtIWI%2FJVziRbBoC%2FzjIU7FNzfUTHUrAiEAr5KhYWBZWLnVUrlN4hjzYz3A7OtUDO4Kl0kui%2BZvpccqiAQInf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARAAGgw2Mzc0MjMxODM4MDUiDIgRIqwSZDwB6AvuQCrcA9qnB%2FYmzhcCFSngPo4ju0qloQUlogz5r3gd%2Bk8iX0SICg1iikQyOA0RiimKAqLmOB0VJeAzsq0XgBsbDzEgmlUWn7b%2BaNVm%2FDyo7Wh1I9DKEVkEcZKErKvhmaEqHppza6WTo9jNhv%2FSkoWuxOXpNixQr0RBEo0qzIk%2BC2W900kDW8uDmcwnyHdCzdSjQ9KtQnamT2Uyhl9pef9fOTT2ra9YVhr7X9l0gOqfYd8pJEBKvnpx6RA8J%2F6i6rZKB%2BtczUW3BpadWPl2xZovuyPy37mskTQJSw6nu0aVDKnJxWTcZW5rr%2BJ3OqXH12IyKiAQmiGisNErrkEDSW%2FFN%2FcKZxvOIvXKX325BBRCo7ATHyEI0D5jj6IXmmFebLp4PG6NHIAQQCCwHmvRro9Ayj6WvBm2kXPb6WnBAQ8hoyq8k53%2BQ0EEMqHqFKG8gRmzLUzW%2BkLfWnM%2BIhCn8JNrpTGsIVzRkEhtFYCUxT7Wphkz8Uaj%2FsJktVXzmr0ZmyN%2BlBYeWg2QCeVyFvrktjnTTau6NBNGCTypNTnv35i21H%2B3sShhEdMEmSPM%2Fc3w8ICoy8QkDO%2FBsWwMaeepAKew5A1Kt1yAgTjA0y8BPuwnwix%2B5ie9t8LSbFR7SeMmgOmvMIKuldEGOqUBKe8QH4cMk5h6cJo5lyPRNlw7kg%2BczOn%2FvwY9oJbnySqtnWxd3jG%2B7bV0Z%2F2TKeIez9GwGcf92s%2FO0yLIbdA0zhFJ7bcZ1bux5BXudgW96PdUwz9SM8QLhwZf06IqbJVI6anrgg7AXA3yIXmoPq6WuaEiAG79jOBkk%2BVLhJL%2FqEl5BEl085TFeQfdcnwS%2B1bW4VL8v2dCj924nQNFqWC%2B5TyL6%2Bza&amp;X-Amz-Signature=01dd4587ca4b62da2ebac4c48593e790453bbe59fa44a5823000cd6087e46bbe&amp;X-Amz-SignedHeaders=host&amp;x-amz-checksum-mode=ENABLED&amp;x-id=GetObject" alt="" loading="lazy" /></figure>
+				<h3>1. The Geometry: Defining a 3D Gaussian</h3>
+				<p>At its core, the scene is just a point cloud where every point has been expanded into a 3D bell curve (a Gaussian). Mathematically, an unnormalized 3D Gaussian is defined by its center position (mean) and its shape (covariance):</p>
+				<p class="kn-math-display">\[G(x) = e^{-\frac{1}{2}(x-\mu)^T \Sigma^{-1} (x-\mu)}\]</p>
+				<ul><li>\(x\): Any point in 3D space.</li><li>\(\mu\) (Mean): The \(x, y, z\) coordinates of the Gaussian's center.</li><li>\(\Sigma\) (Covariance Matrix): A 3x3 matrix that determines the shape, size, and rotation of the blob.</li></ul>
+				<p><strong>The Optimization Trick (Scale and Rotation):</strong></p>
+				<p>During machine learning optimization, gradient descent can easily break the mathematical rules of a covariance matrix (it must remain positive semi-definite). To prevent this, 3DGS splits the covariance matrix \(\Sigma\) into two separate, easily optimizable components: a Scaling matrix (\(S\)) and a Rotation matrix (\(R\), usually represented as a quaternion).</p>
+				<p class="kn-math-display">\[\Sigma = R S S^T R^T\]</p>
+				<h3>2. The Appearance: Color and Opacity</h3>
+				<p>A shape alone doesn't make an image. Each Gaussian also carries parameters for how it looks:</p>
+				<ul><li><strong>Opacity (</strong>\(\alpha\)<strong>):</strong> A value between \(0\) and \(1\) determining how transparent the splat is.</li><li><strong>Color via Spherical Harmonics (SH):</strong> Instead of assigning a single static RGB color, Gaussians use Spherical Harmonics. This is a mathematical way to encode *view-dependent color* (e.g., a specular highlight that shifts as the camera moves).</li></ul>
+				<h3>3. The Math of "Splatting": 3D to 2D Projection</h3>
+				<p>"Splatting" is the process of squashing these 3D blobs onto your 2D screen so you can see them. When you move the camera, you need to project the 3D covariance matrix (\(\Sigma\)) into a 2D covariance matrix (\(\Sigma'\)).</p>
+				<p>This is done using a viewing transformation \(W\) (the camera's position and angle) and \(J\), the Jacobian of the affine approximation of the projective transformation:</p>
+				<p class="kn-math-display">\[\Sigma' = J W \Sigma W^T J^T\]</p>
+				<p>This elegant equation is the heart of why 3DGS is so fast. Instead of ray-tracing through a volumetric field (like NeRF), it just squashes the pre-calculated 3D blobs directly onto the 2D viewing plane using standard matrix multiplication.</p>
+				<h3>4. The Rendering: Alpha Blending</h3>
+				<p>Once all the relevant Gaussians are squashed onto the 2D screen, how do we get the final pixel colors?</p>
+				<ol><li><strong>Sorting:</strong> The Gaussians are sorted extremely rapidly from front to back based on their depth relative to the camera.</li><li><strong>Rasterization:</strong> For a given pixel, the algorithm calculates the final color \(C\) by blending the colors (\(c_i\)) of all overlapping Gaussians, weighted by their opacity (\(\alpha_i\)) and the Gaussian formula evaluated at that pixel:</li></ol>
+				<p class="kn-math-display">\[C = \sum_{i=1}^{N} c_i \alpha_i \prod_{j=1}^{i-1} (1 - \alpha_j)\]</p>
+				<p>This is standard alpha blending: it stops accumulating color once the pixel becomes fully opaque (\(\alpha = 1\)).</p>
+				<hr />
+				<h2><strong>Adaptive Density Control</strong></h2>
+				<p>When training begins, the scene is usually initialized with a sparse, low-quality point cloud (typically generated by a classical photogrammetry tool like COLMAP). To go from a few thousand dots to millions of highly detailed splats, the algorithm periodically pauses the standard optimization to evaluate the "health" of every Gaussian and decide whether to kill it, duplicate it, or split it.</p>
+				<p>Here is exactly how the algorithm makes those decisions during the training phase.</p>
+				<h3>The Trigger: View-Space Positional Gradients</h3>
+				<p>To decide if a Gaussian needs help, the algorithm looks at its <strong>view-space positional gradient</strong>.</p>
+				<p>In plain English: during the backward pass of training, the optimizer calculates how much the final image would improve if a specific Gaussian were moved slightly in 2D screen space. If a Gaussian has a massive positional gradient, it means the optimizer is violently trying to "yank" it to cover a missing feature. High gradients mean the current geometry is insufficient.</p>
+				<p>When the algorithm detects these high gradients, it assumes the area is poorly represented and takes one of two actions based on the physical size of the Gaussian.</p>
+				<hr />
+				<figure class="kn-figure"><img src="https://prod-files-secure.s3.us-west-2.amazonaws.com/40d01d9f-5287-81ac-ac6b-00037c8b4f5f/6df81cea-3ec1-4b4a-88ab-0532b9da31af/image.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&amp;X-Amz-Credential=ASIAZI2LB466WLWTZ7J3%2F20260607%2Fus-west-2%2Fs3%2Faws4_request&amp;X-Amz-Date=20260607T135526Z&amp;X-Amz-Expires=3600&amp;X-Amz-Security-Token=IQoJb3JpZ2luX2VjENT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJHMEUCIHNi2Wa8o6C%2FNBBtIWI%2FJVziRbBoC%2FzjIU7FNzfUTHUrAiEAr5KhYWBZWLnVUrlN4hjzYz3A7OtUDO4Kl0kui%2BZvpccqiAQInf%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FARAAGgw2Mzc0MjMxODM4MDUiDIgRIqwSZDwB6AvuQCrcA9qnB%2FYmzhcCFSngPo4ju0qloQUlogz5r3gd%2Bk8iX0SICg1iikQyOA0RiimKAqLmOB0VJeAzsq0XgBsbDzEgmlUWn7b%2BaNVm%2FDyo7Wh1I9DKEVkEcZKErKvhmaEqHppza6WTo9jNhv%2FSkoWuxOXpNixQr0RBEo0qzIk%2BC2W900kDW8uDmcwnyHdCzdSjQ9KtQnamT2Uyhl9pef9fOTT2ra9YVhr7X9l0gOqfYd8pJEBKvnpx6RA8J%2F6i6rZKB%2BtczUW3BpadWPl2xZovuyPy37mskTQJSw6nu0aVDKnJxWTcZW5rr%2BJ3OqXH12IyKiAQmiGisNErrkEDSW%2FFN%2FcKZxvOIvXKX325BBRCo7ATHyEI0D5jj6IXmmFebLp4PG6NHIAQQCCwHmvRro9Ayj6WvBm2kXPb6WnBAQ8hoyq8k53%2BQ0EEMqHqFKG8gRmzLUzW%2BkLfWnM%2BIhCn8JNrpTGsIVzRkEhtFYCUxT7Wphkz8Uaj%2FsJktVXzmr0ZmyN%2BlBYeWg2QCeVyFvrktjnTTau6NBNGCTypNTnv35i21H%2B3sShhEdMEmSPM%2Fc3w8ICoy8QkDO%2FBsWwMaeepAKew5A1Kt1yAgTjA0y8BPuwnwix%2B5ie9t8LSbFR7SeMmgOmvMIKuldEGOqUBKe8QH4cMk5h6cJo5lyPRNlw7kg%2BczOn%2FvwY9oJbnySqtnWxd3jG%2B7bV0Z%2F2TKeIez9GwGcf92s%2FO0yLIbdA0zhFJ7bcZ1bux5BXudgW96PdUwz9SM8QLhwZf06IqbJVI6anrgg7AXA3yIXmoPq6WuaEiAG79jOBkk%2BVLhJL%2FqEl5BEl085TFeQfdcnwS%2B1bW4VL8v2dCj924nQNFqWC%2B5TyL6%2Bza&amp;X-Amz-Signature=637b595e06144ae487deace864fc71885111b586861ba1ca51ba064d6a2726ca&amp;X-Amz-SignedHeaders=host&amp;x-amz-checksum-mode=ENABLED&amp;x-id=GetObject" alt="" loading="lazy" /></figure>
+				<h3>1. Cloning (Fixing Under-Reconstruction)</h3>
+				<p><strong>The Scenario:</strong> A small, localized feature is missing.</p>
+				<p><strong>The Condition:</strong> A Gaussian has a high positional gradient, AND it is physically <strong>small</strong>.</p>
+				<p><strong>The Action:</strong> The algorithm assumes this small Gaussian is trying to cover empty space nearby but can't stretch far enough. So, it <strong>clones</strong> the Gaussian. It creates an exact duplicate and shifts the new copy slightly in the direction of the gradient.</p>
+				<p>*Analogy:* You are painting a wall with a small brush, and the brush isn't covering enough area. Instead of making the brush bigger, you just get a second small brush to paint next to it.</p>
+				<h3>2. Splitting (Fixing Over-Reconstruction)</h3>
+				<p><strong>The Scenario:</strong> A sharp edge or detailed texture is blurry.</p>
+				<p><strong>The Condition:</strong> A Gaussian has a high positional gradient, BUT it is physically <strong>large</strong>.</p>
+				<p><strong>The Action:</strong> The algorithm assumes this large Gaussian is a clumsy "blob" trying to cover a complex detail (like a sharp corner) where it doesn't fit properly. To fix this, it <strong>splits</strong> the large Gaussian. It deletes the original and replaces it with two smaller Gaussians (typically scaled down by a factor of 1.6).</p>
+				<p>*Analogy:* You are trying to paint a fine portrait with a massive roller brush. The algorithm takes your roller away and gives you two fine-tipped pens instead.</p>
+				<hr />
+				<h3>3. Pruning (Taking out the Trash)</h3>
+				<p>While Cloning and Splitting add millions of Gaussians, the algorithm must also clean up useless ones to save memory and keep rendering fast (often \&gt;100 FPS). It performs <strong>Pruning</strong> aggressively.</p>
+				<p>A Gaussian is immediately deleted if:</p>
+				<ul><li><strong>It becomes too transparent:</strong> If its opacity (\(\alpha\)) drops below a tiny threshold (e.g., \(\alpha < 0.005\)), it has virtually no impact on the final image, so it is removed.</li><li><strong>It gets too big:</strong> If the optimizer stretches a Gaussian so much that it covers a massive chunk of the scene, it causes calculation lag and popping artifacts. Any excessively large splats are purged.</li></ul>
+				<hr />
+				<h3>The Secret Sauce: Periodic Opacity Reset</h3>
+				<p>If you only run the steps above, the optimizer tends to be lazy. It will stack hundreds of semi-transparent Gaussians on top of each other to form solid objects. This creates ugly "floaters" and artifacts when you move the camera.</p>
+				<p>To prevent this, the creators of 3DGS added a brutal but effective trick: <strong>Every 3,000 iterations, the algorithm forcefully resets the opacity (</strong>\(\alpha\)<strong>) of *every single Gaussian in the entire scene* back to nearly zero.</strong></p>
+				<p>This acts as a massive stress test for the scene:</p>
+				<ol><li>Suddenly, the whole scene becomes completely transparent.</li><li>Over the next few iterations, the optimizer frantically tries to restore the image.</li><li>Only the Gaussians that are *strictly necessary* to recreate the image will have their opacities optimized back up to solid levels.</li><li>The lazy, unnecessary, stacked Gaussians are left transparent, and on the very next pass, the <strong>Pruning</strong> step deletes them.</li></ol>
+				<p>By constantly growing the scene where details are missing (Cloning/Splitting) and violently cutting away the fat (Pruning/Resetting), 3DGS organically grows a highly optimized, explicit 3D representation of the real world.</p>
+				<p>Projection Matrix</p>
+				<p>This is a great question. In standard computer graphics (like rendering video games), we *do* use a matrix for perspective projection. But there is a famous "cheat" hidden inside that standard graphics pipeline that makes it fundamentally non-linear, which is why 3D Gaussian Splatting has to invent a workaround (the Jacobian, \(J\)).</p>
+				<p>Let's look at the original graphics matrix, uncover the hidden non-linear cheat, and then derive exactly how \(J\) is calculated to fix it.</p>
+				<h3>1. The Original Format: The 4x4 Projection Matrix</h3>
+				<p>In traditional rendering (OpenGL/DirectX/Vulkan), you project a 3D point \((x, y, z)\) onto a 2D screen using a \(4 \times 4\) projection matrix.</p>
+				<p>To make the math work, graphics engines use a trick called <strong>Homogeneous Coordinates</strong>. They add a fake 4th dimension (\(w\)) to every 3D point, making it \((x, y, z, 1)\).</p>
+				<p>A simplified Pinhole Camera projection matrix looks like this:</p>
+				<p class="kn-math-display">\[P = \begin{bmatrix} f_x & 0 & 0 & 0 \ 0 & f_y & 0 & 0 \ 0 & 0 & 1 & 0 \ 0 & 0 & 1 & 0 \end{bmatrix}\]</p>
+				<p>*(Where *\(f_x\)* and *\(f_y\)* are the focal lengths).*</p>
+				<p>Watch what happens when we multiply a 3D point by this matrix:</p>
+				<p class="kn-math-display">\[\begin{bmatrix} f_x & 0 & 0 & 0 \ 0 & f_y & 0 & 0 \ 0 & 0 & 1 & 0 \ 0 & 0 & 1 & 0 \end{bmatrix} \begin{bmatrix} x \ y \ z \ 1 \end{bmatrix} = \begin{bmatrix} f_x \cdot x \ f_y \cdot y \ z \ z \end{bmatrix}\]</p>
+				<p>Notice the last row. The \(w\) component of our vector has magically become equal to \(z\) (the depth).</p>
+				<h3>2. The Non-Linear "Cheat" (Perspective Divide)</h3>
+				<p>The matrix multiplication above was perfectly linear. But the resulting vector \(\begin{bmatrix} f_x \cdot x, & f_y \cdot y, & z, & z \end{bmatrix}\) is not a 2D pixel coordinate yet.</p>
+				<p>To get the final 2D pixel on the screen, standard graphics hardware does a forced, non-matrix step called the <strong>Perspective Divide</strong>. It divides the \(x\) and \(y\) components by the \(w\) component (which, remember, is now \(z\)):</p>
+				<p class="kn-math-display">\[u_{pixel} = \frac{f_x \cdot x}{z}\]</p>
+				<p class="kn-math-display">\[v_{pixel} = \frac{f_y \cdot y}{z}\]</p>
+				<p><strong>This division is what breaks linearity.</strong></p>
+				<p>In mathematics, a linear transformation means if you double the input, you double the output. But look at perspective: if an object moves twice as far to the right (\(2x\)) AND twice as deep into the scene (\(2z\)), its screen coordinate becomes \(\frac{2x}{2z}\), which simplifies right back to \(\frac{x}{z}\). The object moved massively in 3D space, but its 2D screen position didn't change at all. That is the definition of non-linear geometry.</p>
+				<p><strong>Why this matters for Gaussians:</strong> We can push a single *point* through a non-linear division step easily. But \(\Sigma\) is a *covariance matrix* describing a 3D probability cloud. You cannot just divide a matrix by a coordinate variable. It is mathematically undefined. We need a purely linear matrix that fakes this division effect.</p>
+				<hr />
+				<h3>3. Deriving \(J\): The Calculus of Faking It</h3>
+				<p>Since we cannot use the exact non-linear equation, we use Calculus (a Taylor Series approximation) to find the "best fit" linear transformation matrix.</p>
+				<p>We look at the exact center of our Gaussian at coordinates \((x, y, z)\). At this specific microscopic point, we ask: *"If I move just a tiny bit in X, Y, or Z, exactly how fast do my 2D screen coordinates *\(u\)* and *\(v\)* change?"*</p>
+				<p>We find this by taking the partial derivatives of our perspective equations:</p>
+				<p class="kn-math-display">\[u = \frac{f_x \cdot x}{z}\]</p>
+				<p class="kn-math-display">\[v = \frac{f_y \cdot y}{z}\]</p>
+				<p>The Jacobian matrix \(J\) is simply a grid containing all these derivatives:</p>
+				<p class="kn-math-display">\[J = \begin{bmatrix} \frac{\partial u}{\partial x} & \frac{\partial u}{\partial y} & \frac{\partial u}{\partial z} \ \frac{\partial v}{\partial x} & \frac{\partial v}{\partial y} & \frac{\partial v}{\partial z} \end{bmatrix}\]</p>
+				<p>Let's calculate them one by one using basic calculus rules.</p>
+				<p><strong>For the first row (changes to </strong>\(u\)<strong>):</strong></p>
+				<ol><li>\(\frac{\partial u}{\partial x}\): The derivative of \(\frac{f_x \cdot x}{z}\) with respect to \(x\). Since \(x\) is the variable, the result is just the constant attached to it: \(\frac{f_x}{z}\)</li><li>\(\frac{\partial u}{\partial y}\): There is no \(y\) in the equation for \(u\). So, changing \(y\) does nothing to \(u\). The derivative is \(0\).</li><li>\(\frac{\partial u}{\partial z}\): The derivative of \(f_x \cdot x \cdot z^{-1}\) with respect to \(z\). Using the power rule (bring down the \(-1\), subtract \(1\) from the exponent), we get: \(-\frac{f_x \cdot x}{z^2}\)</li></ol>
+				<p><strong>For the second row (changes to </strong>\(v\)<strong>):</strong></p>
+				<p>We do the exact same thing for the \(v\) equation.</p>
+				<ol><li>\(\frac{\partial v}{\partial x}\): No \(x\) in the equation. Derivative is \(0\).</li><li>\(\frac{\partial v}{\partial y}\): The derivative of \(\frac{f_y \cdot y}{z}\) with respect to \(y\) is \(\frac{f_y}{z}\).</li><li>\(\frac{\partial v}{\partial z}\): The derivative of \(f_y \cdot y \cdot z^{-1}\) is \(-\frac{f_y \cdot y}{z^2}\).</li></ol>
+				<p><strong>The Final Result:</strong></p>
+				<p>Plug those derivatives back into the grid, and you get the exact Jacobian matrix used in the 3D Gaussian Splatting source code:</p>
+				<p class="kn-math-display">\[J = \begin{bmatrix} \frac{f_x}{z} & 0 & -\frac{f_x \cdot x}{z^2} \ 0 & \frac{f_y}{z} & -\frac{f_y \cdot y}{z^2} \end{bmatrix}\]</p>
+				<p>This \(J\) matrix is a perfectly linear, \(2 \times 3\) matrix. It perfectly mimics the non-linear "squash" of perspective projection, but because it is a matrix, it can be cleanly multiplied against the covariance matrix \(\Sigma_{cam}\) using \(\Sigma' = J \Sigma_{cam} J^T\).</p>
+				</div>
+			</article>
+		</div>
+	</div>
+	<script src="../../assets/js/jquery.min.js"></script>
+	<script src="../../assets/js/browser.min.js"></script>
+	<script src="../../assets/js/breakpoints.min.js"></script>
+	<script src="../../assets/js/util.js"></script>
+	<script src="../../assets/js/main.js"></script>
+</body>
+</html>

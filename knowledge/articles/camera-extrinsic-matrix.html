@@ -1,0 +1,92 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<title>Camera Extrinsic Matrix — Knowledge Share — Jipeng Sun</title>
+	<link rel="stylesheet" href="../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="(function(){var b=document.querySelector('.kn-body');if(!b)return;b.querySelectorAll('span').forEach(function(s){if(s.children.length)return;var t=s.textContent.trim();if(/^\\\([\s\S]*\\\)$/.test(t)||/^\\\[[\s\S]*\\\]$/.test(t))s.replaceWith(document.createTextNode(t));});renderMathInElement(b,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false,ignoredTags:['script','noscript','style','textarea','pre','code']});})();"></script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-LCC4R0HD24"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'G-LCC4R0HD24');
+	</script>
+	<script src="../../assets/js/ga-events.js"></script>
+</head>
+<body class="is-preload kn-page">
+	<div id="wrapper">
+		<header id="header">
+			<h1><a href="../../index.html">Jipeng Sun</a></h1>
+			<nav class="links">
+				<ul>
+					<li><a href="../../index.html">Home</a></li>
+					<li><a href="../../research.html">Research</a></li>
+					<li class="active"><a href="../../knowledge-share.html">Knowledge Share</a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course">VR/AR Course</a></li>
+				</ul>
+			</nav>
+			<nav class="main">
+				<ul>
+					<li class="search"><a class="fa-search" href="#search">Search</a><form id="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></li>
+					<li class="menu"><a class="fa-bars" href="#menu">Menu</a></li>
+				</ul>
+			</nav>
+		</header>
+		<section id="menu">
+			<section><form class="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></section>
+			<section>
+				<ul class="links">
+					<li><a href="../../index.html"><h3>Home</h3><p>Jipeng Sun's Homepage</p></a></li>
+					<li><a href="../../research.html"><h3>Research</h3><p>Publications &amp; Papers</p></a></li>
+					<li><a href="../../knowledge-share.html"><h3>Knowledge Share</h3><p>Study notes</p></a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course"><h3>Teaching</h3><p>VR Summer Course</p></a></li>
+				</ul>
+			</section>
+		</section>
+		<div id="main">
+			<article class="post">
+				<header><div class="title"><h2>Camera Extrinsic Matrix</h2></div></header>
+				<p class="kn-back"><a href="../../knowledge-share.html">&larr; Back to Knowledge Share</a></p>
+				<div class="kn-body">
+				<p>Estimating the camera extrinsic matrix—which defines the rigid transformation from the world coordinate system to the camera's local 3D coordinate system—is a fundamental problem in 3D vision.</p>
+				<p>The extrinsic matrix is typically represented as a \(3 \times 4\) matrix, \(E = [R | t]\), where \(R \in SO(3)\) is a \(3 \times 3\) rotation matrix and \(t \in \mathbb{R}^3\) is a \(3 \times 1\) translation vector.</p>
+				<p>The method you choose depends heavily on what information you already have (e.g., known intrinsics, 3D-to-2D point correspondences, or multiple views). Here are the standard approaches to estimating the extrinsic matrix.</p>
+				<h3>1. The Perspective-n-Point (PnP) Problem</h3>
+				<p>If the camera intrinsic matrix \(K\) is known and you have a set of known 3D points in the world \(X_i\) and their corresponding 2D projections in the image \(u_i\), estimating the extrinsics becomes a PnP problem.</p>
+				<ul><li><strong>P3P (Minimal Solver):</strong> Requires exactly 3 point correspondences (plus a 4th to disambiguate multiple algebraic solutions). It relies on the law of cosines to find the distances from the camera center to the 3D points, allowing the recovery of pose.</li><li><strong>EPnP (Efficient PnP):</strong> The standard choice for \(n \ge 4\) points. It expresses the \(n\) 3D points as a weighted sum of four virtual control points. It operates in \(O(n)\) time and is highly resilient to noise compared to classical methods.</li><li><strong>RANSAC + PnP:</strong> In practice, 2D-to-3D feature matching (e.g., using SIFT, ORB, or deep features) produces outliers. PnP is almost always wrapped inside a RANSAC (Random Sample Consensus) loop to robustly estimate the pose using only inlier correspondences.</li></ul>
+				<h3>2. Direct Linear Transform (DLT)</h3>
+				<p>If you do not have the intrinsic matrix, or if you want an initial linear guess for the full projection matrix \(P = K[R|t]\), you can use DLT.</p>
+				<p>Using the homogeneous projection equation \(u_i \sim P X_i\), you can isolate \(P\) by utilizing the cross product: \(u_i \times (P X_i) = 0\).</p>
+				<ol><li>Each 3D-to-2D correspondence provides two linearly independent equations.</li><li>With \(n \ge 6\) points, you can formulate a system \(A \cdot \text{vec}(P) = 0\).</li><li>The solution for \(P\) is the right singular vector corresponding to the smallest singular value of \(A\) (via SVD).</li><li><strong>Extracting Extrinsics:</strong> Once \(P\) is found, you can decompose the leftmost \(3 \times 3\) submatrix using QR decomposition to separate the intrinsic matrix \(K\) (upper triangular) and the rotation matrix \(R\) (orthogonal). The translation vector \(t\) is then recovered using \(K^{-1}\).</li></ol>
+				<h3>3. Non-Linear Optimization (Bundle Adjustment)</h3>
+				<p>Linear methods (like DLT) and algebraic methods (like EPnP) do not minimize physically meaningful errors and are susceptible to noise. They are typically used to generate a good initialization for a non-linear optimizer.</p>
+				<p>You refine the initial \(R\) and \(t\) by minimizing the <strong>reprojection error</strong>:</p>
+				<p class="kn-math-display">\[\arg\min_{R, t} \sum_{i=1}^{n} \| u_i - \pi(K, R, t, X_i) \|^2\]</p>
+				<p>Where \(\pi\) is the perspective projection function.</p>
+				<ul><li><strong>Parameterization:</strong> To enforce the orthogonality constraint of the rotation matrix during optimization, \(R\) is parameterized using quaternions or the Lie algebra \(\mathfrak{so}(3)\) (via the exponential map).</li><li><strong>Solvers:</strong> This non-linear least-squares problem is typically solved using the Levenberg-Marquardt algorithm or Gauss-Newton.</li></ul>
+				<h3>4. Calibration Targets (Zhang's Method)</h3>
+				<p>If you have access to the physical camera and are setting up an environment, Zhang's method is the industry standard for estimating both intrinsics and extrinsics simultaneously.</p>
+				<ol><li>A planar target (like a checkerboard) is captured from multiple views. Because the target is planar, we can set \(Z=0\) for all points, simplifying the projection matrix to a \(3 \times 3\) Homography matrix \(H\).</li><li>The method estimates the homography for each view using DLT.</li><li>Using the constraints of the orthogonal rotation matrix (\(r_1^T r_2 = 0\) and \(\|r_1\| = \|r_2\|\)), the intrinsics \(K\) are solved globally.</li><li>Once \(K\) is known, the extrinsic matrix for each specific image view \(j\) is extracted algebraically from its homography \(H_j\):</li></ol>
+				<p class="kn-math-display">\[r_1 = \lambda K^{-1} h_1\]</p>
+				<p class="kn-math-display">\[r_2 = \lambda K^{-1} h_2\]</p>
+				<p class="kn-math-display">\[r_3 = r_1 \times r_2\]</p>
+				<p class="kn-math-display">\[t = \lambda K^{-1} h_3\]</p>
+				<p>*(Where *\(\lambda\)* is a scaling factor, and *\(h\)* are the columns of *\(H\)*)*.</p>
+				<h3>Summary Workflow</h3>
+				<ul><li><strong>Need to calibrate a physical setup?</strong> Print a checkerboard and use Zhang's method (e.g., <code>cv2.calibrateCamera</code>).</li><li><strong>Tracking camera pose in a known 3D scene?</strong> Match 2D features to 3D scene points, run EPnP inside RANSAC (e.g., <code>cv2.solvePnPRansac</code>), and follow up with Levenberg-Marquardt optimization.</li></ul>
+				</div>
+			</article>
+		</div>
+	</div>
+	<script src="../../assets/js/jquery.min.js"></script>
+	<script src="../../assets/js/browser.min.js"></script>
+	<script src="../../assets/js/breakpoints.min.js"></script>
+	<script src="../../assets/js/util.js"></script>
+	<script src="../../assets/js/main.js"></script>
+</body>
+</html>

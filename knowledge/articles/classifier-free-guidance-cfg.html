@@ -1,0 +1,99 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<title>Classifier-Free Guidance (CFG) — Knowledge Share — Jipeng Sun</title>
+	<link rel="stylesheet" href="../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="(function(){var b=document.querySelector('.kn-body');if(!b)return;b.querySelectorAll('span').forEach(function(s){if(s.children.length)return;var t=s.textContent.trim();if(/^\\\([\s\S]*\\\)$/.test(t)||/^\\\[[\s\S]*\\\]$/.test(t))s.replaceWith(document.createTextNode(t));});renderMathInElement(b,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false,ignoredTags:['script','noscript','style','textarea','pre','code']});})();"></script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-LCC4R0HD24"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'G-LCC4R0HD24');
+	</script>
+	<script src="../../assets/js/ga-events.js"></script>
+</head>
+<body class="is-preload kn-page">
+	<div id="wrapper">
+		<header id="header">
+			<h1><a href="../../index.html">Jipeng Sun</a></h1>
+			<nav class="links">
+				<ul>
+					<li><a href="../../index.html">Home</a></li>
+					<li><a href="../../research.html">Research</a></li>
+					<li class="active"><a href="../../knowledge-share.html">Knowledge Share</a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course">VR/AR Course</a></li>
+				</ul>
+			</nav>
+			<nav class="main">
+				<ul>
+					<li class="search"><a class="fa-search" href="#search">Search</a><form id="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></li>
+					<li class="menu"><a class="fa-bars" href="#menu">Menu</a></li>
+				</ul>
+			</nav>
+		</header>
+		<section id="menu">
+			<section><form class="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></section>
+			<section>
+				<ul class="links">
+					<li><a href="../../index.html"><h3>Home</h3><p>Jipeng Sun's Homepage</p></a></li>
+					<li><a href="../../research.html"><h3>Research</h3><p>Publications &amp; Papers</p></a></li>
+					<li><a href="../../knowledge-share.html"><h3>Knowledge Share</h3><p>Study notes</p></a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course"><h3>Teaching</h3><p>VR Summer Course</p></a></li>
+				</ul>
+			</section>
+		</section>
+		<div id="main">
+			<article class="post">
+				<header><div class="title"><h2>Classifier-Free Guidance (CFG)</h2></div></header>
+				<p class="kn-back"><a href="../../knowledge-share.html">&larr; Back to Knowledge Share</a></p>
+				<div class="kn-body">
+				<p>Classifier-Free Guidance (CFG) is arguably the most critical technique for achieving high-fidelity, strongly aligned generations in modern diffusion models. To understand it mathematically, we first need to look at its predecessor, <strong>Classifier Guidance</strong>, and how CFG elegantly derives from it using Bayes' Theorem.</p>
+				<h3>1. The Foundation: Classifier Guidance</h3>
+				<p>In a diffusion model, the reverse process involves sampling from a probability distribution \(p(x_{t-1} \| x_t)\), which is guided by the score function—the gradient of the log probability of the data:</p>
+				<p class="kn-math-display">\[\nabla_{x_t} \log p(x_t)\]</p>
+				<p>If we want to condition this generation on some class or text \(y\), we need the conditional score \(\nabla_{x_t} \log p(x_t \| y)\).</p>
+				<p>Before CFG, *Classifier Guidance* achieved this by training a completely separate, noise-robust classifier \(p_\phi(y \| x_t)\). Using Bayes' rule, \(p(x_t \| y) \propto p(x_t) p(y \| x_t)\), we can write the conditional score as:</p>
+				<p class="kn-math-display">\[\nabla_{x_t} \log p(x_t | y) = \nabla_{x_t} \log p(x_t) + \nabla_{x_t} \log p_\phi(y | x_t)\]</p>
+				<p>To force the model to adhere more strictly to the condition \(y\), researchers introduced a gradient scale \(s \&gt; 1\):</p>
+				<p class="kn-math-display">\[\tilde{\nabla}_{x_t} = \nabla_{x_t} \log p(x_t) + s \nabla_{x_t} \log p_\phi(y | x_t)\]</p>
+				<p>While mathematically sound, training a separate classifier on noisy latent states across all timesteps is computationally expensive and introduces a bottleneck.</p>
+				<h3>2. The Derivation of Classifier-Free Guidance</h3>
+				<p>Classifier-Free Guidance (proposed by Ho &amp; Salimans) eliminates the need for a separate classifier. Instead, we train a single neural network capable of *both* conditional and unconditional generation. During training, we randomly drop the conditioning \(y\) (replacing it with a null token, \(\emptyset\)) typically 10-20% of the time.</p>
+				<p>Now, we have access to both the unconditional score \(\nabla_{x_t} \log p(x_t)\) and the conditional score \(\nabla_{x_t} \log p(x_t \| y)\) directly from the same model.</p>
+				<p>Let's re-examine Bayes' rule to isolate the classifier gradient that we want to replace:</p>
+				<p class="kn-math-display">\[p(y | x_t) = \frac{p(x_t | y) p(y)}{p(x_t)}\]</p>
+				<p>Taking the logarithm and then the gradient with respect to \(x_t\) (noting that \(p(y)\) does not depend on \(x_t\)):</p>
+				<p class="kn-math-display">\[\nabla_{x_t} \log p(y | x_t) = \nabla_{x_t} \log p(x_t | y) - \nabla_{x_t} \log p(x_t)\]</p>
+				<p>This is the brilliant insight of CFG: <strong>The gradient of an implicit classifier can be represented perfectly as the difference between the conditional and unconditional scores.</strong></p>
+				<p>Substitute this implicit classifier back into our guidance equation (using \(w\) as the guidance scale instead of \(s\)):</p>
+				<p class="kn-math-display">\[\tilde{\nabla}_{x_t} = \nabla_{x_t} \log p(x_t) + w \big( \nabla_{x_t} \log p(x_t | y) - \nabla_{x_t} \log p(x_t) \big)\]</p>
+				<p>Rearranging this gives us the final CFG score formula:</p>
+				<p class="kn-math-display">\[\tilde{\nabla}_{x_t} = (1 - w) \nabla_{x_t} \log p(x_t) + w \nabla_{x_t} \log p(x_t | y)\]</p>
+				<h3>3. Translation to Noise Prediction</h3>
+				<p>In standard formulations, the neural network (like a UNet or DiT) doesn't predict the score directly; it predicts the added noise \(\epsilon_\theta\). The predicted noise is proportional to the negative score:</p>
+				<p class="kn-math-display">\[\epsilon_\theta(x_t) \approx -\sigma_t \nabla_{x_t} \log p(x_t)\]</p>
+				<p>Translating the CFG score formula into noise prediction yields the equation used in inference codebases:</p>
+				<p class="kn-math-display">\[\tilde{\epsilon}_\theta = \epsilon_{uncond} + w (\epsilon_{cond} - \epsilon_{uncond})\]</p>
+				<p>Where:</p>
+				<ul><li>\(\epsilon_{uncond} = \epsilon_\theta(x_t, t, \emptyset)\)</li><li>\(\epsilon_{cond} = \epsilon_\theta(x_t, t, y)\)</li><li>\(w\) is the guidance scale.</li><li>If \(w = 0\), you get pure unconditional generation.</li><li>If \(w = 1\), you get standard conditional generation (no extra guidance).</li><li>If \(w \&gt; 1\) (typically 3 to 7.5), you are performing <strong>vector extrapolation</strong>. You push the noise prediction further in the direction that separates the conditional from the unconditional.</li></ul>
+				<h3>4. Implementation Note: Batched Execution</h3>
+				<p>When implementing this in PyTorch, running the network twice sequentially at every timestep is slow. To optimize this, it is standard practice to concatenate the inputs along the batch dimension. If your latent tensor \(x_t\) has a shape of <code>[B, C, H, W]</code>, you duplicate it to <code>[2B, C, H, W]</code>.</p>
+				<p>You feed this doubled batch into the network alongside a stacked context tensor (containing \(B\) null tokens and \(B\) condition tokens). After a single forward pass, you chunk the output <code>[2B, C, H, W]</code> back into two <code>[B, C, H, W]</code> tensors (\(\epsilon_{uncond}\) and \(\epsilon_{cond}\)) and apply the algebraic CFG equation: <code>uncond + w * (cond - uncond)</code>.</p>
+				<p>This mathematical extrapolation trades diversity for semantic alignment.</p>
+				</div>
+			</article>
+		</div>
+	</div>
+	<script src="../../assets/js/jquery.min.js"></script>
+	<script src="../../assets/js/browser.min.js"></script>
+	<script src="../../assets/js/breakpoints.min.js"></script>
+	<script src="../../assets/js/util.js"></script>
+	<script src="../../assets/js/main.js"></script>
+</body>
+</html>

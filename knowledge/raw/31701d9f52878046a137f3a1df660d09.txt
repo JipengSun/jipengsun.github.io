@@ -1,0 +1,13 @@
+Here is the result of "view" for the Page with URL https://app.notion.com/p/31701d9f52878046a137f3a1df660d09 as of 2026-03-26T15:02:39.038Z:
+<page url="https://app.notion.com/p/31701d9f52878046a137f3a1df660d09">
+<ancestor-path></ancestor-path>
+<properties>
+{"title":"World Models"}
+</properties>
+<content>
+v-jepa
+Easier Trained World Model
+[GitHub - lucas-maes/le-wm: Official code base for LeWorldModel: Stable End-to-End Joint-Embedding Predictive Architecture from Pixels](https://github.com/lucas-maes/le-wm?tab=readme-ov-file)
+<empty-block/>
+</content>
+</page>

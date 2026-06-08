@@ -1,0 +1,107 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<title>Backpropagation — Knowledge Share — Jipeng Sun</title>
+	<link rel="stylesheet" href="../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="(function(){var b=document.querySelector('.kn-body');if(!b)return;b.querySelectorAll('span').forEach(function(s){if(s.children.length)return;var t=s.textContent.trim();if(/^\\\([\s\S]*\\\)$/.test(t)||/^\\\[[\s\S]*\\\]$/.test(t))s.replaceWith(document.createTextNode(t));});renderMathInElement(b,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false,ignoredTags:['script','noscript','style','textarea','pre','code']});})();"></script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-LCC4R0HD24"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'G-LCC4R0HD24');
+	</script>
+	<script src="../../assets/js/ga-events.js"></script>
+</head>
+<body class="is-preload kn-page">
+	<div id="wrapper">
+		<header id="header">
+			<h1><a href="../../index.html">Jipeng Sun</a></h1>
+			<nav class="links">
+				<ul>
+					<li><a href="../../index.html">Home</a></li>
+					<li><a href="../../research.html">Research</a></li>
+					<li class="active"><a href="../../knowledge-share.html">Knowledge Share</a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course">VR/AR Course</a></li>
+				</ul>
+			</nav>
+			<nav class="main">
+				<ul>
+					<li class="search"><a class="fa-search" href="#search">Search</a><form id="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></li>
+					<li class="menu"><a class="fa-bars" href="#menu">Menu</a></li>
+				</ul>
+			</nav>
+		</header>
+		<section id="menu">
+			<section><form class="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></section>
+			<section>
+				<ul class="links">
+					<li><a href="../../index.html"><h3>Home</h3><p>Jipeng Sun's Homepage</p></a></li>
+					<li><a href="../../research.html"><h3>Research</h3><p>Publications &amp; Papers</p></a></li>
+					<li><a href="../../knowledge-share.html"><h3>Knowledge Share</h3><p>Study notes</p></a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course"><h3>Teaching</h3><p>VR Summer Course</p></a></li>
+				</ul>
+			</section>
+		</section>
+		<div id="main">
+			<article class="post">
+				<header><div class="title"><h2>Backpropagation</h2></div></header>
+				<p class="kn-back"><a href="../../knowledge-share.html">&larr; Back to Knowledge Share</a></p>
+				<div class="kn-body">
+				<p>Backpropagation (short for "backward propagation of errors") is the mathematical engine that allows neural networks to learn. At its core, it is an efficient way to apply the <strong>chain rule from calculus</strong> to compute the gradient of a loss function with respect to every single weight and bias in the network.</p>
+				<p>By calculating these gradients, the network knows exactly how to adjust its parameters to minimize the error in its predictions.</p>
+				<p>Here is a step-by-step breakdown of the math behind it.</p>
+				<h3>1. The Setup and Notation</h3>
+				<p>To understand backpropagation, we first need to define the forward pass of a standard multi-layer perceptron (MLP). Let our network have \(L\) layers. For any given layer \(l\):</p>
+				<ul><li>\(a^{[l-1]}\): The activation output from the previous layer (where \(a^{[0]}\) is our input data, \(x\)).</li><li>\(W^{[l]}\): The weight matrix for layer \(l\).</li><li>\(b^{[l]}\): The bias vector for layer \(l\).</li><li>\(z^{[l]}\): The pre-activation linear combination.</li></ul>
+				<p class="kn-math-display">\[z^{[l]} = W^{[l]} a^{[l-1]} + b^{[l]}\]</p>
+				<ul><li>\(a^{[l]}\): The post-activation output, obtained by passing \(z^{[l]}\) through a non-linear activation function \(\sigma\) (like ReLU or Sigmoid).</li></ul>
+				<p class="kn-math-display">\[a^{[l]} = \sigma(z^{[l]})\]</p>
+				<ul><li>\(\mathcal{L}(\hat{y}, y)\): The scalar loss function (e.g., Mean Squared Error or Cross-Entropy) that compares the network's final output \(\hat{y} = a^{[L]}\) to the true target \(y\).</li></ul>
+				<p><strong>The Goal:</strong> We want to find how much a tiny change in a specific weight or bias affects the total loss. Mathematically, we need to compute \(\frac{\partial \mathcal{L}}{\partial W^{[l]}}\) and \(\frac{\partial \mathcal{L}}{\partial b^{[l]}}\).</p>
+				<hr />
+				<h3>2. The Core Concept: The Error Term (\(\delta\))</h3>
+				<p>Instead of calculating the gradients for the weights directly all at once, backpropagation introduces an intermediate variable called the "error term," denoted as \(\delta^{[l]}\).</p>
+				<p>This term represents the gradient of the loss with respect to the *pre-activation* value \(z^{[l]}\):</p>
+				<p class="kn-math-display">\[\delta^{[l]} = \frac{\partial \mathcal{L}}{\partial z^{[l]}}\]</p>
+				<p>If we can find this error term \(\delta^{[l]}\) for every layer, calculating the final gradients for the weights and biases becomes very straightforward. Backpropagation calculates these error terms by starting at the final layer and working backward.</p>
+				<hr />
+				<h3>3. The Four Fundamental Equations of Backpropagation</h3>
+				<p>Backpropagation boils down to four main equations evaluated in sequence.</p>
+				<h3>Equation 1: Error at the Output Layer (\(\delta^{[L]}\))</h3>
+				<p>We start by calculating the error at the very end of the network. Using the chain rule, the derivative of the loss with respect to \(z^{[L]}\) is the derivative of the loss with respect to the final activation \(a^{[L]}\), multiplied by the derivative of the activation function itself.</p>
+				<p class="kn-math-display">\[\delta^{[L]} = \frac{\partial \mathcal{L}}{\partial a^{[L]}} \odot \sigma'(z^{[L]})\]</p>
+				<p>*(Note: The *\(\odot\)* symbol represents the Hadamard product, which is element-wise multiplication.)*</p>
+				<h3>Equation 2: Propagating the Error Backward (\(\delta^{[l]}\))</h3>
+				<p>Once we have the error at the output layer, we calculate the error for the hidden layers by moving backward (\(l = L-1, L-2, \dots, 1\)). The error at layer \(l\) is calculated using the weights and the error from the *next* layer (\(l+1\)):</p>
+				<p class="kn-math-display">\[\delta^{[l]} = \left( (W^{[l+1]})^T \delta^{[l+1]} \right) \odot \sigma'(z^{[l]})\]</p>
+				<p>This equation is the heart of backpropagation. It mathematically describes how the "blame" for the final loss is distributed backward through the network's weights \((W^{[l+1]})^T\) to the previous layers.</p>
+				<h3>Equation 3: Gradient of the Weights</h3>
+				<p>Now that we have the error term \(\delta^{[l]}\) for a given layer, we can finally calculate how much the loss changes with respect to the weights in that layer. The gradient is the outer product of the layer's error and the *previous* layer's activation:</p>
+				<p class="kn-math-display">\[\frac{\partial \mathcal{L}}{\partial W^{[l]}} = \delta^{[l]} (a^{[l-1]})^T\]</p>
+				<h3>Equation 4: Gradient of the Biases</h3>
+				<p>The gradient of the loss with respect to the biases is simply the error term itself, because the derivative of \(z^{[l]}\) with respect to \(b^{[l]}\) is 1:</p>
+				<p class="kn-math-display">\[\frac{\partial \mathcal{L}}{\partial b^{[l]}} = \delta^{[l]}\]</p>
+				<hr />
+				<h3>4. Updating the Parameters (Gradient Descent)</h3>
+				<p>Once backpropagation has efficiently computed \(\frac{\partial \mathcal{L}}{\partial W^{[l]}}\) and \(\frac{\partial \mathcal{L}}{\partial b^{[l]}}\) for every layer, the network "learns" by updating its parameters to move in the opposite direction of the gradient.</p>
+				<p>Using a learning rate \(\alpha\), the weights and biases are updated as follows:</p>
+				<p class="kn-math-display">\[W^{[l]} \leftarrow W^{[l]} - \alpha \frac{\partial \mathcal{L}}{\partial W^{[l]}}\]</p>
+				<p class="kn-math-display">\[b^{[l]} \leftarrow b^{[l]} - \alpha \frac{\partial \mathcal{L}}{\partial b^{[l]}}\]</p>
+				<p>By repeatedly performing a forward pass to get predictions, backward propagation to get the gradients, and gradient descent to update the parameters, the neural network iteratively minimizes the loss function.</p>
+				</div>
+			</article>
+		</div>
+	</div>
+	<script src="../../assets/js/jquery.min.js"></script>
+	<script src="../../assets/js/browser.min.js"></script>
+	<script src="../../assets/js/breakpoints.min.js"></script>
+	<script src="../../assets/js/util.js"></script>
+	<script src="../../assets/js/main.js"></script>
+</body>
+</html>

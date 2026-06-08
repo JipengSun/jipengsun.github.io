@@ -1,0 +1,121 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<title>KL Divergence — Knowledge Share — Jipeng Sun</title>
+	<link rel="stylesheet" href="../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="(function(){var b=document.querySelector('.kn-body');if(!b)return;b.querySelectorAll('span').forEach(function(s){if(s.children.length)return;var t=s.textContent.trim();if(/^\\\([\s\S]*\\\)$/.test(t)||/^\\\[[\s\S]*\\\]$/.test(t))s.replaceWith(document.createTextNode(t));});renderMathInElement(b,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false,ignoredTags:['script','noscript','style','textarea','pre','code']});})();"></script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-LCC4R0HD24"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'G-LCC4R0HD24');
+	</script>
+	<script src="../../assets/js/ga-events.js"></script>
+</head>
+<body class="is-preload kn-page">
+	<div id="wrapper">
+		<header id="header">
+			<h1><a href="../../index.html">Jipeng Sun</a></h1>
+			<nav class="links">
+				<ul>
+					<li><a href="../../index.html">Home</a></li>
+					<li><a href="../../research.html">Research</a></li>
+					<li class="active"><a href="../../knowledge-share.html">Knowledge Share</a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course">VR/AR Course</a></li>
+				</ul>
+			</nav>
+			<nav class="main">
+				<ul>
+					<li class="search"><a class="fa-search" href="#search">Search</a><form id="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></li>
+					<li class="menu"><a class="fa-bars" href="#menu">Menu</a></li>
+				</ul>
+			</nav>
+		</header>
+		<section id="menu">
+			<section><form class="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></section>
+			<section>
+				<ul class="links">
+					<li><a href="../../index.html"><h3>Home</h3><p>Jipeng Sun's Homepage</p></a></li>
+					<li><a href="../../research.html"><h3>Research</h3><p>Publications &amp; Papers</p></a></li>
+					<li><a href="../../knowledge-share.html"><h3>Knowledge Share</h3><p>Study notes</p></a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course"><h3>Teaching</h3><p>VR Summer Course</p></a></li>
+				</ul>
+			</section>
+		</section>
+		<div id="main">
+			<article class="post">
+				<header><div class="title"><h2>KL Divergence</h2></div></header>
+				<p class="kn-back"><a href="../../knowledge-share.html">&larr; Back to Knowledge Share</a></p>
+				<div class="kn-body">
+				<p>At its core, <strong>Kullback-Leibler (KL) Divergence</strong> is a statistical measure of how much one probability distribution differs from a second, reference probability distribution.</p>
+				<p>You can think of it as the "penalty" or "surprise" you experience if you use an approximation (a model) to represent reality, instead of the true distribution itself. In information theory, it is often referred to as <strong>relative entropy</strong>.</p>
+				<p>Here is the mathematical breakdown of how it works.</p>
+				<h2>The Formal Definition</h2>
+				<p>The mathematical definition of KL divergence depends on whether your probability distributions are discrete (like rolling dice) or continuous (like measuring exact temperatures). We denote the divergence of distribution \(Q\) from distribution \(P\) as \(D_{KL}(P \parallel Q)\).</p>
+				<p>Typically, \(P\) represents the "true" distribution of the data, and \(Q\) represents the "model" or approximation of \(P\).</p>
+				<p><strong>1. For Discrete Distributions</strong></p>
+				<p>If \(P\) and \(Q\) are defined on the same discrete sample space \(\mathcal{X}\), the KL divergence is:</p>
+				<p class="kn-math-display">\[D_{KL}(P \parallel Q) = \sum_{x \in \mathcal{X}} P(x) \log\left(\frac{P(x)}{Q(x)}\right)\]</p>
+				<p><strong>2. For Continuous Distributions</strong></p>
+				<p>If \(P\) and \(Q\) are continuous distributions with probability density functions \(p(x)\) and \(q(x)\), the sum becomes an integral:</p>
+				<p class="kn-math-display">\[D_{KL}(P \parallel Q) = \int_{-\infty}^{\infty} p(x) \log\left(\frac{p(x)}{q(x)}\right) dx\]</p>
+				<p>*(Note: The logarithm base can be 2 if information is measured in bits, or *\(e\)* if measured in nats, which is more common in machine learning.)*</p>
+				<h2>Deconstructing the Equation</h2>
+				<p>To really understand what the math is doing, we can rewrite the equation using the expected value operator (\(E\)). The KL divergence is simply the expected value of the logarithmic difference between the probabilities \(P\) and \(Q\), assuming the data is drawn from \(P\):</p>
+				<p class="kn-math-display">\[D_{KL}(P \parallel Q) = \mathbb{E}_{x \sim P} [\log P(x) - \log Q(x)]\]</p>
+				<ul><li>\(\log P(x) - \log Q(x)\): This difference measures how much less probable an event \(x\) is under your model \(Q\) compared to the truth \(P\).</li><li>\(\mathbb{E}_{x \sim P}\): By weighting this difference by \(P(x)\), we care most about getting the probabilities right for the events that *actually happen most frequently* in the true distribution.</li></ul>
+				<h2>Three Crucial Properties</h2>
+				<ol><li><strong>It is Non-Negative:</strong> \(D_{KL}(P \parallel Q) \geq 0\). This is known as Gibbs' inequality. The divergence is exactly zero if and only if \(P\) and \(Q\) are identical almost everywhere.</li><li><strong>It is Asymmetric:</strong> \(D_{KL}(P \parallel Q) \neq D_{KL}(Q \parallel P)\). Because of this asymmetry, KL divergence is technically not a true mathematical "distance" metric (like Euclidean distance).</li><li><strong>Undefined for Zero Probabilities:</strong> If \(Q(x) = 0\) for any event where \(P(x) > 0\), the ratio \(\frac{P(x)}{0}\) forces the KL divergence to go to infinity. This means if your model assigns a zero probability to an event that can actually happen in reality, the penalty is mathematically infinite.</li></ol>
+				<hr />
+				<h2>Why KL is Non-Negative?</h2>
+				<p>The fact that KL divergence can never be negative—a rule known as <strong>Gibbs' inequality</strong>—is the mathematical backbone of why it works as a "distance" or "penalty" metric in the first place.</p>
+				<p>Intuitively, think of it from an information-theory perspective: the true distribution \(P\) is the absolute most efficient way to represent your data. If you use *any* other model \(Q\) to represent that data, you are introducing inefficiencies. You can never have a "negative" penalty for being wrong; the absolute best you can do is have zero penalty when your model \(Q\) perfectly matches reality \(P\).</p>
+				<p>To prove this mathematically, we rely on a fundamental concept called <strong>Jensen's Inequality</strong>.</p>
+				<h2>The Mathematical Proof</h2>
+				<p>Jensen's Inequality states that for any strictly concave function (like the logarithm function), the expected value of the function is always *less than or equal to* the function of the expected value.</p>
+				<p>In mathematical terms, if \(f\) is concave, then:</p>
+				<p class="kn-math-display">\[\mathbb{E}[f(X)] \le f(\mathbb{E}[X])\]</p>
+				<p>Here is how we use that to prove \(D_{KL}(P \parallel Q) \geq 0\):</p>
+				<p><strong>Step 1: Invert the ratio inside the logarithm</strong></p>
+				<p>Let's start with the standard discrete formula for KL divergence:</p>
+				<p class="kn-math-display">\[D_{KL}(P \parallel Q) = \sum_{x} P(x) \log\left(\frac{P(x)}{Q(x)}\right)\]</p>
+				<p>Using the logarithmic rule that \(\log(a/b) = -\log(b/a)\), we can rewrite this by flipping the fraction and pulling a negative sign out to the front:</p>
+				<p class="kn-math-display">\[-D_{KL}(P \parallel Q) = \sum_{x} P(x) \log\left(\frac{Q(x)}{P(x)}\right)\]</p>
+				<p><strong>Step 2: Express it as an Expectation</strong></p>
+				<p>Notice that the right side of the equation is just the expected value of the term \(\log\left(\frac{Q(x)}{P(x)}\right)\), weighted by the true probability \(P(x)\).</p>
+				<p class="kn-math-display">\[-D_{KL}(P \parallel Q) = \mathbb{E}_{x \sim P} \left[ \log\left(\frac{Q(x)}{P(x)}\right) \right]\]</p>
+				<p><strong>Step 3: Apply Jensen's Inequality</strong></p>
+				<p>Because the \(\log\) function is strictly concave, we can apply Jensen's Inequality to pull the \(\log\) *outside* the expectation. Doing this means the left side will be less than or equal to the right side:</p>
+				<p class="kn-math-display">\[\mathbb{E}_{x \sim P} \left[ \log\left(\frac{Q(x)}{P(x)}\right) \right] \le \log \left( \mathbb{E}_{x \sim P} \left[ \frac{Q(x)}{P(x)} \right] \right)\]</p>
+				<p><strong>Step 4: Solve the inner expectation</strong></p>
+				<p>Now, let's look at that inner expectation mathematically. To find the expected value of \(\frac{Q(x)}{P(x)}\) with respect to \(P\), we multiply it by \(P(x)\) and sum it up:</p>
+				<p class="kn-math-display">\[\mathbb{E}_{x \sim P} \left[ \frac{Q(x)}{P(x)} \right] = \sum_{x} P(x) \left( \frac{Q(x)}{P(x)} \right) = \sum_{x} Q(x)\]</p>
+				<p>Because \(Q\) is a valid probability distribution, the sum of all its probabilities must equal exactly 1.</p>
+				<p><strong>Step 5: The Final Conclusion</strong></p>
+				<p>Substitute that \(1\) back into our inequality from Step 3:</p>
+				<p class="kn-math-display">\[-D_{KL}(P \parallel Q) \le \log(1)\]</p>
+				<p>Since \(\log(1) = 0\), we get:</p>
+				<p class="kn-math-display">\[-D_{KL}(P \parallel Q) \le 0\]</p>
+				<p>Multiply both sides by \(-1\) (which flips the inequality sign), and we arrive at our proof:</p>
+				<p class="kn-math-display">\[D_{KL}(P \parallel Q) \ge 0\]</p>
+				<h2>When is it exactly zero?</h2>
+				<p>Because the logarithm is *strictly* concave, Jensen's inequality only becomes a perfect equality if the term inside is a constant. In this case, \(\frac{Q(x)}{P(x)}\) must be a constant for all \(x\). Since both distributions must sum to 1, that constant can only be 1.</p>
+				<p>Therefore, \(D_{KL}(P \parallel Q) = 0\) if and only if \(P(x) = Q(x)\) for every single possible outcome.</p>
+				<hr />
+				</div>
+			</article>
+		</div>
+	</div>
+	<script src="../../assets/js/jquery.min.js"></script>
+	<script src="../../assets/js/browser.min.js"></script>
+	<script src="../../assets/js/breakpoints.min.js"></script>
+	<script src="../../assets/js/util.js"></script>
+	<script src="../../assets/js/main.js"></script>
+</body>
+</html>

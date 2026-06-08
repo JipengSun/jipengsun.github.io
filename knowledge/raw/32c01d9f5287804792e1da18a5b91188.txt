@@ -1,0 +1,44 @@
+Here is the result of "view" for the Page with URL https://app.notion.com/p/32c01d9f5287804792e1da18a5b91188 as of 2026-03-23T00:58:03.131Z:
+<page url="https://app.notion.com/p/32c01d9f5287804792e1da18a5b91188">
+<ancestor-path></ancestor-path>
+<properties>
+{"title":"ELBO (**Evidence Lower Bound**)"}
+</properties>
+<content>
+In Bayesian inference and generative modeling, the **Evidence Lower Bound (ELBO)** is a crucial quantity used to approximate the marginal likelihood (the "evidence") when the true posterior distribution is computationally intractable.
+## The Problem: Intractable Posteriors
+In a latent variable model, we have observed data $`x`$ and hidden variables $`z`$. We want to find the posterior distribution $`p(z|x)`$:
+$`p(z|x) = \frac{p(x, z)}{p(x)} = \frac{p(x|z)p(z)}{\int p(x, z) dz}`$
+For complex models (like deep neural networks), the integral in the denominator—the **evidence** $`p(x)`$—is usually impossible to compute. We instead introduce a simpler, variational distribution $`q_\phi(z|x)`$ to approximate the true posterior.
+---
+## Derivation via KL Divergence
+We can derive the ELBO by looking at the **Kullback-Leibler (KL) divergence** between our approximation $`q(z|x)`$ and the true posterior $`p(z|x)`$. Since KL divergence is always non-negative ($`KL \ge 0`$), it provides a natural way to bound the log-evidence.
+1. Start with the KL divergence:
+	$`D_{KL}(q(z|x) \parallel p(z|x)) = \mathbb{E}_{z \sim q} \left[ \log \frac{q(z|x)}{p(z|x)} \right]`$
+2. Apply Bayes' Rule ($`p(z|x) = \frac{p(x, z)}{p(x)}`$):
+	$`D_{KL}(q(z|x) \parallel p(z|x)) = \mathbb{E}_{z \sim q} \left[ \log q(z|x) - \log p(x, z) + \log p(x) \right]`$
+3. Since $`\log p(x)`$ does not depend on $`z`$, we can pull it out of the expectation:
+	$`D_{KL}(q(z|x) \parallel p(z|x)) = \mathbb{E}_{z \sim q} \left[ \log \frac{q(z|x)}{p(x, z)} \right] + \log p(x)`$
+4. Rearrange to isolate the log-evidence:
+	$`\log p(x) = D_{KL}(q(z|x) \parallel p(z|x)) + \underbrace{\mathbb{E}_{z \sim q} \left[ \log \frac{p(x, z)}{q(z|x)} \right]}_{\text{ELBO}}`$
+Because $`D_{KL} \ge 0`$, it follows that:
+$`\log p(x) \ge \text{ELBO}`$
+---
+## Alternative Derivation: Jensen’s Inequality
+A more direct way to see why it is a "lower bound" is using **Jensen's Inequality**, which states that for a concave function like $`\log`$, $`f(\mathbb{E}[X]) \ge \mathbb{E}[f(X)]`$.
+$`\log p(x) = \log \int p(x, z) dz`$
+$`\log p(x) = \log \int q(z|x) \frac{p(x, z)}{q(z|x)} dz`$
+$`\log p(x) = \log \mathbb{E}_{z \sim q} \left[ \frac{p(x, z)}{q(z|x)} \right]`$
+Applying Jensen's Inequality:
+$`\log p(x) \ge \mathbb{E}_{z \sim q} \left[ \log \frac{p(x, z)}{q(z|x)} \right]`$
+---
+## Decomposing the ELBO
+To make the ELBO useful for optimization (as in Variational Autoencoders), we rewrite the joint distribution $`p(x, z)`$ as $`p(x|z)p(z)`$:
+$`\mathcal{L} = \mathbb{E}_{z \sim q} \left[ \log \frac{p(x|z)p(z)}{q(z|x)} \right]`$
+$`\mathcal{L} = \mathbb{E}_{z \sim q} [\log p(x|z)] - \mathbb{E}_{z \sim q} \left[ \log \frac{q(z|x)}{p(z)} \right]`$
+$`\mathcal{L} = \underbrace{\mathbb{E}_{z \sim q} [\log p(x|z)]}_{\text{Reconstruction Term}} - \underbrace{D_{KL}(q(z|x) \parallel p(z))}_{\text{Regularization Term}}`$
+- **Reconstruction Term:** Encourages the model to assign high probability to the observed data given the latent codes.
+- **Regularization Term:** Forces the approximate posterior $`q(z|x)`$ to stay close to the prior $`p(z)`$, preventing the model from collapsing into a simple lookup table.
+Maximizing the ELBO is equivalent to minimizing the KL divergence between our approximation and the true posterior. In practice, this allows us to perform efficient stochastic gradient descent on complex latent variable models.
+</content>
+</page>

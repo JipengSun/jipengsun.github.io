@@ -1,0 +1,53 @@
+Here is the result of "view" for the Page with URL https://www.notion.so/34901d9f5287801981a7e6a7eab9ddc5 as of 2026-04-21T14:12:37.519Z:
+<page url="https://www.notion.so/34901d9f5287801981a7e6a7eab9ddc5">
+<ancestor-path></ancestor-path>
+<properties>
+{"title":"Backpropagation"}
+</properties>
+<content>
+Backpropagation (short for "backward propagation of errors") is the mathematical engine that allows neural networks to learn. At its core, it is an efficient way to apply the **chain rule from calculus** to compute the gradient of a loss function with respect to every single weight and bias in the network.
+By calculating these gradients, the network knows exactly how to adjust its parameters to minimize the error in its predictions.
+Here is a step-by-step breakdown of the math behind it.
+### 1. The Setup and Notation
+To understand backpropagation, we first need to define the forward pass of a standard multi-layer perceptron (MLP). Let our network have $`L`$ layers. For any given layer $`l`$:
+- $`a^{[l-1]}`$: The activation output from the previous layer (where $`a^{[0]}`$ is our input data, $`x`$).
+- $`W^{[l]}`$: The weight matrix for layer $`l`$.
+- $`b^{[l]}`$: The bias vector for layer $`l`$.
+- $`z^{[l]}`$: The pre-activation linear combination.
+	$`z^{[l]} = W^{[l]} a^{[l-1]} + b^{[l]}`$
+- $`a^{[l]}`$: The post-activation output, obtained by passing $`z^{[l]}`$ through a non-linear activation function $`\sigma`$ (like ReLU or Sigmoid).
+	$`a^{[l]} = \sigma(z^{[l]})`$
+- $`\mathcal{L}(\hat{y}, y)`$: The scalar loss function (e.g., Mean Squared Error or Cross-Entropy) that compares the network's final output $`\hat{y} = a^{[L]}`$ to the true target $`y`$.
+**The Goal:** We want to find how much a tiny change in a specific weight or bias affects the total loss. Mathematically, we need to compute $`\frac{\partial \mathcal{L}}{\partial W^{[l]}}`$ and $`\frac{\partial \mathcal{L}}{\partial b^{[l]}}`$.
+---
+### 2. The Core Concept: The Error Term ($`\delta`$)
+Instead of calculating the gradients for the weights directly all at once, backpropagation introduces an intermediate variable called the "error term," denoted as $`\delta^{[l]}`$.
+This term represents the gradient of the loss with respect to the *pre-activation* value $`z^{[l]}`$:
+$`\delta^{[l]} = \frac{\partial \mathcal{L}}{\partial z^{[l]}}`$
+If we can find this error term $`\delta^{[l]}`$ for every layer, calculating the final gradients for the weights and biases becomes very straightforward. Backpropagation calculates these error terms by starting at the final layer and working backward.
+---
+### 3. The Four Fundamental Equations of Backpropagation
+Backpropagation boils down to four main equations evaluated in sequence.
+### Equation 1: Error at the Output Layer ($`\delta^{[L]}`$)
+We start by calculating the error at the very end of the network. Using the chain rule, the derivative of the loss with respect to $`z^{[L]}`$ is the derivative of the loss with respect to the final activation $`a^{[L]}`$, multiplied by the derivative of the activation function itself.
+$`\delta^{[L]} = \frac{\partial \mathcal{L}}{\partial a^{[L]}} \odot \sigma'(z^{[L]})`$
+*(Note: The *$`\odot`$* symbol represents the Hadamard product, which is element-wise multiplication.)*
+### Equation 2: Propagating the Error Backward ($`\delta^{[l]}`$)
+Once we have the error at the output layer, we calculate the error for the hidden layers by moving backward ($`l = L-1, L-2, \dots, 1`$). The error at layer $`l`$ is calculated using the weights and the error from the *next* layer ($`l+1`$):
+$`\delta^{[l]} = \left( (W^{[l+1]})^T \delta^{[l+1]} \right) \odot \sigma'(z^{[l]})`$
+This equation is the heart of backpropagation. It mathematically describes how the "blame" for the final loss is distributed backward through the network's weights $`(W^{[l+1]})^T`$ to the previous layers.
+### Equation 3: Gradient of the Weights
+Now that we have the error term $`\delta^{[l]}`$ for a given layer, we can finally calculate how much the loss changes with respect to the weights in that layer. The gradient is the outer product of the layer's error and the *previous* layer's activation:
+$`\frac{\partial \mathcal{L}}{\partial W^{[l]}} = \delta^{[l]} (a^{[l-1]})^T`$
+### Equation 4: Gradient of the Biases
+The gradient of the loss with respect to the biases is simply the error term itself, because the derivative of $`z^{[l]}`$ with respect to $`b^{[l]}`$ is 1:
+$`\frac{\partial \mathcal{L}}{\partial b^{[l]}} = \delta^{[l]}`$
+---
+### 4. Updating the Parameters (Gradient Descent)
+Once backpropagation has efficiently computed $`\frac{\partial \mathcal{L}}{\partial W^{[l]}}`$ and $`\frac{\partial \mathcal{L}}{\partial b^{[l]}}`$ for every layer, the network "learns" by updating its parameters to move in the opposite direction of the gradient.
+Using a learning rate $`\alpha`$, the weights and biases are updated as follows:
+$`W^{[l]} \leftarrow W^{[l]} - \alpha \frac{\partial \mathcal{L}}{\partial W^{[l]}}`$
+$`b^{[l]} \leftarrow b^{[l]} - \alpha \frac{\partial \mathcal{L}}{\partial b^{[l]}}`$
+By repeatedly performing a forward pass to get predictions, backward propagation to get the gradients, and gradient descent to update the parameters, the neural network iteratively minimizes the loss function.
+</content>
+</page>

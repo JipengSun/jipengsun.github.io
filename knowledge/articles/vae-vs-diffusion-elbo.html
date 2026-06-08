@@ -1,0 +1,88 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<title>VAE vs. Diffusion from ELBO Perspective — Knowledge Share — Jipeng Sun</title>
+	<link rel="stylesheet" href="../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="(function(){var b=document.querySelector('.kn-body');if(!b)return;b.querySelectorAll('span').forEach(function(s){if(s.children.length)return;var t=s.textContent.trim();if(/^\\\([\s\S]*\\\)$/.test(t)||/^\\\[[\s\S]*\\\]$/.test(t))s.replaceWith(document.createTextNode(t));});renderMathInElement(b,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false,ignoredTags:['script','noscript','style','textarea','pre','code']});})();"></script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-LCC4R0HD24"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'G-LCC4R0HD24');
+	</script>
+	<script src="../../assets/js/ga-events.js"></script>
+</head>
+<body class="is-preload kn-page">
+	<div id="wrapper">
+		<header id="header">
+			<h1><a href="../../index.html">Jipeng Sun</a></h1>
+			<nav class="links">
+				<ul>
+					<li><a href="../../index.html">Home</a></li>
+					<li><a href="../../research.html">Research</a></li>
+					<li class="active"><a href="../../knowledge-share.html">Knowledge Share</a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course">VR/AR Course</a></li>
+				</ul>
+			</nav>
+			<nav class="main">
+				<ul>
+					<li class="search"><a class="fa-search" href="#search">Search</a><form id="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></li>
+					<li class="menu"><a class="fa-bars" href="#menu">Menu</a></li>
+				</ul>
+			</nav>
+		</header>
+		<section id="menu">
+			<section><form class="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></section>
+			<section>
+				<ul class="links">
+					<li><a href="../../index.html"><h3>Home</h3><p>Jipeng Sun's Homepage</p></a></li>
+					<li><a href="../../research.html"><h3>Research</h3><p>Publications &amp; Papers</p></a></li>
+					<li><a href="../../knowledge-share.html"><h3>Knowledge Share</h3><p>Study notes</p></a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course"><h3>Teaching</h3><p>VR Summer Course</p></a></li>
+				</ul>
+			</section>
+		</section>
+		<div id="main">
+			<article class="post">
+				<header><div class="title"><h2>VAE vs. Diffusion from ELBO Perspective</h2></div></header>
+				<p class="kn-back"><a href="../../knowledge-share.html">&larr; Back to Knowledge Share</a></p>
+				<div class="kn-body">
+				<p>It is fascinating that two entirely different generative paradigms—Variational Autoencoders (VAEs) and Diffusion Models—are mathematically rooted in optimizing the exact same Evidence Lower Bound (ELBO).</p>
+				<p>The general ELBO formula is:</p>
+				<p class="kn-math-display">\[\log p(\mathbf{x}) \ge \mathbb{E}_{q(\mathbf{z}|\mathbf{x})}[\log p_\theta(\mathbf{x}|\mathbf{z})] - D_{KL}(q(\mathbf{z}|\mathbf{x}) \parallel p(\mathbf{z}))\]</p>
+				<p>The radical divergence in how they function and the results they produce comes down to fundamental design choices regarding the <strong>latent space</strong>, the <strong>forward process</strong> (encoding), and the <strong>reverse process</strong> (decoding).</p>
+				<p>Here is a breakdown of the key mathematical and structural differences that force VAEs and Diffusion models down different paths.</p>
+				<h2>1. The Forward Process (The "Encoder")</h2>
+				<p>In the ELBO framework, we have an approximate posterior, \(q(\mathbf{z}|\mathbf{x})\), which maps data to a latent space.</p>
+				<ul><li><strong>VAE (Learned &amp; Single-Step):</strong> In a VAE, \(q_\phi(\mathbf{z}|\mathbf{x})\) is a <strong>learned neural network</strong> (the encoder) parameterized by \(\phi\). It takes a complex, non-linear, single-step leap from the data distribution to the latent distribution.</li><li><strong>Diffusion (Fixed &amp; Multi-Step):</strong> In a diffusion model, the forward process \(q(\mathbf{x}_{1:T}|\mathbf{x}_0)\) is <strong>fixed and mathematically defined</strong>. It has zero learnable parameters. It is a predefined Markov chain that adds Gaussian noise over \(T\) small steps.</li></ul>
+				<h2>2. Dimensionality and the Information Bottleneck</h2>
+				<p>The structure of the latent variable \(\mathbf{z}\) defines what the model is forced to learn.</p>
+				<ul><li><strong>VAE (Information Compression):</strong> VAEs use a strict <strong>information bottleneck</strong>. The latent vector \(\mathbf{z}\) is typically of a much lower dimension than the input image \(\mathbf{x}\). The model is forced to compress the image into a dense, semantic representation. This is why VAE latent spaces are highly interpretable and great for interpolating between concepts (e.g., blending two faces).</li><li><strong>Diffusion (Dimensionality Preservation):</strong> Diffusion models do not compress the data spatially. Every latent variable \(\mathbf{x}_1, \dots, \mathbf{x}_T\) has the <strong>exact same dimensionality</strong> as the original image \(\mathbf{x}_0\). Instead of compressing data into a smaller vector, diffusion gradually destroys the mutual information between the original image and the latent state by adding noise, until \(\mathbf{x}_T\) is pure noise.</li></ul>
+				<h2>3. The Reverse Process (The "Decoder")</h2>
+				<p>The generative step involves mapping from the latent space back to the data space, represented as \(p_\theta(\mathbf{x}|\mathbf{z})\).</p>
+				<ul><li><strong>VAE (One Massive Leap):</strong> The VAE decoder \(p_\theta(\mathbf{x}|\mathbf{z})\) must map a low-dimensional, highly compressed vector all the way back to a high-dimensional image in <strong>one single pass</strong>. This is an incredibly difficult mapping to learn perfectly, which is why VAEs often produce blurry images; they learn the global structure well but fail to perfectly reconstruct high-frequency, fine-grained details in one shot.</li><li><strong>Diffusion (Thousands of Tiny Steps):</strong> Diffusion models break the generation process into hundreds or thousands of <strong>tiny, iterative steps</strong>: \(p_\theta(\mathbf{x}_{t-1}|\mathbf{x}_t)\). Because each step only requires removing a highly predictable, microscopic amount of Gaussian noise, the neural network's job is drastically simplified at each individual timestep. The composition of hundreds of simple Gaussian steps yields a highly complex, expressive data distribution, resulting in unmatched image sharpness and detail.</li></ul>
+				<h2>4. How the ELBO Manifests in the Loss</h2>
+				<p>The general ELBO formula is:</p>
+				<p class="kn-math-display">\[\log p(\mathbf{x}) \ge \mathbb{E}_{q(\mathbf{z}|\mathbf{x})}[\log p_\theta(\mathbf{x}|\mathbf{z})] - D_{KL}(q(\mathbf{z}|\mathbf{x}) \parallel p(\mathbf{z}))\]</p>
+				<p>How this equation is penalized during training differs entirely:</p>
+				<ul><li><strong>The VAE Trade-off:</strong> The VAE loss is an explicit tug-of-war. The first term is the <strong>reconstruction loss</strong> (make the output look exactly like the input). The second term is the <strong>KL penalty</strong> (force the learned latent distribution to match a standard normal prior \(\mathcal{N}(\mathbf{0}, \mathbf{I})\)). If the VAE focuses too much on reconstruction, the latent space becomes disjointed. If it focuses too much on the prior, the images become blurry.</li><li><strong>The Diffusion Decomposition:</strong> Because the diffusion forward process is a fixed sequence of Gaussians, and the reverse process is modeled as Gaussians, the ELBO beautifully decomposes into a sum of KL divergences at every single timestep \(t\). As we walked through previously, matching these Gaussian distributions mathematically simplifies to matching their means. Therefore, the diffusion ELBO bypasses the VAE's "reconstruction vs. prior" tug-of-war entirely, reducing simply to <strong>step-wise noise prediction</strong>: \(\|\boldsymbol{\epsilon} - \boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t)\|^2\).</li></ul>
+				<hr />
+				<p>In summary, VAEs ask a network to do the heavy lifting of mapping between complex domains in single, compressed leaps, resulting in speed but structural blurriness. Diffusion removes the bottleneck and breaks the math down into a long chain of trivial Gaussian steps, sacrificing speed for mathematical tractability and extreme detail.</p>
+				<p>Would you like to look at how these two contrasting paradigms are actually merged together in modern architectures, such as Latent Diffusion Models (like Stable Diffusion)?</p>
+				</div>
+			</article>
+		</div>
+	</div>
+	<script src="../../assets/js/jquery.min.js"></script>
+	<script src="../../assets/js/browser.min.js"></script>
+	<script src="../../assets/js/breakpoints.min.js"></script>
+	<script src="../../assets/js/util.js"></script>
+	<script src="../../assets/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+Here is the result of "view" for the Page with URL https://www.notion.so/33401d9f528780b996e0fb59323b447f as of 2026-03-31T20:16:32.250Z:
+<page url="https://www.notion.so/33401d9f528780b996e0fb59323b447f">
+<ancestor-path></ancestor-path>
+<properties>
+{"title":"Optical Flow"}
+</properties>
+<content>
+**Optical flow** is the pattern of apparent motion of objects, surfaces, and edges in a visual scene, caused by the relative motion between an observer (an eye or a camera) and the scene.
+In computer vision, calculating optical flow means finding a vector field that shows where every pixel in an image has moved in the next frame of a video.
+### 1. The Core Assumption: Brightness Constancy
+The fundamental math behind optical flow relies on the **brightness constancy constraint**. This assumes that the pixel intensity (brightness or color) of a specific point on an object remains the same between consecutive frames, even if its position changes.
+If we have an image where $`I(x, y, t)`$ represents the intensity of a pixel at coordinates $`(x, y)`$ at time $`t`$, and the pixel moves by a distance of $`(\Delta x, \Delta y)`$ over a time period $`\Delta t`$, the brightness constancy constraint is written as:
+$`I(x, y, t) = I(x + \Delta x, y + \Delta y, t + \Delta t)`$
+### 2. The Taylor Series Expansion
+To solve this, we assume the movement $`(\Delta x, \Delta y)`$ and the time step $`\Delta t`$ are very small. This allows us to use a first-order Taylor series expansion to approximate the right side of the equation:
+$`I(x + \Delta x, y + \Delta y, t + \Delta t) \approx I(x, y, t) + \frac{\partial I}{\partial x}\Delta x + \frac{\partial I}{\partial y}\Delta y + \frac{\partial I}{\partial t}\Delta t`$
+Because of our brightness constancy assumption, we can substitute this expansion back into our first equation. The $`I(x, y, t)`$ terms on both sides cancel out, leaving us with:
+$`\frac{\partial I}{\partial x}\Delta x + \frac{\partial I}{\partial y}\Delta y + \frac{\partial I}{\partial t}\Delta t = 0`$
+Next, we divide the entire equation by $`\Delta t`$:
+$`\frac{\partial I}{\partial x}\frac{\Delta x}{\Delta t} + \frac{\partial I}{\partial y}\frac{\Delta y}{\Delta t} + \frac{\partial I}{\partial t} = 0`$
+### 3. The Optical Flow Equation
+We can now define our motion vectors. The velocity in the x-direction is $`u = \frac{\Delta x}{\Delta t}`$, and the velocity in the y-direction is $`v = \frac{\Delta y}{\Delta t}`$.
+We also rewrite the partial derivatives as image gradients:
+- $`I_x = \frac{\partial I}{\partial x}`$ (how brightness changes horizontally)
+- $`I_y = \frac{\partial I}{\partial y}`$ (how brightness changes vertically)
+- $`I_t = \frac{\partial I}{\partial t}`$ (how brightness changes over time between frames)
+Substituting these into our previous formula gives us the standard **Optical Flow Equation**:
+$`I_x u + I_y v + I_t = 0`$
+### 4. The Aperture Problem
+We have arrived at a single linear equation, but we have two unknowns: $`u`$ and $`v`$ (the horizontal and vertical velocities). This means the equation cannot be solved uniquely for a single pixel.
+Mathematically, we can only determine the component of motion that is parallel to the spatial gradient (perpendicular to the edge of the object). Motion along an edge cannot be detected by observing a small local area. This is known as the **aperture problem**.
+Imagine looking through a tiny pinhole (an aperture) at a straight, diagonal black line painted on a piece of paper. If someone slides that paper horizontally to the right, the line appears to move down and to the right through your pinhole. If they slide it vertically downward, it *also* looks like it's moving down and to the right.
+Because you are zoomed in so far that you only see a straight edge, **you cannot tell which way the object is actually moving**. You can only detect the motion perpendicular to the edge itself.
+### 5. Solving the Problem (Adding Constraints)
+To solve for $`u`$ and $`v`$, we need additional mathematical constraints. There are two classic ways to do this:
+- **The Lucas-Kanade Method (Local):** This assumes that a small window of pixels (e.g., $`3 \times 3`$) surrounding the target pixel all have the same motion $`(u, v)`$. This gives us 9 equations for 2 unknowns, which we can solve using a least-squares approximation:
+	$`\begin{bmatrix} I_{x_1} & I_{y_1} \\ \vdots & \vdots \\ I_{x_9} & I_{y_9} \end{bmatrix} \begin{bmatrix} u \\ v \end{bmatrix} = \begin{bmatrix} -I_{t_1} \\ \vdots \\ -I_{t_9} \end{bmatrix}`$
+- **The Horn-Schunck Method (Global):** This formulates the problem as an optimization task, adding a "smoothness" penalty. It assumes that the overall flow field should be smooth across the entire image, minimizing the variations in $`u`$ and $`v`$ alongside the brightness constancy error.
+---
+<empty-block/>
+</content>
+</page>

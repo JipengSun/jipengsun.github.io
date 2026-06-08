@@ -1,0 +1,91 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<title>Lagrangian Method — Knowledge Share — Jipeng Sun</title>
+	<link rel="stylesheet" href="../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="(function(){var b=document.querySelector('.kn-body');if(!b)return;b.querySelectorAll('span').forEach(function(s){if(s.children.length)return;var t=s.textContent.trim();if(/^\\\([\s\S]*\\\)$/.test(t)||/^\\\[[\s\S]*\\\]$/.test(t))s.replaceWith(document.createTextNode(t));});renderMathInElement(b,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false,ignoredTags:['script','noscript','style','textarea','pre','code']});})();"></script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-LCC4R0HD24"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'G-LCC4R0HD24');
+	</script>
+	<script src="../../assets/js/ga-events.js"></script>
+</head>
+<body class="is-preload kn-page">
+	<div id="wrapper">
+		<header id="header">
+			<h1><a href="../../index.html">Jipeng Sun</a></h1>
+			<nav class="links">
+				<ul>
+					<li><a href="../../index.html">Home</a></li>
+					<li><a href="../../research.html">Research</a></li>
+					<li class="active"><a href="../../knowledge-share.html">Knowledge Share</a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course">VR/AR Course</a></li>
+				</ul>
+			</nav>
+			<nav class="main">
+				<ul>
+					<li class="search"><a class="fa-search" href="#search">Search</a><form id="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></li>
+					<li class="menu"><a class="fa-bars" href="#menu">Menu</a></li>
+				</ul>
+			</nav>
+		</header>
+		<section id="menu">
+			<section><form class="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></section>
+			<section>
+				<ul class="links">
+					<li><a href="../../index.html"><h3>Home</h3><p>Jipeng Sun's Homepage</p></a></li>
+					<li><a href="../../research.html"><h3>Research</h3><p>Publications &amp; Papers</p></a></li>
+					<li><a href="../../knowledge-share.html"><h3>Knowledge Share</h3><p>Study notes</p></a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course"><h3>Teaching</h3><p>VR Summer Course</p></a></li>
+				</ul>
+			</section>
+		</section>
+		<div id="main">
+			<article class="post">
+				<header><div class="title"><h2>Lagrangian Method</h2></div></header>
+				<p class="kn-back"><a href="../../knowledge-share.html">&larr; Back to Knowledge Share</a></p>
+				<div class="kn-body">
+				<h2>1. The Standard Lagrangian</h2>
+				<p>The standard Lagrangian is a mathematical trick to turn a *constrained* problem into an *unconstrained* one. It does this by taking the hard rules (constraints) and turning them into a pricing system.</p>
+				<p><strong>The Setup:</strong></p>
+				<p>Imagine you want to minimize a function \(f(x)\) subject to a strict equality constraint \(h(x) = 0\).</p>
+				<p><strong>The Equation:</strong></p>
+				<p>The standard Lagrangian function introduces a new variable, \(\lambda\) (the Lagrange multiplier or "dual variable"), to penalize the constraint:</p>
+				<p class="kn-math-display">\[L(x, \lambda) = f(x) + \lambda^T h(x)\]</p>
+				<ul><li>\(f(x)\): Your original goal (the objective function).</li><li>\(h(x)\): Your constraint (which must equal zero).</li><li>\(\lambda\): The "price" you pay for breaking the constraint.</li></ul>
+				<p><strong>What it is used for:</strong></p>
+				<p>The standard Lagrangian is a foundational tool in calculus and physics.</p>
+				<ul><li><strong>Analytic Solutions:</strong> It allows us to find the exact optimal points using derivatives (the Karush-Kuhn-Tucker or KKT conditions). By setting the gradient of \(L\) to zero, you find the "saddle point" where the solution is optimal.</li><li><strong>Theoretical bounds:</strong> It is used to create "dual problems," which give you a lower bound on how good your optimization can possibly get.</li></ul>
+				<h2>2. The Extended (Augmented) Lagrangian</h2>
+				<p>While the standard Lagrangian is beautiful in theory, it can be fragile in practice. If you try to write a computer algorithm to solve a standard Lagrangian (like *dual ascent*), the algorithm will often fail to converge if the original function \(f(x)\) isn't strictly convex (e.g., if it is flat in some places or linear).</p>
+				<p>To fix this, mathematicians "augmented" the Lagrangian by adding a quadratic penalty term.</p>
+				<p><strong>The Equation:</strong></p>
+				<p>Using the same setup as before, the Augmented Lagrangian \(L_\rho\) is written as:</p>
+				<p class="kn-math-display">\[L_\rho(x, \lambda) = f(x) + \lambda^T h(x) + \frac{\rho}{2}\|h(x)\|_2^2\]</p>
+				<ul><li><strong>The new term </strong>\(\frac{\rho}{2}\|h(x)\|_2^2\): This is the square of the constraint violation multiplied by a penalty parameter \(\rho > 0\).</li></ul>
+				<p><strong>What it is used for:</strong></p>
+				<p>The Augmented Lagrangian is the engine behind modern, large-scale computational solvers—including ADMM.</p>
+				<ul><li><strong>Robust Algorithms:</strong> Because \(y = x^2\) is a perfectly bowl-shaped (strictly convex) curve, adding this squared penalty forces the entire problem to become strictly convex near the optimal solution.</li><li><strong>Guaranteed Convergence:</strong> This "bowl shape" ensures that computer algorithms don't get stuck oscillating or failing to converge, even if your original \(f(x)\) is highly complex or non-smooth.</li><li><strong>Exactness:</strong> Unlike pure penalty methods (which just guess a massive number for the penalty and ruin numerical stability), the Augmented Lagrangian uses the \(\lambda\) term to guide the system to the *exact* right answer using a moderate, stable \(\rho\).</li></ul>
+				<h2>Summary of the Difference</h2>
+				<p>Think of it like keeping a dog in a yard:</p>
+				<ul><li><strong>Standard Lagrangian:</strong> You tell the dog to stay in the yard, and if it leaves, you yell at it (the \(\lambda\) penalty). If the dog is very stubborn, yelling might not be enough to keep it inside.</li><li><strong>Augmented Lagrangian:</strong> You yell at the dog, *and* you attach it to a bungee cord tied to the center of the yard (the quadratic penalty). The further it tries to run, the exponentially harder it gets pulled back.</li></ul>
+				<hr />
+				</div>
+			</article>
+		</div>
+	</div>
+	<script src="../../assets/js/jquery.min.js"></script>
+	<script src="../../assets/js/browser.min.js"></script>
+	<script src="../../assets/js/breakpoints.min.js"></script>
+	<script src="../../assets/js/util.js"></script>
+	<script src="../../assets/js/main.js"></script>
+</body>
+</html>

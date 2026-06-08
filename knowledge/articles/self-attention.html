@@ -1,0 +1,93 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<title>Self Attention — Knowledge Share — Jipeng Sun</title>
+	<link rel="stylesheet" href="../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="(function(){var b=document.querySelector('.kn-body');if(!b)return;b.querySelectorAll('span').forEach(function(s){if(s.children.length)return;var t=s.textContent.trim();if(/^\\\([\s\S]*\\\)$/.test(t)||/^\\\[[\s\S]*\\\]$/.test(t))s.replaceWith(document.createTextNode(t));});renderMathInElement(b,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false,ignoredTags:['script','noscript','style','textarea','pre','code']});})();"></script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-LCC4R0HD24"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'G-LCC4R0HD24');
+	</script>
+	<script src="../../assets/js/ga-events.js"></script>
+</head>
+<body class="is-preload kn-page">
+	<div id="wrapper">
+		<header id="header">
+			<h1><a href="../../index.html">Jipeng Sun</a></h1>
+			<nav class="links">
+				<ul>
+					<li><a href="../../index.html">Home</a></li>
+					<li><a href="../../research.html">Research</a></li>
+					<li class="active"><a href="../../knowledge-share.html">Knowledge Share</a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course">VR/AR Course</a></li>
+				</ul>
+			</nav>
+			<nav class="main">
+				<ul>
+					<li class="search"><a class="fa-search" href="#search">Search</a><form id="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></li>
+					<li class="menu"><a class="fa-bars" href="#menu">Menu</a></li>
+				</ul>
+			</nav>
+		</header>
+		<section id="menu">
+			<section><form class="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></section>
+			<section>
+				<ul class="links">
+					<li><a href="../../index.html"><h3>Home</h3><p>Jipeng Sun's Homepage</p></a></li>
+					<li><a href="../../research.html"><h3>Research</h3><p>Publications &amp; Papers</p></a></li>
+					<li><a href="../../knowledge-share.html"><h3>Knowledge Share</h3><p>Study notes</p></a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course"><h3>Teaching</h3><p>VR Summer Course</p></a></li>
+				</ul>
+			</section>
+		</section>
+		<div id="main">
+			<article class="post">
+				<header><div class="title"><h2>Self Attention</h2></div></header>
+				<p class="kn-back"><a href="../../knowledge-share.html">&larr; Back to Knowledge Share</a></p>
+				<div class="kn-body">
+				<p>At its core, self-attention is a sequence-to-sequence operation. It takes a sequence of vectors and produces a new sequence of vectors of the same length, where each output vector is a weighted sum of all the input vectors.</p>
+				<p>The easiest way to understand the math is through a database retrieval analogy: you have a <strong>Query</strong>, you check it against a set of <strong>Keys</strong>, and depending on how well they match, you retrieve the corresponding <strong>Values</strong>. In self-attention, the query, keys, and values all come from the *same* input sequence.</p>
+				<h3>1. The Input and Linear Projections</h3>
+				<p>Let the input sequence be represented by a matrix \(X \in \mathbb{R}^{N \times d_{\text{model}}}\), where \(N\) is the sequence length (number of tokens) and \(d_{\text{model}}\) is the embedding dimension.</p>
+				<p>To create the Queries (\(Q\)), Keys (\(K\)), and Values (\(V\)), we multiply the input matrix \(X\) by three learnable weight matrices:</p>
+				<ul><li>\(W^Q \in \mathbb{R}^{d_{\text{model}} \times d_k}\)</li><li>\(W^K \in \mathbb{R}^{d_{\text{model}} \times d_k}\)</li><li>\(W^V \in \mathbb{R}^{d_{\text{model}} \times d_v}\)</li></ul>
+				<p>This gives us our \(Q\), \(K\), and \(V\) matrices:</p>
+				<p class="kn-math-display">\[Q = XW^Q\]</p>
+				<p class="kn-math-display">\[K = XW^K\]</p>
+				<p class="kn-math-display">\[V = XW^V\]</p>
+				<p>If you are tracking the tensor dimensions (as you typically would when setting up your network architecture in code), \(Q\) and \(K\) will have the shape \(N \times d_k\), and \(V\) will have the shape \(N \times d_v\).</p>
+				<h3>2. Computing Attention Scores (Dot Product)</h3>
+				<p>Next, we need to determine how much focus (or "attention") each token should place on every other token in the sequence. We do this by taking the dot product of the Query matrix with the transposed Key matrix:</p>
+				<p class="kn-math-display">\[S = QK^T\]</p>
+				<p>The resulting score matrix \(S \in \mathbb{R}^{N \times N}\) represents the raw alignment scores. For instance, the entry \(S_{ij}\) tells us how much the token at position \(i\) (the query) wants to attend to the token at position \(j\) (the key).</p>
+				<h3>3. Scaling and Softmax</h3>
+				<p>The raw dot products can grow very large in magnitude when the key dimension \(d_k\) is large. Large values push the subsequent softmax function into regions where gradients are extremely small (vanishing gradients).</p>
+				<p>To stabilize the gradients during training, the scores are scaled down by the square root of the key dimension, \(\sqrt{d_k}\). Then, a softmax function is applied row-wise so that the attention weights for each query sum to 1.</p>
+				<p class="kn-math-display">\[A = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)\]</p>
+				<p>Here, \(A \in \mathbb{R}^{N \times N}\) is the attention weight matrix. \(A_{ij}\) is the probability-like weight that token \(i\) assigns to token \(j\).</p>
+				<h3>4. The Final Output</h3>
+				<p>Finally, we compute the output sequence by multiplying the attention weight matrix \(A\) by the Value matrix \(V\):</p>
+				<p class="kn-math-display">\[\text{Output} = AV\]</p>
+				<p>Because \(A\) has shape \(N \times N\) and \(V\) has shape \(N \times d_v\), the resulting Output matrix will have the shape \(N \times d_v\). Each vector in this output matrix is a convex combination of the original Value vectors, weighted heavily toward the tokens that scored highest in the attention matrix.</p>
+				<h3>The Complete Equation</h3>
+				<p>Putting it all together, the single, unified equation for Scaled Dot-Product Attention is:</p>
+				<p class="kn-math-display">\[\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V\]</p>
+				</div>
+			</article>
+		</div>
+	</div>
+	<script src="../../assets/js/jquery.min.js"></script>
+	<script src="../../assets/js/browser.min.js"></script>
+	<script src="../../assets/js/breakpoints.min.js"></script>
+	<script src="../../assets/js/util.js"></script>
+	<script src="../../assets/js/main.js"></script>
+</body>
+</html>

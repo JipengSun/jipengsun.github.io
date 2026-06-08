@@ -1,0 +1,8 @@
+Here is the result of "view" for the Page with URL https://app.notion.com/p/33001d9f528780c19fd8c8afabbc1edc as of 2026-03-27T15:30:28.250Z:
+<page url="https://app.notion.com/p/33001d9f528780c19fd8c8afabbc1edc">
+<ancestor-path></ancestor-path>
+<properties>
+{"title":"Geometry Generation (todo)"}
+</properties>
+<blank-page>This page is blank and has no content.</blank-page>
+</page>

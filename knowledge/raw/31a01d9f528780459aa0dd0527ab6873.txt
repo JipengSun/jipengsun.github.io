@@ -1,0 +1,13 @@
+Here is the result of "view" for the Page with URL https://app.notion.com/p/31a01d9f528780459aa0dd0527ab6873 as of 2026-04-21T17:21:07.144Z:
+<page url="https://app.notion.com/p/31a01d9f528780459aa0dd0527ab6873">
+<ancestor-path></ancestor-path>
+<properties>
+{"title":"Computational Imaging"}
+</properties>
+<content>
+<empty-block/>
+<mention-page url="https://app.notion.com/p/31a01d9f52878048ae50fab695d977cb"/> 
+<mention-page url="https://app.notion.com/p/31801d9f52878017a966fe9c0b3fb4dd"/> 
+<empty-block/>
+</content>
+</page>

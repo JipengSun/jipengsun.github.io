@@ -1,0 +1,45 @@
+Here is the result of "view" for the Page with URL https://www.notion.so/35501d9f528780ab9d0efc6831a5611e as of 2026-05-04T01:20:29.121Z:
+<page url="https://www.notion.so/35501d9f528780ab9d0efc6831a5611e">
+<ancestor-path></ancestor-path>
+<properties>
+{"title":"Camera Extrinsic Matrix"}
+</properties>
+<content>
+Estimating the camera extrinsic matrix—which defines the rigid transformation from the world coordinate system to the camera's local 3D coordinate system—is a fundamental problem in 3D vision.
+The extrinsic matrix is typically represented as a $`3 \times 4`$ matrix, $`E = [R | t]`$, where $`R \in SO(3)`$ is a $`3 \times 3`$ rotation matrix and $`t \in \mathbb{R}^3`$ is a $`3 \times 1`$ translation vector.
+The method you choose depends heavily on what information you already have (e.g., known intrinsics, 3D-to-2D point correspondences, or multiple views). Here are the standard approaches to estimating the extrinsic matrix.
+### 1. The Perspective-n-Point (PnP) Problem
+If the camera intrinsic matrix \$K\$ is known and you have a set of known 3D points in the world $`X_i`$ and their corresponding 2D projections in the image $`u_i`$, estimating the extrinsics becomes a PnP problem.
+- **P3P (Minimal Solver):** Requires exactly 3 point correspondences (plus a 4th to disambiguate multiple algebraic solutions). It relies on the law of cosines to find the distances from the camera center to the 3D points, allowing the recovery of pose.
+- **EPnP (Efficient PnP):** The standard choice for $`n \ge 4`$ points. It expresses the $`n`$ 3D points as a weighted sum of four virtual control points. It operates in $`O(n)`$ time and is highly resilient to noise compared to classical methods.
+- **RANSAC + PnP:** In practice, 2D-to-3D feature matching (e.g., using SIFT, ORB, or deep features) produces outliers. PnP is almost always wrapped inside a RANSAC (Random Sample Consensus) loop to robustly estimate the pose using only inlier correspondences.
+### 2. Direct Linear Transform (DLT)
+If you do not have the intrinsic matrix, or if you want an initial linear guess for the full projection matrix $`P = K[R|t]`$, you can use DLT.
+Using the homogeneous projection equation $`u_i \sim P X_i`$, you can isolate $`P`$ by utilizing the cross product: $`u_i \times (P X_i) = 0`$.
+1. Each 3D-to-2D correspondence provides two linearly independent equations.
+2. With $`n \ge 6`$ points, you can formulate a system $`A \cdot \text{vec}(P) = 0`$.
+3. The solution for $`P`$ is the right singular vector corresponding to the smallest singular value of $`A`$ (via SVD).
+4. **Extracting Extrinsics:** Once $`P`$ is found, you can decompose the leftmost $`3 \times 3`$ submatrix using QR decomposition to separate the intrinsic matrix $`K`$ (upper triangular) and the rotation matrix $`R`$ (orthogonal). The translation vector $`t`$ is then recovered using $`K^{-1}`$.
+### 3. Non-Linear Optimization (Bundle Adjustment)
+Linear methods (like DLT) and algebraic methods (like EPnP) do not minimize physically meaningful errors and are susceptible to noise. They are typically used to generate a good initialization for a non-linear optimizer.
+You refine the initial $`R`$ and $`t`$ by minimizing the **reprojection error**:
+$`\arg\min_{R, t} \sum_{i=1}^{n} \| u_i - \pi(K, R, t, X_i) \|^2`$
+Where $`\pi`$ is the perspective projection function.
+- **Parameterization:** To enforce the orthogonality constraint of the rotation matrix during optimization, $`R`$ is parameterized using quaternions or the Lie algebra $`\mathfrak{so}(3)`$ (via the exponential map).
+- **Solvers:** This non-linear least-squares problem is typically solved using the Levenberg-Marquardt algorithm or Gauss-Newton.
+### 4. Calibration Targets (Zhang's Method)
+If you have access to the physical camera and are setting up an environment, Zhang's method is the industry standard for estimating both intrinsics and extrinsics simultaneously.
+1. A planar target (like a checkerboard) is captured from multiple views. Because the target is planar, we can set $`Z=0`$ for all points, simplifying the projection matrix to a $`3 \times 3`$ Homography matrix $`H`$.
+2. The method estimates the homography for each view using DLT.
+3. Using the constraints of the orthogonal rotation matrix ($`r_1^T r_2 = 0`$ and $`\|r_1\| = \|r_2\|`$), the intrinsics $`K`$ are solved globally.
+4. Once $`K`$ is known, the extrinsic matrix for each specific image view $`j`$ is extracted algebraically from its homography $`H_j`$:
+	$`r_1 = \lambda K^{-1} h_1`$
+	$`r_2 = \lambda K^{-1} h_2`$
+	$`r_3 = r_1 \times r_2`$
+	$`t = \lambda K^{-1} h_3`$
+	*(Where *$`\lambda`$* is a scaling factor, and *$`h`$* are the columns of *$`H`$*)*.
+### Summary Workflow
+- **Need to calibrate a physical setup?** Print a checkerboard and use Zhang's method (e.g., `cv2.calibrateCamera`).
+- **Tracking camera pose in a known 3D scene?** Match 2D features to 3D scene points, run EPnP inside RANSAC (e.g., `cv2.solvePnPRansac`), and follow up with Levenberg-Marquardt optimization.
+</content>
+</page>

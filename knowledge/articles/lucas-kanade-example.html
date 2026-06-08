@@ -1,0 +1,136 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<title>Lucas-Kanade Method Example — Knowledge Share — Jipeng Sun</title>
+	<link rel="stylesheet" href="../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="(function(){var b=document.querySelector('.kn-body');if(!b)return;b.querySelectorAll('span').forEach(function(s){if(s.children.length)return;var t=s.textContent.trim();if(/^\\\([\s\S]*\\\)$/.test(t)||/^\\\[[\s\S]*\\\]$/.test(t))s.replaceWith(document.createTextNode(t));});renderMathInElement(b,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false,ignoredTags:['script','noscript','style','textarea','pre','code']});})();"></script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-LCC4R0HD24"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'G-LCC4R0HD24');
+	</script>
+	<script src="../../assets/js/ga-events.js"></script>
+</head>
+<body class="is-preload kn-page">
+	<div id="wrapper">
+		<header id="header">
+			<h1><a href="../../index.html">Jipeng Sun</a></h1>
+			<nav class="links">
+				<ul>
+					<li><a href="../../index.html">Home</a></li>
+					<li><a href="../../research.html">Research</a></li>
+					<li class="active"><a href="../../knowledge-share.html">Knowledge Share</a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course">VR/AR Course</a></li>
+				</ul>
+			</nav>
+			<nav class="main">
+				<ul>
+					<li class="search"><a class="fa-search" href="#search">Search</a><form id="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></li>
+					<li class="menu"><a class="fa-bars" href="#menu">Menu</a></li>
+				</ul>
+			</nav>
+		</header>
+		<section id="menu">
+			<section><form class="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></section>
+			<section>
+				<ul class="links">
+					<li><a href="../../index.html"><h3>Home</h3><p>Jipeng Sun's Homepage</p></a></li>
+					<li><a href="../../research.html"><h3>Research</h3><p>Publications &amp; Papers</p></a></li>
+					<li><a href="../../knowledge-share.html"><h3>Knowledge Share</h3><p>Study notes</p></a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course"><h3>Teaching</h3><p>VR Summer Course</p></a></li>
+				</ul>
+			</section>
+		</section>
+		<div id="main">
+			<article class="post">
+				<header><div class="title"><h2>Lucas-Kanade Method Example</h2></div></header>
+				<p class="kn-back"><a href="../../knowledge-share.html">&larr; Back to Knowledge Share</a></p>
+				<div class="kn-body">
+				<p>To see exactly how the Lucas-Kanade (LK) method solves for optical flow, we need to walk through the <strong>least-squares approximation</strong>.</p>
+				<p>Because the LK method assumes all pixels in a small window move together, we end up with more equations than unknowns (an overdetermined system). We cannot solve it perfectly, so we use linear algebra to find the "best fit" solution.</p>
+				<p>In digital images, we cannot calculate continuous derivatives like we do in calculus because pixels are discrete blocks of data. Instead, we calculate \(I_x\) (how much the image changes horizontally) and \(I_y\) (how much the image changes vertically) using a method called <strong>finite differences</strong>.</p>
+				<p>Simply put, to find the gradient at a specific pixel, we look at the pixels immediately next to it and subtract their values.</p>
+				<p>Here is a concrete image example to show exactly how these numbers are derived.</p>
+				<h3>1. Calculating \(I_x\), \(I_y\), and \(I_t\)</h3>
+				<p>Let's look at a tiny \(3 \times 3\) patch of pixels. Imagine this is a picture of a dark object on a light background. In grayscale, 0 is black and 255 is white.</p>
+				<p><strong>Frame 1:</strong></p>
+				<p class="kn-math-display">\[\begin{bmatrix} 50 & 50 & 150 \ 50 & \mathbf{50} & 150 \ 50 & 50 & 150  \end{bmatrix}\]</p>
+				<p>We want to calculate the gradients for our <strong>target pixel in the center</strong> (currently at value \(50\)).</p>
+				<ul><li><strong>Calculating </strong>\(I_x\)<strong> (Horizontal Gradient):</strong> We subtract the pixel to the left from the pixel to the right (central difference).</li></ul>
+				<p class="kn-math-display">\[I_x = \frac{I_{right} - I_{left}}{2} = \frac{150 - 50}{2} = 50\]</p>
+				<ul><li><strong>Calculating </strong>\(I_y\)<strong> (Vertical Gradient):</strong> We subtract the pixel above from the pixel below.</li></ul>
+				<p class="kn-math-display">\[I_y = \frac{I_{bottom} - I_{top}}{2} = \frac{50 - 50}{2} = 0\]</p>
+				<p>Now, let's say the camera captures the next frame, and the lighter background has shifted one pixel to the left.</p>
+				<p><strong>Frame 2:</strong></p>
+				<p class="kn-math-display">\[\begin{bmatrix} 50 & 150 & 150 \ 50 & \textbf{150} & 150 \ 50 & 150 & 150 \end{bmatrix}\]</p>
+				<ul><li><strong>Calculating </strong>\(I_t\)<strong> (Temporal Gradient):</strong> We subtract the center pixel's value in Frame 1 from its new value in Frame 2.</li></ul>
+				<p class="kn-math-display">\[I_t = I_{Frame 2} - I_{Frame 1} = 150 - 50 = 100\]</p>
+				<p>If we plug these into our standard optical flow equation (\(I_x u + I_y v = -I_t\)), we get:</p>
+				<p class="kn-math-display">\[50u + 0v = -100\]</p>
+				<p class="kn-math-display">\[50u = -100 \implies u = -2\]</p>
+				<p>The math correctly tells us the object appears to be moving to the left along the x-axis!</p>
+				<hr />
+				<h3>1. The Scenario and Raw Data</h3>
+				<p>Imagine we are looking at a tiny \(2 \times 2\)<strong> pixel window</strong> (4 pixels total) on an image. For each of these 4 pixels, our image processing algorithms have already calculated the spatial gradients (\(I_x\), \(I_y\)) and the temporal gradient (\(I_t\)).</p>
+				<p>Let's assume the raw data for our 4 pixels is:</p>
+				<ul><li><strong>Pixel 1:</strong> \(I_x = 1\), \(I_y = 0\), \(I_t = -2\)</li><li><strong>Pixel 2:</strong> \(I_x = 1\), \(I_y = 1\), \(I_t = -3\)</li><li><strong>Pixel 3:</strong> \(I_x = 0\), \(I_y = 1\), \(I_t = -1\)</li><li><strong>Pixel 4:</strong> \(I_x = 2\), \(I_y = 0\), \(I_t = -4\)</li></ul>
+				<h3>2. Setting Up the Matrices</h3>
+				<p>Recall the standard optical flow equation for a single pixel: \(I_x u + I_y v = -I_t\).</p>
+				<p>We stack the equations for all 4 pixels to create our system, \(A\mathbf{v} = \mathbf{b}\):</p>
+				<p class="kn-math-display">\[A = \begin{bmatrix} 1 & 0 \ 1 & 1 \ 0 & 1 \ 2 & 0 \end{bmatrix}, \quad \mathbf{v} = \begin{bmatrix} u \ v \end{bmatrix}, \quad \mathbf{b} = \begin{bmatrix} 2 \ 3 \ 1 \ 4 \end{bmatrix}\]</p>
+				<p>Notice that Matrix \(A\) is \(4 \times 2\). Because it is not a square matrix, we cannot simply invert it to solve for \(\mathbf{v}\).</p>
+				<h3>3. The Least Squares Trick</h3>
+				<p>To make this solvable, we multiply both sides of the equation by the transpose of \(A\), denoted as \(A^T\). This is the standard way to find the least-squares solution.</p>
+				<p>Our new equation becomes:</p>
+				<p class="kn-math-display">\[A^T A \mathbf{v} = A^T \mathbf{b}\]</p>
+				<p>Let's calculate the transpose of \(A\):</p>
+				<p class="kn-math-display">\[A^T = \begin{bmatrix} 1 & 1 & 0 & 2 \ 0 & 1 & 1 & 0 \end{bmatrix}\]</p>
+				<h3>4. Matrix Multiplication</h3>
+				<p>Now we multiply the matrices.</p>
+				<p><strong>First, calculate </strong>\(A^T A\) (often called the *structure tensor*):</p>
+				<p class="kn-math-display">\[A^T A = \begin{bmatrix} 1 & 1 & 0 & 2 \ 0 & 1 & 1 & 0 \end{bmatrix} \begin{bmatrix} 1 & 0 \ 1 & 1 \ 0 & 1 \ 2 & 0 \end{bmatrix} = \begin{bmatrix} (1+1+0+4) & (0+1+0+0) \ (0+1+0+0) & (0+1+1+0) \end{bmatrix}\]</p>
+				<p class="kn-math-display">\[A^T A = \begin{bmatrix} 6 & 1 \ 1 & 2 \end{bmatrix}\]</p>
+				<p>Notice that \(A^T A\) is now a neat \(2 \times 2\) square matrix.</p>
+				<p><strong>Next, calculate </strong>\(A^T \mathbf{b}\)<strong>:</strong></p>
+				<p class="kn-math-display">\[A^T \mathbf{b} = \begin{bmatrix} 1 & 1 & 0 & 2 \ 0 & 1 & 1 & 0 \end{bmatrix} \begin{bmatrix} 2 \ 3 \ 1 \ 4 \end{bmatrix} = \begin{bmatrix} (2+3+0+8) \ (0+3+1+0) \end{bmatrix}\]</p>
+				<p class="kn-math-display">\[A^T \mathbf{b} = \begin{bmatrix} 13 \ 4 \end{bmatrix}\]</p>
+				<h3>5. Solving for the Velocity Vector (\(u, v\))</h3>
+				<p>Our complex overdetermined system has been reduced to a simple \(2 \times 2\) system:</p>
+				<p class="kn-math-display">\[\begin{bmatrix} 6 & 1 \ 1 & 2 \end{bmatrix} \begin{bmatrix} u \ v \end{bmatrix} = \begin{bmatrix} 13 \ 4 \end{bmatrix}\]</p>
+				<p>To isolate \(\mathbf{v}\), we multiply both sides by the inverse of \(A^T A\).</p>
+				<p>First, find the determinant of \(A^T A\): \((6 \times 2) - (1 \times 1) = 11\).</p>
+				<p>Then, find the inverse matrix:</p>
+				<p class="kn-math-display">\[(A^T A)^{-1} = \frac{1}{11} \begin{bmatrix} 2 & -1 \ -1 & 6 \end{bmatrix}\]</p>
+				<p>Finally, we multiply the inverse by our \(A^T \mathbf{b}\) vector:</p>
+				<p class="kn-math-display">\[\begin{bmatrix} u \ v \end{bmatrix} = \frac{1}{11} \begin{bmatrix} 2 & -1 \ -1 & 6 \end{bmatrix} \begin{bmatrix} 13 \ 4 \end{bmatrix}\]</p>
+				<p class="kn-math-display">\[\begin{bmatrix} u \ v \end{bmatrix} = \frac{1}{11} \begin{bmatrix} (2 \times 13) + (-1 \times 4) \ (-1 \times 13) + (6 \times 4) \end{bmatrix} = \frac{1}{11} \begin{bmatrix} 26 - 4 \ -13 + 24 \end{bmatrix} = \frac{1}{11} \begin{bmatrix} 22 \ 11 \end{bmatrix}\]</p>
+				<p class="kn-math-display">\[\begin{bmatrix} u \ v \end{bmatrix} = \begin{bmatrix} 2 \ 1 \end{bmatrix}\]</p>
+				<h3>The Final Result</h3>
+				<p>Through the least-squares calculation, the Lucas-Kanade method determined that \(u = 2\) and \(v = 1\).</p>
+				<p>In the context of optical flow, this means that the entire \(2 \times 2\) pixel window we tracked has moved <strong>2 pixels to the right</strong> (positive x-direction) and <strong>1 pixel down</strong> (positive y-direction) between the first frame and the second frame.</p>
+				<h3>Intuitively: How does Lucas-Kanade actually work?</h3>
+				<p>To understand the genius of the Lucas-Kanade (LK) method, you first have to understand the optical illusion it was built to solve: <strong>The Aperture Problem</strong>.</p>
+				<p>Imagine looking through a tiny pinhole (an aperture) at a straight, diagonal black line painted on a piece of paper. If someone slides that paper horizontally to the right, the line appears to move down and to the right through your pinhole. If they slide it vertically downward, it *also* looks like it's moving down and to the right.</p>
+				<p>Because you are zoomed in so far that you only see a straight edge, <strong>you cannot tell which way the object is actually moving</strong>. You can only detect the motion perpendicular to the edge itself.</p>
+				<p>When a computer looks at a single pixel and its immediate neighbors, it is looking through a tiny pinhole. It suffers from the aperture problem.</p>
+				<h3>The "Neighborhood Watch" Solution</h3>
+				<p>Lucas and Kanade realized that an isolated pixel doesn't have enough information to solve its own motion. Their intuitive solution was to force teamwork.</p>
+				<ol><li><strong>The Window Assumption:</strong> LK draws a window (e.g., \(3 \times 3\) or \(5 \times 5\) pixels) around the target pixel and assumes <strong>every pixel in that window is moving in the exact same direction at the exact same speed</strong>.</li><li><strong>Gathering Perspectives:</strong> Inside that window, you might have a horizontal edge, a vertical edge, and maybe a corner. Each of these pixels has different \(I_x\) and \(I_y\) gradients.</li><li><strong>The Consensus:</strong> By throwing all these different gradient equations into the least-squares matrix (the \(A^T A\) calculation from the previous example), the algorithm effectively says: *"Pixel A thinks we are moving Left. Pixel B thinks we are moving Up. What single 2D motion vector satisfies both of them?"* The method works intuitively because it finds the mathematical intersection of different edge orientations. This is also why <strong>optical flow algorithms track corners and highly textured areas very well</strong>, but struggle to track large, featureless areas (like a blank white wall) or single, infinitely straight lines where no consensus can be drawn.</li></ol>
+				</div>
+			</article>
+		</div>
+	</div>
+	<script src="../../assets/js/jquery.min.js"></script>
+	<script src="../../assets/js/browser.min.js"></script>
+	<script src="../../assets/js/breakpoints.min.js"></script>
+	<script src="../../assets/js/util.js"></script>
+	<script src="../../assets/js/main.js"></script>
+</body>
+</html>

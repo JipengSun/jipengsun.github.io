@@ -1,0 +1,47 @@
+Here is the result of "view" for the Page with URL https://www.notion.so/33301d9f52878038a6f0d88e61ba2406 as of 2026-05-06T01:29:57.900Z:
+<page url="https://www.notion.so/33301d9f52878038a6f0d88e61ba2406">
+<ancestor-path></ancestor-path>
+<properties>
+{"title":"HQS (Half-Quadratic Splitting)"}
+</properties>
+<content>
+It is designed to minimize an objective function that consists of two competing terms: a data fidelity term (how well the solution matches the measurements) and a regularization term (prior knowledge about the solution).
+Here is the mathematical breakdown of how the algorithm works.
+### 1. The Core Problem Formulation
+In a standard linear inverse problem, the goal is to recover an unknown signal $`x`$ from degraded measurements $`y`$. The forward model is typically $`y = A x + n`$, where $`A`$ is the degradation operator (like a blur kernel or a physical projection matrix) and $`n`$ is noise.
+To find the optimal $`x`$, you typically want to minimize this unconstrained objective function:
+$`\arg\min_x \frac{1}{2} \| y - A x \|^2 + \lambda \Phi(x)`$
+- $`\frac{1}{2} \| y - A x \|^2`$: The data fidelity term.
+- $`\Phi(x)`$: The regularization or prior term (e.g., Total Variation, sparsity, or an implicit neural network prior).
+- $`\lambda`$: A scaling weight that balances the two terms.
+Because the operator $`A`$ and the non-linear prior $`\Phi(x)`$ are often coupled together, solving this directly can be computationally heavy or mathematically intractable.
+### 2. The Half-Quadratic Split
+HQS simplifies the math by introducing an auxiliary variable $`z`$. It rewrites the equation into a constrained optimization problem:
+$`\arg\min_{x, z} \frac{1}{2} \| y - A x \|^2 + \lambda \Phi(z) \quad \text{subject to} \quad z = x`$
+Instead of strictly enforcing $`z = x`$, HQS relaxes the constraint by turning it into a quadratic penalty. The objective function becomes:
+$`\arg\min_{x, z} \frac{1}{2} \| y - A x \|^2 + \lambda \Phi(z) + \frac{\rho}{2} \| z - x \|^2`$
+Here, $`\rho`$ is a penalty parameter. As $`\rho \to \infty`$, the penalty for any difference between $`x`$ and $`z`$ becomes infinitely large, eventually forcing $`z`$ to equal $`x`$ and returning the system to the original problem.
+### 3. Alternating Minimization
+Because the new objective function is decoupled, it can be solved by alternating between two easier subproblems at each iteration $`k`$.
+### Step A: The $`x`$-update (Data Consistency)
+Assume the auxiliary variable $`z`$ is fixed at its current value $`z_k`$. We solve for $`x`$:
+$`x_{k+1} = \arg\min_x \left( \frac{1}{2} \| y - A x \|^2 + \frac{\rho}{2} \| z_k - x \|^2 \right)`$
+This equation is purely quadratic and differentiable. Taking the derivative with respect to $`x`$ and setting it to zero yields a closed-form linear system:
+$`(A^T A + \rho I) x_{k+1} = A^T y + \rho z_k`$
+If $`A`$ represents a convolution (like a blur kernel in optics), this step can be calculated highly efficiently in the Fourier domain:
+$`x_{k+1} = \mathcal{F}^{-1} \left( \frac{\overline{\mathcal{F}(A)} \circ \mathcal{F}(y) + \rho \mathcal{F}(z_k)}{|\mathcal{F}(A)|^2 + \rho} \right)`$
+### Step B: The $`z`$-update (Proximal Operator / Prior)
+Assume $`x`$ is now fixed at the newly calculated $`x_{k+1}`$. We solve for $`z`$:
+$`z_{k+1} = \arg\min_z \left( \frac{\rho}{2} \| z - x_{k+1} \|^2 + \lambda \Phi(z) \right)`$
+By factoring out $`\rho`$, this takes the standard mathematical form of a **proximal operator**:
+$`z_{k+1} = \arg\min_z \left( \frac{1}{2 (\lambda / \rho)} \| z - x_{k+1} \|^2 + \Phi(z) \right)`$
+Mathematically, this is equivalent to a pure image denoising problem. The algorithm tries to find a signal $`z`$ that satisfies the mathematical prior $`\Phi(z)`$ while staying as close as possible to the intermediate, noisy estimate $`x_{k+1}`$. In modern Plug-and-Play (PnP) methods, this exact mathematical step is simply swapped out for an off-the-shelf neural network denoiser.
+### 4. Convergence Loop
+The full algorithm loops through these two updates iteratively:
+1. **Update **$`x`$ using the physical measurements and the forward model $`A`$.
+2. **Update **$`z`$ by applying the prior/denoiser.
+3. **Increase **$`\rho`$ gradually at each iteration.
+By pushing \$\\rho\$ higher over time, the algorithm forces the data-consistent output (\$x\$) and the prior-consistent output (\$z\$) to converge into a single, physically accurate, and noise-free solution.
+<empty-block/>
+</content>
+</page>

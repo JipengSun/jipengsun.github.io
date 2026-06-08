@@ -1,0 +1,132 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<title>Diffusion Transformer (DiT) — Knowledge Share — Jipeng Sun</title>
+	<link rel="stylesheet" href="../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="(function(){var b=document.querySelector('.kn-body');if(!b)return;b.querySelectorAll('span').forEach(function(s){if(s.children.length)return;var t=s.textContent.trim();if(/^\\\([\s\S]*\\\)$/.test(t)||/^\\\[[\s\S]*\\\]$/.test(t))s.replaceWith(document.createTextNode(t));});renderMathInElement(b,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false,ignoredTags:['script','noscript','style','textarea','pre','code']});})();"></script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-LCC4R0HD24"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'G-LCC4R0HD24');
+	</script>
+	<script src="../../assets/js/ga-events.js"></script>
+</head>
+<body class="is-preload kn-page">
+	<div id="wrapper">
+		<header id="header">
+			<h1><a href="../../index.html">Jipeng Sun</a></h1>
+			<nav class="links">
+				<ul>
+					<li><a href="../../index.html">Home</a></li>
+					<li><a href="../../research.html">Research</a></li>
+					<li class="active"><a href="../../knowledge-share.html">Knowledge Share</a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course">VR/AR Course</a></li>
+				</ul>
+			</nav>
+			<nav class="main">
+				<ul>
+					<li class="search"><a class="fa-search" href="#search">Search</a><form id="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></li>
+					<li class="menu"><a class="fa-bars" href="#menu">Menu</a></li>
+				</ul>
+			</nav>
+		</header>
+		<section id="menu">
+			<section><form class="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></section>
+			<section>
+				<ul class="links">
+					<li><a href="../../index.html"><h3>Home</h3><p>Jipeng Sun's Homepage</p></a></li>
+					<li><a href="../../research.html"><h3>Research</h3><p>Publications &amp; Papers</p></a></li>
+					<li><a href="../../knowledge-share.html"><h3>Knowledge Share</h3><p>Study notes</p></a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course"><h3>Teaching</h3><p>VR Summer Course</p></a></li>
+				</ul>
+			</section>
+		</section>
+		<div id="main">
+			<article class="post">
+				<header><div class="title"><h2>Diffusion Transformer (DiT)</h2></div></header>
+				<p class="kn-back"><a href="../../knowledge-share.html">&larr; Back to Knowledge Share</a></p>
+				<div class="kn-body">
+				<p>To understand the math behind the Diffusion Transformer (DiT), we have to separate it into two distinct parts: the <strong>mathematical framework</strong> (the objective function defining how noise transitions to data) and the <strong>neural architecture</strong> (how the tensor operations actually process the space and time variables).</p>
+				<p>Here is the rigorous breakdown of how DiTs operate, specifically framed around the continuous-time formulations (like Flow Matching) that are standard in modern implementations.</p>
+				<h3>1. The Mathematical Objective: Flow Matching &amp; Diffusion</h3>
+				<p>The DiT does not change the fundamental math of generative modeling; it simply acts as the function approximator.</p>
+				<p>Let \(x \in \mathbb{R}^{C \times H \times W}\) be a clean image from the data distribution \(p_{data}\), and \(\epsilon \sim \mathcal{N}(0, I)\) be pure noise from the prior distribution \(p_{prior}\).</p>
+				<p>In a standard linear Flow Matching schedule, the intermediate state \(z_t\) at time \(t \in [0,1]\) is defined as:</p>
+				<p class="kn-math-display">\[z_t = (1-t)x + t\epsilon\]</p>
+				<p>*(Note: In traditional diffusion, this is parameterized via *\(\sqrt{\bar{\alpha}_t}\)* and *\(\sqrt{1-\bar{\alpha}_t}\)*, but the core principle is identical).*</p>
+				<p>The velocity vector field that points from the noise to the data is the derivative of the path:</p>
+				<p class="kn-math-display">\[v = \frac{d z_t}{d t} = \epsilon - x\]</p>
+				<p>The goal of the DiT, denoted as \(v_\theta(z_t, t, c)\), is to predict this velocity (or alternatively, to predict the noise \(\epsilon\) or the clean image \(x_0\)), conditioned on the timestep \(t\) and any global condition \(c\). The network minimizes the Mean Squared Error:</p>
+				<p class="kn-math-display">\[\mathcal{L} = \mathbb{E}_{t, x, \epsilon} \left[ \| v_\theta(z_t, t, c) - (\epsilon - x) \|^2 \right]\]</p>
+				<figure class="kn-figure"><img src="https://prod-files-secure.s3.us-west-2.amazonaws.com/40d01d9f-5287-81ac-ac6b-00037c8b4f5f/4ff10cd9-d162-4c15-baee-d62fce49d813/image.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&amp;X-Amz-Credential=ASIAZI2LB4663VY4UXVP%2F20260607%2Fus-west-2%2Fs3%2Faws4_request&amp;X-Amz-Date=20260607T135526Z&amp;X-Amz-Expires=3600&amp;X-Amz-Security-Token=IQoJb3JpZ2luX2VjENT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDM8lRWHxx05ZpdyngNrn4a7TzQfUZpUxX2l%2FJKHWsibwIhAPu5xD%2BcUTFDGHkqz1A7U3U3LMlRLLGIFCV%2BaoCIuETdKogECJ3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQABoMNjM3NDIzMTgzODA1Igwnlzz25sF0Efvx4AIq3AOPN%2FaO8A%2FWckMBDMZwZSSIp%2Bl%2FKIf8HgNSI9vJY7V0MPMOvJ5cPAMZqLnVf47wgZcvAyC6qk8xJnBPCUKWcB11bsFlcswD9MOeQis6OtYdd%2FKJoy2WUxBOTyLU54KiBpv4%2BxX4EADGuJ4g8Do1wWWnI5mqvVTkVxLJPvfBlmVdo2ufLjPlF7%2FX8HGhA8YiOI2qi%2FUswW%2BZnqs7uP1LKQCxzgI4tVwyyuRskMu4A9yXbn03JbjYYJXRdj7ki3oPWe3YQmYTZcbLoFIeSQj5Ix2gfjsR6jyF8LqSWnx6zYoYjZYD6iI%2F2GUZO0k7pQrxirnL0vDrl3mqsPUgV5dPgxAGGkgRG5PhwgdzF6kG8aBxOh9ge29yN5SugG8npejKYs4IfRNf%2FQDR5rUZJOovENlPemWTa1MqlhdA4xAUScUcsZ9SFI1%2Fb7Fjz%2B3u%2Bh5YKKmfo3557TzR6wN26tifHmclEfTJZ4amIzxjQ9xrf3E5xQ%2Bf1EO5ZFUmsHYOJeV86kgT1ho%2FKrT50fZiDHL3ftLWG2uyum1rhQGv%2Fqdr05bhPKQ%2BeVd2yqQIAMKttExweWSCrG6G3XX9cwZFIgwTUMCCm%2FdtOt6emRvkLQ9MNRlUDZxYlhZ%2FQp8pnJb0YjCcrpXRBjqkAQzVoPQ4fxvc%2BCtifMP2I3r8Vu0i612ravhPCkpkb%2FRnDkJUKmT56Astn576Pdgd60B4fOY%2Fj5voUPySy6g9cBUTV%2FX11cQ0FVv%2Btc6GQPH0n%2BtHGFZp2jHJCzhbSDnCXTve1NwsEYsP3QHQgrvb%2BtN42KO3sgicRaUduoRDc84yAfj6uRcNQHyBWyjOMQdkdT%2Fmjv1gVSRwpjJ0HZCSyHtDXVO%2F&amp;X-Amz-Signature=403e7af3531b4224da3a946b3ff020a7d99093cd01d7624af4e3c6736343502a&amp;X-Amz-SignedHeaders=host&amp;x-amz-checksum-mode=ENABLED&amp;x-id=GetObject" alt="" loading="lazy" /></figure>
+				<h3>2. The DiT Architecture: Patchification</h3>
+				<p>Unlike a UNet, which maintains 2D spatial feature maps and uses convolutions, the DiT flattens the image into a 1D sequence of tokens.</p>
+				<p>Given a noisy image \(z_t \in \mathbb{R}^{C \times H \times W}\) and a patch size \(p\), the image is sliced into \(N\) patches, where \(N = \frac{H}{p} \times \frac{W}{p}\).</p>
+				<p>Each patch is linearly projected into a hidden dimension \(D\). The resulting sequence \(Z \in \mathbb{R}^{N \times D}\) represents the spatial information.</p>
+				<p>To retain spatial awareness (since self-attention is permutation-invariant), 2D sinusoidal positional embeddings \(P_{pos} \in \mathbb{R}^{N \times D}\) are added:</p>
+				<p class="kn-math-display">\[X_0 = Z + P_{pos}\]</p>
+				<figure class="kn-figure"><img src="https://prod-files-secure.s3.us-west-2.amazonaws.com/40d01d9f-5287-81ac-ac6b-00037c8b4f5f/b93daee3-c933-46f7-9b02-9f4c6c117599/image.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&amp;X-Amz-Credential=ASIAZI2LB4663VY4UXVP%2F20260607%2Fus-west-2%2Fs3%2Faws4_request&amp;X-Amz-Date=20260607T135526Z&amp;X-Amz-Expires=3600&amp;X-Amz-Security-Token=IQoJb3JpZ2luX2VjENT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDM8lRWHxx05ZpdyngNrn4a7TzQfUZpUxX2l%2FJKHWsibwIhAPu5xD%2BcUTFDGHkqz1A7U3U3LMlRLLGIFCV%2BaoCIuETdKogECJ3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQABoMNjM3NDIzMTgzODA1Igwnlzz25sF0Efvx4AIq3AOPN%2FaO8A%2FWckMBDMZwZSSIp%2Bl%2FKIf8HgNSI9vJY7V0MPMOvJ5cPAMZqLnVf47wgZcvAyC6qk8xJnBPCUKWcB11bsFlcswD9MOeQis6OtYdd%2FKJoy2WUxBOTyLU54KiBpv4%2BxX4EADGuJ4g8Do1wWWnI5mqvVTkVxLJPvfBlmVdo2ufLjPlF7%2FX8HGhA8YiOI2qi%2FUswW%2BZnqs7uP1LKQCxzgI4tVwyyuRskMu4A9yXbn03JbjYYJXRdj7ki3oPWe3YQmYTZcbLoFIeSQj5Ix2gfjsR6jyF8LqSWnx6zYoYjZYD6iI%2F2GUZO0k7pQrxirnL0vDrl3mqsPUgV5dPgxAGGkgRG5PhwgdzF6kG8aBxOh9ge29yN5SugG8npejKYs4IfRNf%2FQDR5rUZJOovENlPemWTa1MqlhdA4xAUScUcsZ9SFI1%2Fb7Fjz%2B3u%2Bh5YKKmfo3557TzR6wN26tifHmclEfTJZ4amIzxjQ9xrf3E5xQ%2Bf1EO5ZFUmsHYOJeV86kgT1ho%2FKrT50fZiDHL3ftLWG2uyum1rhQGv%2Fqdr05bhPKQ%2BeVd2yqQIAMKttExweWSCrG6G3XX9cwZFIgwTUMCCm%2FdtOt6emRvkLQ9MNRlUDZxYlhZ%2FQp8pnJb0YjCcrpXRBjqkAQzVoPQ4fxvc%2BCtifMP2I3r8Vu0i612ravhPCkpkb%2FRnDkJUKmT56Astn576Pdgd60B4fOY%2Fj5voUPySy6g9cBUTV%2FX11cQ0FVv%2Btc6GQPH0n%2BtHGFZp2jHJCzhbSDnCXTve1NwsEYsP3QHQgrvb%2BtN42KO3sgicRaUduoRDc84yAfj6uRcNQHyBWyjOMQdkdT%2Fmjv1gVSRwpjJ0HZCSyHtDXVO%2F&amp;X-Amz-Signature=18cb906b8c1301a7bb0e25404f3bbc8c4df6c3197ceb0578eeace1aba1f6a6aa&amp;X-Amz-SignedHeaders=host&amp;x-amz-checksum-mode=ENABLED&amp;x-id=GetObject" alt="" loading="lazy" /></figure>
+				<h3>3. The Core Innovation: AdaLN-Zero Math</h3>
+				<p>The secret to the DiT's success is how it injects the temporal and conditional information (\(t\) and \(c\)). Standard transformers use Layer Normalization (LN). DiTs replace this with <strong>Adaptive Layer Normalization (AdaLN)</strong>.</p>
+				<p>First, the timestep \(t\) and condition \(c\) are embedded and passed through a multi-layer perceptron (MLP) to generate six modulation parameters per transformer block:</p>
+				<p class="kn-math-display">\[(\gamma_1, \beta_1, \alpha_1, \gamma_2, \beta_2, \alpha_2) = \text{MLP}( \text{Embed}(t) + \text{Embed}(c) )\]</p>
+				<p>These parameters scale and shift the normalized tokens.</p>
+				<p>For the \(l\)-th DiT block, the mathematical update rule is:</p>
+				<p class="kn-math-display">\[h = X_l + \alpha_1 \odot \text{MSA} \Big( \gamma_1 \odot \text{LayerNorm}(X_l) + \beta_1 \Big)\]</p>
+				<p class="kn-math-display">\[X_{l+1} = h + \alpha_2 \odot \text{FFN} \Big( \gamma_2 \odot \text{LayerNorm}(h) + \beta_2 \Big)\]</p>
+				<p>Where \(\text{MSA}\) is Multi-Head Self-Attention and \(\text{FFN}\) is the Feed-Forward Network.</p>
+				<p><strong>The "Zero" in AdaLN-Zero:</strong></p>
+				<p>At initialization, the final linear layer of the modulation MLP is initialized to exactly zero. Therefore, at step 0 of training:</p>
+				<p class="kn-math-display">\[\gamma_i = \mathbf{1}, \quad \beta_i = \mathbf{0}, \quad \alpha_i = \mathbf{0}\]</p>
+				<p>This means the block behaves exactly as an identity mapping: \(X_{l+1} = X_l\). This allows the network to start training with perfect gradient flow, identically to the unconditioned transformer, preventing early-stage numerical collapse.</p>
+				<h3>4. Output Unpatchification</h3>
+				<p>After \(L\) layers, the final sequence \(X_L \in \mathbb{R}^{N \times D}\) is passed through a standard linear layer (also zero-initialized) to expand the hidden dimension back to the pixel space of the patch (\(p \times p \times C\)).</p>
+				<p class="kn-math-display">\[Y = \text{Linear}(X_L) \quad \text{where } Y \in \mathbb{R}^{N \times (p^2 C)}\]</p>
+				<p>This 1D sequence is simply reshaped back into the 2D spatial grid \((C \times H \times W)\), representing the predicted velocity \(v\), noise \(\epsilon\), or expected clean image \(x_0\).</p>
+				<hr />
+				<p>The inherent challenge with DiTs arises when handling dense, spatially-varying conditions—like inverse problem estimates or physical measurements. Because AdaLN applies a global \(\gamma\) and \(\beta\) across *all* spatial tokens simultaneously, it excels at global concepts (like "make this a picture of a dog") but struggles natively with local pixel-to-pixel mapping constraints without external architectural modifications.</p>
+				<h2>Why Adaptive Layer</h2>
+				<p>To understand how a Transformer mathematically shifts its focus using Adaptive Layer Normalization (adaLN), we have to look at what \(\gamma\) (scale) and \(\beta\) (shift) actually are.</p>
+				<p>They are not single numbers applied to the whole image; they are <strong>vectors</strong> applied to the feature channels of every single token.</p>
+				<h3>1. Understanding the Feature Dimension (\(D\))</h3>
+				<p>In a Transformer, every patch of an image (a token) is represented by a vector of size \(D\) (the hidden dimension, e.g., \(D = 1024\)).</p>
+				<p>Through training, each of these 1024 channels learns to look for a specific visual concept:</p>
+				<ul><li><strong>Channel 12</strong> might activate strongly when it sees a sharp vertical edge (high frequency).</li><li><strong>Channel 450</strong> might activate when it detects a broad gradient of the color blue (low frequency).</li><li><strong>Channel 899</strong> might track the presence of a "fur-like" texture.</li></ul>
+				<h3>2. The Condition Embedding</h3>
+				<p>When you pass a timestep \(t\) (e.g., \(t=1000\) for pure noise) and a class label \(c\) (e.g., "Cat") into the network, they are first converted into mathematical vectors (embeddings) and combined. Let's call this combined condition vector \(w\).</p>
+				<p>This vector \(w\) contains the explicit instruction: *"We are at step 1000, and we are trying to build a Cat."*</p>
+				<h3>3. The MLP "Mixing Board"</h3>
+				<p>In standard LayerNorm, \\(\gamma\$ and \$\beta\$ are static vectors of size \$D\$. In adaLN, the condition vector \$w\$ is fed into a small, fully connected neural network (an MLP) located inside every Transformer block.</p>
+				<p>This MLP acts like an automated sound engineer at a mixing board. It outputs the \$\gamma\$ and \$\beta\$ vectors dynamically for that specific timestep:</p>
+				<p class="kn-math-display">\[\gamma = \text{MLP}_\gamma(w) \in \mathbb{R}^D\]</p>
+				<p class="kn-math-display">\[\beta = \text{MLP}_\beta(w) \in \mathbb{R}^D\]</p>
+				<h3>4. The Modulation (Element-wise Multiplication)</h3>
+				<p>Here is where the actual "shifting of focus" happens. The normalized token data, \(\text{LayerNorm}(x)\), is multiplied by \(\gamma\) <strong>element-wise</strong> (denoted by \(\odot\)), and then \(\beta\) is added.</p>
+				<p class="kn-math-display">\[y = \gamma \odot \text{LayerNorm}(x) + \beta\]</p>
+				<p>Because this is element-wise, the MLP has granular control over every single one of the 1024 feature channels.</p>
+				<h3>The Mechanism in Action (Timestep\)t=1000\(vs\)t=1\()</h3>
+				<p>Let's look at how the MLP modulates the network based on the timestep.</p>
+				<p><strong>At\)t=1000\((High Noise):</strong></p>
+				<p>The image is almost entirely static. Looking for sharp edges is mathematically useless because the noise is made of random, sharp, high-frequency spikes.</p>
+				<ul><li>The MLP sees\)t=1000\(and outputs a \$\gamma\$ vector where the value for <strong>Channel 12 (Edges)</strong> is pushed close to \$0.0\$. This effectively silences the network's edge detectors.</li><li>Simultaneously, the MLP outputs a high value for <strong>Channel 450 (Broad Blue Gradients)</strong>. This forces the network to ignore the static and focus only on establishing the rough layout of the sky in the background.</li></ul>
+				<p><strong>At\)t=1\((Low Noise):</strong></p>
+				<p>The image is mostly formed. The broad shapes are already in place, and the network needs to refine the final pixels.</p>
+				<ul><li>The MLP sees\)t=1\$ and dramatically changes the \\$\\gamma\\$ vector.</li><li>It lowers the \\$\\gamma\\$ value for <strong>Channel 450</strong> (the broad shapes are done, no need to focus on them).</li><li>It cranks up the \\$\\gamma\\$ value for <strong>Channel 12 (Edges)</strong> and <strong>Channel 899 (Fur Texture)</strong> to \\$2.5\\$. The network suddenly becomes hyper-sensitive to fine details, allowing the attention mechanism to sharply define the cat's whiskers.</li></ul>
+				</div>
+			</article>
+		</div>
+	</div>
+	<script src="../../assets/js/jquery.min.js"></script>
+	<script src="../../assets/js/browser.min.js"></script>
+	<script src="../../assets/js/breakpoints.min.js"></script>
+	<script src="../../assets/js/util.js"></script>
+	<script src="../../assets/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+Here is the result of "view" for the Page with URL https://app.notion.com/p/31a01d9f5287804cb1baea8ce98a4d71 as of 2026-03-05T20:03:01.051Z:
+<page url="https://app.notion.com/p/31a01d9f5287804cb1baea8ce98a4d71">
+<ancestor-path></ancestor-path>
+<properties>
+{"title":"Diffusion from Stochastic Differential Equations (SDEs) Perspective"}
+</properties>
+<content>
+From a mathematical perspective, diffusion models are fundamentally about **defining a trajectory between a complex, intractable data distribution and a simple, tractable noise distribution, and then learning the vector field that reverses this trajectory.**
+Given a background in computational imaging and computer vision, the most elegant and unifying way to look at this is through the lens of continuous-time Stochastic Differential Equations (SDEs), which encapsulates discrete models like DDPMs and SGMs.
+Here is the mathematical breakdown of the diffusion framework.
+### 1. The Forward Process: Destroying Information
+We start with data $`\mathbf{x}_0 \sim p_0(\mathbf{x})`$, where $`p_0`$ is our target data distribution (e.g., natural images). The goal of the forward process is to progressively add Gaussian noise until the distribution at time $`T`$, denoted $`p_T(\mathbf{x})`$, is indistinguishable from a standard Gaussian prior $`\mathcal{N}(\mathbf{0}, \mathbf{I})`$.
+This continuous perturbation is modeled by an Itô SDE:
+$`d\mathbf{x} = \mathbf{f}(\mathbf{x}, t)dt + g(t)d\mathbf{w}`$
+Where:
+- $`\mathbf{f}(\mathbf{x}, t)`$ is the **drift coefficient** (a vector function pulling the data, often scaling it down).
+- $`g(t)`$ is the **diffusion coefficient** (a scalar function controlling the variance of the injected noise).
+- $`\mathbf{w}`$ is the standard Brownian motion (Wiener process).
+By choosing affine drift functions (e.g., $`\mathbf{f}(\mathbf{x}, t) = -\frac{1}{2}\beta(t)\mathbf{x}`$), the transition kernel $`q(\mathbf{x}_t | \mathbf{x}_0)`$ remains Gaussian, which allows for closed-form sampling at any arbitrary timestep $`t`$ without simulating the entire chain.
+### 2. The Reverse Process: Generating Data
+To generate data, we need to simulate the SDE backward in time, starting from $`\mathbf{x}_T \sim \mathcal{N}(\mathbf{0}, \mathbf{I})`$ and moving to $`t=0`$.
+According to Anderson's theorem, any forward SDE has a corresponding reverse-time SDE:
+$`d\mathbf{x} = [\mathbf{f}(\mathbf{x}, t) - g(t)^2 \nabla_{\mathbf{x}} \log p_t(\mathbf{x})]dt + g(t)d\mathbf{\bar{w}}`$
+Where:
+- $`d\mathbf{\bar{w}}`$ is a reverse-time Brownian motion.
+- $`dt`$ is an infinitesimal negative time step.
+- $`\nabla_{\mathbf{x}} \log p_t(\mathbf{x})`$ is the **score function** of the perturbed data distribution.
+The drift and diffusion coefficients ($`\mathbf{f}`$ and $`g`$) are analytically known because we designed the forward process. The only unknown term required to reverse the SDE is the score function.
+### 3. Score Matching: Learning the Vector Field
+Since the true marginal distribution $`p_t(\mathbf{x})`$ is intractable (it requires integrating over all possible original images $`\mathbf{x}_0`$), we cannot compute $`\nabla_{\mathbf{x}} \log p_t(\mathbf{x})`$ directly.
+Instead, we train a neural network—the score model $`s_\theta(\mathbf{x}, t)`$—to approximate it. We optimize this using **Denoising Score Matching**, which relies on the fact that matching the tractable conditional score $`\nabla_{\mathbf{x}_t} \log q(\mathbf{x}_t | \mathbf{x}_0)`$ is equivalent to matching the intractable marginal score up to a constant.
+The objective function is:
+$`\mathcal{L}(\theta) = \mathbb{E}_{t \sim \mathcal{U}(0,T), \mathbf{x}_0 \sim p_0, \mathbf{x}_t \sim q(\mathbf{x}_t|\mathbf{x}_0)} \left[ \lambda(t) \| s_\theta(\mathbf{x}_t, t) - \nabla_{\mathbf{x}_t} \log q(\mathbf{x}_t | \mathbf{x}_0) \|_2^2 \right]`$
+Where:
+- $`\lambda(t)`$ is a positive weighting function (often chosen to balance the variance of the score magnitude across time).
+- $`\nabla_{\mathbf{x}_t} \log q(\mathbf{x}_t | \mathbf{x}_0)`$ is analytically available because the perturbation kernel $`q(\mathbf{x}_t | \mathbf{x}_0)`$ is Gaussian. Specifically, it simplifies to $`-\frac{\boldsymbol{\epsilon}}{\sigma(t)}`$, where $`\boldsymbol{\epsilon} \sim \mathcal{N}(\mathbf{0}, \mathbf{I})`$ is the noise injected.
+This is why, in practice, DDPMs are often implemented to predict the injected noise $`\boldsymbol{\epsilon}`$ rather than the score directly; they are mathematically equivalent up to a scaling factor.
+### 4. Connection to Discrete Models (DDPM)
+While the SDE framework is continuous, the foundational Denoising Diffusion Probabilistic Models (DDPM) defined this as a discrete Markov chain.
+In the discrete case, the forward transitions are:
+$`q(\mathbf{x}_t | \mathbf{x}_{t-1}) = \mathcal{N}(\mathbf{x}_t; \sqrt{1 - \beta_t} \mathbf{x}_{t-1}, \beta_t \mathbf{I})`$
+And the optimization is derived from maximizing the Evidence Lower Bound (ELBO) on the log-likelihood of the data, similar to Variational Autoencoders (VAEs). The SDE formulation generalizes this limit as the number of discrete steps $`N \to \infty`$.
+---
+Because the reverse process inherently models a learned prior distribution of natural signals, diffusion models have become incredibly powerful tools for solving ill-posed inverse problems (like super-resolution, phase retrieval, or denoising).
+<empty-block/>
+</content>
+</page>

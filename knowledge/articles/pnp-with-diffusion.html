@@ -1,0 +1,94 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<title>PnP with Diffusion — Knowledge Share — Jipeng Sun</title>
+	<link rel="stylesheet" href="../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="(function(){var b=document.querySelector('.kn-body');if(!b)return;b.querySelectorAll('span').forEach(function(s){if(s.children.length)return;var t=s.textContent.trim();if(/^\\\([\s\S]*\\\)$/.test(t)||/^\\\[[\s\S]*\\\]$/.test(t))s.replaceWith(document.createTextNode(t));});renderMathInElement(b,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false,ignoredTags:['script','noscript','style','textarea','pre','code']});})();"></script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-LCC4R0HD24"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'G-LCC4R0HD24');
+	</script>
+	<script src="../../assets/js/ga-events.js"></script>
+</head>
+<body class="is-preload kn-page">
+	<div id="wrapper">
+		<header id="header">
+			<h1><a href="../../index.html">Jipeng Sun</a></h1>
+			<nav class="links">
+				<ul>
+					<li><a href="../../index.html">Home</a></li>
+					<li><a href="../../research.html">Research</a></li>
+					<li class="active"><a href="../../knowledge-share.html">Knowledge Share</a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course">VR/AR Course</a></li>
+				</ul>
+			</nav>
+			<nav class="main">
+				<ul>
+					<li class="search"><a class="fa-search" href="#search">Search</a><form id="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></li>
+					<li class="menu"><a class="fa-bars" href="#menu">Menu</a></li>
+				</ul>
+			</nav>
+		</header>
+		<section id="menu">
+			<section><form class="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></section>
+			<section>
+				<ul class="links">
+					<li><a href="../../index.html"><h3>Home</h3><p>Jipeng Sun's Homepage</p></a></li>
+					<li><a href="../../research.html"><h3>Research</h3><p>Publications &amp; Papers</p></a></li>
+					<li><a href="../../knowledge-share.html"><h3>Knowledge Share</h3><p>Study notes</p></a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course"><h3>Teaching</h3><p>VR Summer Course</p></a></li>
+				</ul>
+			</section>
+		</section>
+		<div id="main">
+			<article class="post">
+				<header><div class="title"><h2>PnP with Diffusion</h2></div></header>
+				<p class="kn-back"><a href="../../knowledge-share.html">&larr; Back to Knowledge Share</a></p>
+				<div class="kn-body">
+				<p><strong>1. The Original Optimization Problem</strong></p>
+				<p>The core idea of plug-and-play Image Restoration (IR) methods is to take a complex inverse problem and separate it into a data term and a prior term 1. This is expressed as the following optimization problem:</p>
+				<p class="kn-math-display">\[\hat{x} = \text{argmin}_x \frac{1}{2\sigma_n^2} \|y - H(x)\|^2 + \lambda P(x)\]</p>
+				<ul><li>\(y\): The observed measurement.</li><li>\(H\): A known degradation operator (e.g., blur, downsampling).</li><li>\(\sigma_n\): The standard deviation of the Gaussian noise.</li><li>\(\lambda P(\cdot)\): The prior term with a regularization parameter \(\lambda\) which ensures the solution adheres to the desired data distribution 1.</li></ul>
+				<p><strong>2. Decoupling the Problem with HQS</strong></p>
+				<p>To solve this efficiently, the authors use the Half-Quadratic-Splitting (HQS) algorithm to decouple the data and prior terms. By introducing an auxiliary variable \(z\) and a constraint coefficient \(\mu\), the single equation is split into two iteratively solved subproblems:</p>
+				<p><strong>Prior Subproblem:</strong></p>
+				<p class="kn-math-display">\[z_k = \text{argmin}_z \frac{1}{2(\sqrt{\lambda/\mu})^2} \|z - x_k\|^2 + P(z)\]</p>
+				<p><strong>*Data Subproblem:</strong> *</p>
+				<p class="kn-math-display">\[x_{k-1} = \text{argmin}_x \|y - H(x)\|^2 + \mu \sigma_n^2 \|x - z_k\|^2\]</p>
+				<p>The prior subproblem is effectively a Gaussian denoising problem, while the data subproblem represents a proximal operator that ensures data consistency.</p>
+				<p><strong>3. Solving the Prior Term with Diffusion Models</strong></p>
+				<p>Instead of using traditional denoisers, DiffPIR utilizes the generative capabilities of score-based diffusion models. In diffusion models, the score function \(s_\theta(x_t, t)\) approximates the gradient of the log-density of perturbed data.</p>
+				<p>By defining the relative noise level \(\bar{\sigma}_t = \frac{\sqrt{1-\bar{\alpha}_t}}{\bar{\alpha}_t}\) and substituting \(\sqrt{\lambda/\mu} = \bar{\sigma}_t\), the prior subproblem can be rewritten as a proximal operator that uses the diffusion model's score function:</p>
+				<p class="kn-math-display">\[z_k \approx x_k + \frac{1 - \bar{\alpha}_t}{\bar{\alpha}t} s_\theta(x_k)\]</p>
+				<p>In this context, \(z_k\) represents the predicted clean image, \(\hat{x}_0^{(t)}\)</p>
+				<p><strong>4. Solving the Data Term</strong></p>
+				<p>With the clean image \(\hat{x}_0^{(t)}\) estimated by the diffusion model, it is fed into the data subproblem to ensure the image matches the initial measurements:</p>
+				<p class="kn-math-display">\[\hat{x}_0^{(t)} = \text{argmin}_x \|y - H(x)\|^2 + \rho_t \|x - \hat{x}_0^{(t)}\|^2\]</p>
+				<p>Here, \(\rho_t = \lambda(\sigma_n / \bar{\sigma}_t)^2\) . For many tasks like image deblurring or super-resolution, this problem has a fast analytical closed-form solution. If an analytical solution is unavailable, it can be approximated using a first-order gradient descent step:</p>
+				<p class="kn-math-display">\[\hat{x}_0^{(t)} \approx \hat{x}_0^{(t)} - \frac{\bar{\sigma}t^2}{2\lambda \sigma_n^2} \nabla{\hat{x}_0^{(t)}} \|y - H(\hat{x}_0^{(t)})\|^2\]</p>
+				<p><strong>5. DiffPIR Final Sampling Step</strong></p>
+				<p>Once the image $<code>\hat{x}_0^{(t)}</code>* is updated to be data-consistent, the algorithm uses an estimation-correction strategy similar to DDIM to move to the next reverse diffusion step *\(x_{t-1}\).</p>
+				<p>First, the effective predicted noise \(\hat{\epsilon}\) is calculated based on the updated image:</p>
+				<p class="kn-math-display">\[\hat{\epsilon}(x_t,y) = \frac{1}{\sqrt{1 - \bar{\alpha}_t}} (x_t - \sqrt{\bar{\alpha}_t}\hat{x}_0^{(t)})\]</p>
+				<p>Finally, a noise hyperparameter \(\zeta\) is introduced to balance the corrected predicted noise \(\hat{\epsilon}\) and standard Gaussian noise \(\epsilon_t \sim \mathcal{N}(0, I)\). The final reverse sampling step is calculated as:</p>
+				<p class="kn-math-display">\[x_{t-1} = \sqrt{\bar{\alpha}_{t-1}}\hat{x}_0^{(t)} + \sqrt{1 - \bar{\alpha}_{t-1}}(\sqrt{1 - \zeta}\hat{\epsilon} + \sqrt{\zeta}\epsilon_t)\]</p>
+				<p>This process loops backwards from timestep \(T\) down to 1, progressively removing noise while constraining the output to match the target measurements.</p>
+				</div>
+			</article>
+		</div>
+	</div>
+	<script src="../../assets/js/jquery.min.js"></script>
+	<script src="../../assets/js/browser.min.js"></script>
+	<script src="../../assets/js/breakpoints.min.js"></script>
+	<script src="../../assets/js/util.js"></script>
+	<script src="../../assets/js/main.js"></script>
+</body>
+</html>

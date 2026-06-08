@@ -1,0 +1,103 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<title>AutoDiff — Knowledge Share — Jipeng Sun</title>
+	<link rel="stylesheet" href="../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="(function(){var b=document.querySelector('.kn-body');if(!b)return;b.querySelectorAll('span').forEach(function(s){if(s.children.length)return;var t=s.textContent.trim();if(/^\\\([\s\S]*\\\)$/.test(t)||/^\\\[[\s\S]*\\\]$/.test(t))s.replaceWith(document.createTextNode(t));});renderMathInElement(b,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false,ignoredTags:['script','noscript','style','textarea','pre','code']});})();"></script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-LCC4R0HD24"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'G-LCC4R0HD24');
+	</script>
+	<script src="../../assets/js/ga-events.js"></script>
+</head>
+<body class="is-preload kn-page">
+	<div id="wrapper">
+		<header id="header">
+			<h1><a href="../../index.html">Jipeng Sun</a></h1>
+			<nav class="links">
+				<ul>
+					<li><a href="../../index.html">Home</a></li>
+					<li><a href="../../research.html">Research</a></li>
+					<li class="active"><a href="../../knowledge-share.html">Knowledge Share</a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course">VR/AR Course</a></li>
+				</ul>
+			</nav>
+			<nav class="main">
+				<ul>
+					<li class="search"><a class="fa-search" href="#search">Search</a><form id="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></li>
+					<li class="menu"><a class="fa-bars" href="#menu">Menu</a></li>
+				</ul>
+			</nav>
+		</header>
+		<section id="menu">
+			<section><form class="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></section>
+			<section>
+				<ul class="links">
+					<li><a href="../../index.html"><h3>Home</h3><p>Jipeng Sun's Homepage</p></a></li>
+					<li><a href="../../research.html"><h3>Research</h3><p>Publications &amp; Papers</p></a></li>
+					<li><a href="../../knowledge-share.html"><h3>Knowledge Share</h3><p>Study notes</p></a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course"><h3>Teaching</h3><p>VR Summer Course</p></a></li>
+				</ul>
+			</section>
+		</section>
+		<div id="main">
+			<article class="post">
+				<header><div class="title"><h2>AutoDiff</h2></div></header>
+				<p class="kn-back"><a href="../../knowledge-share.html">&larr; Back to Knowledge Share</a></p>
+				<div class="kn-body">
+				<p>Automatic differentiation (AutoDiff) is the algorithmic foundation that makes modern machine learning frameworks like PyTorch and JAX possible. While backpropagation is specifically the algorithm used to train neural networks, AutoDiff is the generalized mathematical framework that evaluates the derivatives of *any* function specified by a computer program.</p>
+				<p>It is fundamentally different from <strong>symbolic differentiation</strong> (which manipulates math expressions to output exact new formulas but suffers from "expression swell") and <strong>numerical differentiation</strong> (which uses finite differences \(f(x+h) - f(x) / h\) and suffers from floating-point rounding errors).</p>
+				<p>AutoDiff computes exact derivatives to machine precision by breaking down every program into a sequence of elementary operations (addition, multiplication, sine, cosine, etc.) and repeatedly applying the <strong>chain rule</strong>.</p>
+				<p>Here is the math behind how it works, using a <strong>computational graph</strong>.</p>
+				<h3>1. The Computational Graph</h3>
+				<p>Any function, no matter how complex, can be decomposed into a sequence of intermediate variables \(v_i\).</p>
+				<p>Let's evaluate the function \(f(x_1, x_2) = \sin(x_1) + x_1 x_2\) at the inputs \(x_1 = 2, x_2 = 3\). We break this down into a forward trace of elementary operations:</p>
+				<ul><li><strong>Inputs:</strong> \* \(v_1 = x_1 = 2\)</li><li>\(v_2 = x_2 = 3\)</li><li><strong>Intermediates:</strong></li><li>\(v_3 = \sin(v_1) = \sin(2) \approx 0.909\)</li><li>\(v_4 = v_1 \cdot v_2 = 2 \cdot 3 = 6\)</li><li><strong>Output:</strong></li><li>\(v_5 = v_3 + v_4 \approx 6.909 = y\)</li></ul>
+				<p>AutoDiff evaluates the derivatives of this graph using one of two primary modes: <strong>Forward Mode</strong> or <strong>Reverse Mode</strong>.</p>
+				<hr />
+				<h3>2. Forward Mode AutoDiff (Tangent Mode)</h3>
+				<p>Forward mode computes the derivative of all intermediate variables with respect to *one* specific input variable simultaneously with the forward pass. It calculates <strong>Jacobian-Vector Products (JVPs)</strong>.</p>
+				<p>We define a "tangent" variable \(\dot{v}_i\), which represents the derivative of \(v_i\) with respect to our chosen input (let's say \(x_1\)):</p>
+				<p class="kn-math-display">\[\dot{v}_i = \frac{\partial v_i}{\partial x_1}\]</p>
+				<p>We seed the inputs based on the variable we are differentiating against. Since we want derivatives with respect to \(x_1\):</p>
+				<ul><li>\(\dot{v}_1 = \frac{\partial x_1}{\partial x_1} = 1\)</li><li>\(\dot{v}_2 = \frac{\partial x_2}{\partial x_1} = 0\)</li></ul>
+				<p>Now, we evaluate the forward equations and their derivatives simultaneously, applying basic calculus rules to each elementary step:</p>
+				<ul><li>\(v_3 = \sin(v_1)\) \(\rightarrow\) \(\dot{v}_3 = \cos(v_1) \dot{v}_1 = \cos(2) \cdot 1 \approx -0.416\)</li><li>\(v_4 = v_1 \cdot v_2\) \(\rightarrow\) \(\dot{v}_4 = \dot{v}_1 v_2 + v_1 \dot{v}_2 = (1 \cdot 3) + (2 \cdot 0) = 3\) *(Product Rule)*</li><li>\(v_5 = v_3 + v_4\) \(\rightarrow\) \(\dot{v}_5 = \dot{v}_3 + \dot{v}_4 \approx -0.416 + 3 = 2.584\)</li></ul>
+				<p><strong>Result:</strong> \(\frac{\partial y}{\partial x_1} = \dot{v}_5 = 2.584\).</p>
+				<p>*Note: To get the derivative with respect to *\(x_2\)*, we would have to run the entire forward mode pass a second time, seeding *\(\dot{v}_1 = 0\)* and *\(\dot{v}_2 = 1\)*.*</p>
+				<hr />
+				<h3>3. Reverse Mode AutoDiff (Adjoint Mode)</h3>
+				<p>Reverse mode is exactly what deep learning relies on (it *is* generalized backpropagation). Instead of tracking how an input affects everything downstream, it tracks how the final output is affected by every intermediate variable upstream. It calculates <strong>Vector-Jacobian Products (VJPs)</strong>.</p>
+				<p>We define an "adjoint" variable \(\bar{v}_i\), which represents the derivative of the *final output* \(y\) with respect to the intermediate variable \(v_i\):</p>
+				<p class="kn-math-display">\[\bar{v}_i = \frac{\partial y}{\partial v_i}\]</p>
+				<p>Reverse mode happens in two phases:</p>
+				<ol><li><strong>Forward Pass:</strong> Compute and store all the intermediate variables \(v_i\) (as done in Section 1).</li><li><strong>Reverse Pass:</strong> Start from the output and apply the chain rule backwards.</li></ol>
+				<p>We seed the output adjoint:</p>
+				<ul><li>\(\bar{v}_5 = \frac{\partial y}{\partial y} = 1\)</li></ul>
+				<p>Now, we step backwards through the graph. For each node, we calculate its adjoint by multiplying the adjoint of its "child" node by the local derivative:</p>
+				<ul><li>\(v_5 = v_3 + v_4\) \* \(\bar{v}_4 = \bar{v}_5 \frac{\partial v_5}{\partial v_4} = 1 \cdot 1 = 1\)</li><li>\(\bar{v}_3 = \bar{v}_5 \frac{\partial v_5}{\partial v_3} = 1 \cdot 1 = 1\)</li><li>\(v_4 = v_1 \cdot v_2\)</li><li>\(\bar{v}_2 = \bar{v}_4 \frac{\partial v_4}{\partial v_2} = 1 \cdot v_1 = 2\)</li><li>\(v_3 = \sin(v_1)\) \* Wait! \(v_1\) branches out to both \(v_3\) and \(v_4\). In reverse mode, if a variable has multiple consumers, its adjoint is the <strong>sum</strong> of the gradients from all its consumers (Multivariable Chain Rule).</li><li>\(\bar{v}_1 = \bar{v}_3 \frac{\partial v_3}{\partial v_1} + \bar{v}_4 \frac{\partial v_4}{\partial v_1} = \bar{v}_3 \cos(v_1) + \bar{v}_4 v_2 = (1 \cdot \cos(2)) + (1 \cdot 3) \approx -0.416 + 3 = 2.584\)</li></ul>
+				<p><strong>Result:</strong> In a *single* backward pass, we computed both \(\frac{\partial y}{\partial x_1} = \bar{v}_1 \approx 2.584\) and \(\frac{\partial y}{\partial x_2} = \bar{v}_2 = 2\).</p>
+				<hr />
+				<h3>4. Why Deep Learning Uses Reverse Mode</h3>
+				<p>The choice between Forward and Reverse mode depends purely on the shape of the function \(f: \mathbb{R}^n \rightarrow \mathbb{R}^m\).</p>
+				<ul><li><strong>Forward Mode is </strong>\(O(n)\)<strong>:</strong> It requires one pass per input dimension. If you have \(n = 100\) inputs and \(m = 1\) output, you must run it 100 times. It is ideal for functions with few inputs and many outputs.</li><li><strong>Reverse Mode is </strong>\(O(m)\)<strong>:</strong> It requires one forward pass and one backward pass per output dimension. A neural network has millions of inputs (weights/parameters) but only <strong>one</strong> scalar output (the loss function).</li></ul>
+				<p>Because \(m = 1\) and \(n\) is massive, Reverse Mode AutoDiff allows us to compute the gradient for millions of parameters in just a single backward sweep.</p>
+				</div>
+			</article>
+		</div>
+	</div>
+	<script src="../../assets/js/jquery.min.js"></script>
+	<script src="../../assets/js/browser.min.js"></script>
+	<script src="../../assets/js/breakpoints.min.js"></script>
+	<script src="../../assets/js/util.js"></script>
+	<script src="../../assets/js/main.js"></script>
+</body>
+</html>

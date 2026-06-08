@@ -1,0 +1,125 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<title>DDIM (Denoising Diffusion Implicit Models) — Knowledge Share — Jipeng Sun</title>
+	<link rel="stylesheet" href="../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="(function(){var b=document.querySelector('.kn-body');if(!b)return;b.querySelectorAll('span').forEach(function(s){if(s.children.length)return;var t=s.textContent.trim();if(/^\\\([\s\S]*\\\)$/.test(t)||/^\\\[[\s\S]*\\\]$/.test(t))s.replaceWith(document.createTextNode(t));});renderMathInElement(b,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false,ignoredTags:['script','noscript','style','textarea','pre','code']});})();"></script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-LCC4R0HD24"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'G-LCC4R0HD24');
+	</script>
+	<script src="../../assets/js/ga-events.js"></script>
+</head>
+<body class="is-preload kn-page">
+	<div id="wrapper">
+		<header id="header">
+			<h1><a href="../../index.html">Jipeng Sun</a></h1>
+			<nav class="links">
+				<ul>
+					<li><a href="../../index.html">Home</a></li>
+					<li><a href="../../research.html">Research</a></li>
+					<li class="active"><a href="../../knowledge-share.html">Knowledge Share</a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course">VR/AR Course</a></li>
+				</ul>
+			</nav>
+			<nav class="main">
+				<ul>
+					<li class="search"><a class="fa-search" href="#search">Search</a><form id="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></li>
+					<li class="menu"><a class="fa-bars" href="#menu">Menu</a></li>
+				</ul>
+			</nav>
+		</header>
+		<section id="menu">
+			<section><form class="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></section>
+			<section>
+				<ul class="links">
+					<li><a href="../../index.html"><h3>Home</h3><p>Jipeng Sun's Homepage</p></a></li>
+					<li><a href="../../research.html"><h3>Research</h3><p>Publications &amp; Papers</p></a></li>
+					<li><a href="../../knowledge-share.html"><h3>Knowledge Share</h3><p>Study notes</p></a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course"><h3>Teaching</h3><p>VR Summer Course</p></a></li>
+				</ul>
+			</section>
+		</section>
+		<div id="main">
+			<article class="post">
+				<header><div class="title"><h2>DDIM (Denoising Diffusion Implicit Models)</h2></div></header>
+				<p class="kn-back"><a href="../../knowledge-share.html">&larr; Back to Knowledge Share</a></p>
+				<div class="kn-body">
+				<p>The fundamental difference between DDPM (Denoising Diffusion Probabilistic Models) and DDIM (Denoising Diffusion Implicit Models) lies entirely in the <strong>reverse sampling process</strong>.</p>
+				<p>Remarkably, DDIM uses the <strong>exact same trained neural network</strong> (\(\boldsymbol{\epsilon}_\theta\)) and the exact same objective function as DDPM. What changes is the mathematical assumption about how the noise was added in the first place, which drastically alters how we remove it.</p>
+				<p>Here is the mathematical breakdown of how DDIM diverges from the DDPM foundation established in the first question.</p>
+				<h2>1. Dropping the Markovian Assumption</h2>
+				<p>In DDPM, the forward process is strictly a <strong>Markov chain</strong>: \(\mathbf{x}_t\) depends *only* on \(\mathbf{x}_{t-1}\). Because of this, the reverse sampling must also be a strict step-by-step Markov chain. You cannot skip steps without breaking the mathematical guarantee of recovering the data distribution, which is why DDPM requires evaluating the U-Net hundreds or thousands of times.</p>
+				<p>DDIM (Song et al., 2020) makes a brilliant observation: the training objective \(L_{simple}\) only depends on the marginal distribution \(q(\mathbf{x}_t | \mathbf{x}_0)\). It does *not* actually depend on the joint distribution \(q(\mathbf{x}_{1:T} | \mathbf{x}_0)\).</p>
+				<p>Therefore, DDIM proposes a <strong>non-Markovian</strong> forward process that results in the exact same marginals:</p>
+				<p class="kn-math-display">\[q(\mathbf{x}_t | \mathbf{x}_0) = \mathcal{N}(\mathbf{x}_t; \sqrt{\bar{\alpha}_t}\mathbf{x}_0, (1 - \bar{\alpha}_t)\mathbf{I})\]</p>
+				<p>Because the marginals are identical, a model trained with DDPM is perfectly valid for DDIM.</p>
+				<h2>2. The Generalized Sampling Equation</h2>
+				<p>By redefining the forward process to be non-Markovian, we can derive a generalized, parameterized equation for the reverse step \(q_\sigma(\mathbf{x}_{t-1} | \mathbf{x}_t, \mathbf{x}_0)\).</p>
+				<p>To compute \(\mathbf{x}_{t-1}\), DDIM reconstructs it using three distinct components:</p>
+				<ol><li><strong>Predicted Original Image (</strong>\(\hat{\mathbf{x}}_0\)<strong>):</strong> Using the current noisy image \(\mathbf{x}_t\) and the network's noise prediction.</li><li><strong>Direction Pointing to </strong>\(\mathbf{x}_t\)<strong>:</strong> The deterministic portion of the noise.</li><li><strong>Random Noise:</strong> The stochastic variance.</li></ol>
+				<p>The generalized sampling equation becomes:</p>
+				<p class="kn-math-display">\[\mathbf{x}_{t-1} = \underbrace{\sqrt{\bar{\alpha}_{t-1}} \left( \frac{\mathbf{x}_t - \sqrt{1 - \bar{\alpha}_t} \boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t)}{\sqrt{\bar{\alpha}_t}} \right)}_{\text{1. Predicted } \mathbf{x}_0} + \underbrace{\sqrt{1 - \bar{\alpha}_{t-1} - \sigma_t^2} \cdot \boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t)}_{\text{2. Direction pointing to } \mathbf{x}_t} + \underbrace{\sigma_t \mathbf{z}}_{\text{3. Random Noise}}\]</p>
+				<p>Where \(\mathbf{z} \sim \mathcal{N}(\mathbf{0}, \mathbf{I})\) is standard Gaussian noise, and \(\sigma_t\) is a variance parameter we control.</p>
+				<h2>3. The \(\sigma_t\) Toggle: From Probabilistic to Implicit</h2>
+				<p>The power of this equation is that \(\sigma_t\) acts as a toggle that controls the stochasticity of the generative process.</p>
+				<ul><li><strong>Recovering DDPM:</strong> If we set \(\sigma_t = \sqrt{\frac{1 - \bar{\alpha}_{t-1}}{1 - \bar{\alpha}_t}} \sqrt{1 - \frac{\bar{\alpha}_t}{\bar{\alpha}_{t-1}}}\), the equation mathematically collapses back into the exact DDPM sampling equation. The process is a stochastic Markov chain.</li><li><strong>Creating DDIM:</strong> If we set \(\sigma_t = 0\), the random noise term \(\sigma_t \mathbf{z}\) is completely eliminated.</li></ul>
+				<p>When \(\sigma_t = 0\), the sampling process becomes entirely <strong>deterministic</strong> given a fixed initial latent noise \(\mathbf{x}_T\). Because there is no random noise injection at each step, it is an "implicit" probabilistic model.</p>
+				<h2>4. The Continuous-Time Perspective (Probability Flow ODE)</h2>
+				<p>When you set \(\sigma_t = 0\), the discrete steps of DDIM can be viewed as the Euler method for solving a specific Ordinary Differential Equation (ODE), known as the <strong>Probability Flow ODE</strong>.</p>
+				<p>This is the crucial advantage of DDIM. Because it is solving an ODE rather than a Stochastic Differential Equation (SDE like DDPM), the trajectory from pure noise to a clean image is smooth and deterministic.</p>
+				<h2>5. Why this matters: Accelerated Sampling</h2>
+				<p>Because ODEs can be solved using numerical methods with much larger step sizes, DDIM allows for <strong>sub-sequence sampling</strong>.</p>
+				<p>Instead of evaluating the network at every \(t \in {1, 2, \dots, T}\), we can define a much shorter sub-sequence \(\tau\) (e.g., just 50 steps out of 1000). We simply update the \(\bar{\alpha}\) values in the DDIM equation to match the new, larger stride lengths. DDIM will reliably construct the image in those 50 steps, whereas DDPM would fail and produce severe artifacts if you tried to skip that many steps stochastically.</p>
+				<hr />
+				<h2>Derivation of the Generalized Sampling Equation</h2>
+				<p class="kn-math-display">\[\mathbf{x}_{t-1} = \underbrace{\sqrt{\bar{\alpha}_{t-1}} \left( \frac{\mathbf{x}_t - \sqrt{1 - \bar{\alpha}_t} \boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t)}{\sqrt{\bar{\alpha}_t}} \right)}_{\text{1. Predicted } \mathbf{x}_0} + \underbrace{\sqrt{1 - \bar{\alpha}_{t-1} - \sigma_t^2} \cdot \boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t)}_{\text{2. Direction pointing to } \mathbf{x}_t} + \underbrace{\sigma_t \mathbf{z}}_{\text{3. Random Noise}}\]</p>
+				<p>In the original DDIM paper, this equation is not derived from a forward chronological process; instead, it is reverse-engineered. The authors essentially asked: *"What equation can we build that perfectly satisfies the mathematical rules of our marginal distributions, while letting us control the randomness?"*</p>
+				<p>Here is the step-by-step derivation of how they constructed that exact equation.</p>
+				<h2>1. The Marginal Requirement (The Anchor)</h2>
+				<p>Everything in DDIM hinges on one strict mathematical rule: the marginal distribution at any timestep \(t\) must remain identical to the original DDPM model.</p>
+				<p>By definition, if we know the original clean image \(\mathbf{x}_0\), the noisy image at step \(t-1\) is defined as:</p>
+				<p class="kn-math-display">\[\mathbf{x}_{t-1}=\sqrt{\bar{\alpha}_{t-1}}\mathbf{x}_0+\sqrt{1-\bar{\alpha}_{t-1}}\boldsymbol{\epsilon}_{t-1}\]</p>
+				<p>Here, \(\sqrt{1-\bar{\alpha}_{t-1}}\) represents the <strong>total amount of noise</strong> present in the image at timestep \(t-1\).</p>
+				<h2>2. The Noise Decomposition (The "Aha!" Moment)</h2>
+				<p>The brilliance of DDIM is recognizing that we do not have to draw all of that noise entirely at random. We can split the total noise at step \(t-1\) into two separate, independent pieces:</p>
+				<ol><li><strong>Known Noise (Direction):</strong> A portion of the noise that points in the exact same direction as the noise we just identified at step \(t\).</li><li><strong>Random Noise (Stochasticity):</strong> A completely fresh, randomly sampled noise vector.</li></ol>
+				<p>Because the variances of independent Gaussian distributions add together, we can define a parameter \(\sigma_t^2\) to represent the variance of the random noise. To ensure the *total* variance still equals \((1-\bar{\alpha}_{t-1})\), the variance of the known noise must be the remainder: \((1-\bar{\alpha}_{t-1}-\sigma_t^2)\).</p>
+				<p>Substituting these two split noise components back into our equation for \(\mathbf{x}_{t-1}\) gives us:</p>
+				<p class="kn-math-display">\[\mathbf{x}_{t-1}=\sqrt{\bar{\alpha}_{t-1}}\mathbf{x}_0+\underbrace{\sqrt{1-\bar{\alpha}_{t-1}-\sigma_t^2}\boldsymbol{\epsilon}_t}_{\text{Known Noise}}+\underbrace{\sigma_t\mathbf{z}}_{\text{Random Noise}}\]</p>
+				<h2>3. Predicting the Missing Variables</h2>
+				<p>The equation above is mathematically sound, but in practice, during the reverse generation process, we are missing two critical pieces of information:</p>
+				<ul><li>We do not have the real original image \(\mathbf{x}_0\).</li><li>We do not have the real noise \(\boldsymbol{\epsilon}_t\).</li></ul>
+				<p>However, we *do* have our current noisy image \(\mathbf{x}_t\), and we have a trained neural network designed to predict the noise: \(\boldsymbol{\epsilon}_\theta(\mathbf{x}_t,t)\).</p>
+				<p>We can estimate the real noise by simply swapping in our network's prediction:</p>
+				<p class="kn-math-display">\[\boldsymbol{\epsilon}_t\approx\boldsymbol{\epsilon}_\theta(\mathbf{x}_t,t)\]</p>
+				<p>Next, we need to estimate \(\mathbf{x}_0\). We know the standard forward equation for step \(t\) is:</p>
+				<p class="kn-math-display">\[\mathbf{x}_t=\sqrt{\bar{\alpha}_t}\mathbf{x}_0+\sqrt{1-\bar{\alpha}_t}\boldsymbol{\epsilon}_t\]</p>
+				<p>By rearranging this algebra to isolate \(\mathbf{x}_0\), and substituting our network's noise prediction, we get a working estimate for the original image:</p>
+				<p class="kn-math-display">\[\hat{\mathbf{x}}_0=\frac{\mathbf{x}_t-\sqrt{1-\bar{\alpha}_t}\boldsymbol{\epsilon}_\theta(\mathbf{x}_t,t)}{\sqrt{\bar{\alpha}_t}}\]</p>
+				<h2>4. The Final Assembly</h2>
+				<p>Now, we simply take our reverse-engineered equation from Step 2:</p>
+				<p class="kn-math-display">\[\mathbf{x}_{t-1}=\sqrt{\bar{\alpha}_{t-1}}\mathbf{x}_0+\sqrt{1-\bar{\alpha}_{t-1}-\sigma_t^2}\boldsymbol{\epsilon}_t+\sigma_t\mathbf{z}\]</p>
+				<p>And substitute our practical estimates (\(\hat{\mathbf{x}}_0\) and \(\boldsymbol{\epsilon}_\theta\)) in place of the unknown, perfect variables:</p>
+				<p class="kn-math-display">\[\mathbf{x}_{t-1}=\underbrace{\sqrt{\bar{\alpha}_{t-1}}\left(\frac{\mathbf{x}_t-\sqrt{1-\bar{\alpha}_t}\boldsymbol{\epsilon}_\theta(\mathbf{x}_t,t)}{\sqrt{\bar{\alpha}_t}}\right)}_{\text{1. Predicted }\mathbf{x}_0}+\underbrace{\sqrt{1-\bar{\alpha}_{t-1}-\sigma_t^2}\cdot\boldsymbol{\epsilon}_\theta(\mathbf{x}_t,t)}_{\text{2. Direction pointing to }\mathbf{x}_t}+\underbrace{\sigma_t\mathbf{z}}_{\text{3. Random Noise}}\]</p>
+				<p>This yields the exact generalized sampling equation you asked about. By decomposing the variance and estimating \(\mathbf{x}_0\) on the fly, the model can navigate backward from noise to image while perfectly respecting the required marginal distributions.</p>
+				<hr />
+				</div>
+			</article>
+		</div>
+	</div>
+	<script src="../../assets/js/jquery.min.js"></script>
+	<script src="../../assets/js/browser.min.js"></script>
+	<script src="../../assets/js/breakpoints.min.js"></script>
+	<script src="../../assets/js/util.js"></script>
+	<script src="../../assets/js/main.js"></script>
+</body>
+</html>

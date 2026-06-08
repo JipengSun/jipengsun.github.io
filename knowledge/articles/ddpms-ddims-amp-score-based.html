@@ -1,0 +1,104 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<title>DDPMs, DDIMs, and Score-Based Methods — Knowledge Share — Jipeng Sun</title>
+	<link rel="stylesheet" href="../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="(function(){var b=document.querySelector('.kn-body');if(!b)return;b.querySelectorAll('span').forEach(function(s){if(s.children.length)return;var t=s.textContent.trim();if(/^\\\([\s\S]*\\\)$/.test(t)||/^\\\[[\s\S]*\\\]$/.test(t))s.replaceWith(document.createTextNode(t));});renderMathInElement(b,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false,ignoredTags:['script','noscript','style','textarea','pre','code']});})();"></script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-LCC4R0HD24"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'G-LCC4R0HD24');
+	</script>
+	<script src="../../assets/js/ga-events.js"></script>
+</head>
+<body class="is-preload kn-page">
+	<div id="wrapper">
+		<header id="header">
+			<h1><a href="../../index.html">Jipeng Sun</a></h1>
+			<nav class="links">
+				<ul>
+					<li><a href="../../index.html">Home</a></li>
+					<li><a href="../../research.html">Research</a></li>
+					<li class="active"><a href="../../knowledge-share.html">Knowledge Share</a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course">VR/AR Course</a></li>
+				</ul>
+			</nav>
+			<nav class="main">
+				<ul>
+					<li class="search"><a class="fa-search" href="#search">Search</a><form id="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></li>
+					<li class="menu"><a class="fa-bars" href="#menu">Menu</a></li>
+				</ul>
+			</nav>
+		</header>
+		<section id="menu">
+			<section><form class="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></section>
+			<section>
+				<ul class="links">
+					<li><a href="../../index.html"><h3>Home</h3><p>Jipeng Sun's Homepage</p></a></li>
+					<li><a href="../../research.html"><h3>Research</h3><p>Publications &amp; Papers</p></a></li>
+					<li><a href="../../knowledge-share.html"><h3>Knowledge Share</h3><p>Study notes</p></a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course"><h3>Teaching</h3><p>VR Summer Course</p></a></li>
+				</ul>
+			</section>
+		</section>
+		<div id="main">
+			<article class="post">
+				<header><div class="title"><h2>DDPMs, DDIMs, and Score-Based Methods</h2></div></header>
+				<p class="kn-back"><a href="../../knowledge-share.html">&larr; Back to Knowledge Share</a></p>
+				<div class="kn-body">
+				<p>The connection between DDPMs, DDIMs, and Score-Based Generative Models is one of the most elegant unifying theories in modern machine learning (formalized beautifully by Yang Song et al. in 2020).</p>
+				<p>It proves that predicting the noise in a discrete Markov chain is mathematically identical to learning the vector field that points toward the data manifold in continuous time.</p>
+				<p>Here is how we cross the bridge from discrete noise prediction to continuous Score-Based Modeling and the Probability Flow ODE.</p>
+				<h2>1. What is a "Score"?</h2>
+				<p>In statistics, the <strong>score</strong> of a probability distribution \(p(\mathbf{x})\) is defined as the gradient of the log-probability density with respect to the data:</p>
+				<p class="kn-math-display">\[\nabla_{\mathbf{x}} \log p(\mathbf{x})\]</p>
+				<p>Why is this useful? Calculating the actual probability \(p(\mathbf{x})\) usually requires computing an intractable normalization constant (the partition function). However, taking the derivative \(\nabla_{\mathbf{x}}\) eliminates this constant.</p>
+				<p>Visually, the score is a <strong>vector field</strong>. At any point in high-dimensional space, the score vector points in the direction of higher data density (i.e., it points toward where the real images are).</p>
+				<h2>2. The Noise-Score Equivalence (Tweedie's Formula)</h2>
+				<p>How does this relate to predicting noise \(\boldsymbol{\epsilon}\)?</p>
+				<p>Recall our discrete forward process marginal:</p>
+				<p class="kn-math-display">\[q(\mathbf{x}_t | \mathbf{x}_0) = \mathcal{N}(\mathbf{x}_t; \sqrt{\bar{\alpha}_t}\mathbf{x}_0, (1 - \bar{\alpha}_t)\mathbf{I})\]</p>
+				<p>If we take the gradient of the log of this Gaussian distribution with respect to \(\mathbf{x}_t\), the math simplifies incredibly. Through a principle related to Tweedie's formula, the score of the perturbed data is directly proportional to the noise added:</p>
+				<p class="kn-math-display">\[\nabla_{\mathbf{x}_t} \log q(\mathbf{x}_t) = -\frac{\boldsymbol{\epsilon}}{\sqrt{1 - \bar{\alpha}_t}}\]</p>
+				<p>This is the "Aha!" moment. When you train a U-Net in a diffusion model to predict the noise \(\boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t)\), <strong>you are actually training a Score Network</strong> \(\mathbf{s}_\theta(\mathbf{x}_t, t)\) in disguise. The U-Net is learning the continuous vector field that points away from pure noise and toward the clean data manifold.</p>
+				<p class="kn-math-display">\[\mathbf{s}_\theta(\mathbf{x}_t, t) = -\frac{\boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t)}{\sqrt{1 - \bar{\alpha}_t}}\]</p>
+				<h2>3. Moving to Continuous Time (The SDE)</h2>
+				<p>To fully utilize this score, we must abandon discrete timesteps \(t \in {1, 2, \dots, T}\) and move to continuous time \(t \in [0, 1]\).</p>
+				<p>As the step size approaches zero, the forward diffusion process (adding noise) becomes a <strong>Stochastic Differential Equation (SDE)</strong>:</p>
+				<p class="kn-math-display">\[d\mathbf{x} = \mathbf{f}(\mathbf{x}, t)dt + g(t)d\mathbf{w}\]</p>
+				<ul><li>\(\mathbf{f}(\mathbf{x}, t)dt\): The deterministic drift (how the data scales down over time).</li><li>\(g(t)d\mathbf{w}\): The stochastic diffusion (the Brownian motion/Gaussian noise being injected).</li></ul>
+				<h2>4. The Reverse SDE</h2>
+				<p>A fundamental theorem by Anderson (1982) states that any forward SDE has a corresponding reverse-time SDE. If we run time backward from \(t=1\) to \(t=0\), the equation is:</p>
+				<p class="kn-math-display">\[d\mathbf{x} = [\mathbf{f}(\mathbf{x}, t) - g(t)^2 \nabla_{\mathbf{x}} \log p_t(\mathbf{x})]dt + g(t)d\bar{\mathbf{w}}\]</p>
+				<p>Notice the crucial term: \(\nabla_{\mathbf{x}} \log p_t(\mathbf{x})\). To run the generation process backward, <strong>all we need is the score</strong>. Since our U-Net \(\boldsymbol{\epsilon}_\theta\) has already learned the score, we can plug it directly into this SDE and solve it using numerical SDE solvers (like Euler-Maruyama) to generate images. This is the continuous-time equivalent of DDPM.</p>
+				<h2>5. The Probability Flow ODE (The Bridge to DDIM)</h2>
+				<p>Solving SDEs is notoriously slow because the random Brownian motion \(d\bar{\mathbf{w}}\) forces you to take tiny step sizes to avoid massive integration errors.</p>
+				<p>However, the authors of the continuous-time framework discovered something remarkable: for every SDE, there exists a deterministic <strong>Ordinary Differential Equation (ODE)</strong> whose trajectories perfectly share the exact same marginal probability densities \(p_t(\mathbf{x})\) at every moment in time \(t\).</p>
+				<p>This is the <strong>Probability Flow ODE</strong>:</p>
+				<p class="kn-math-display">\[d\mathbf{x} = \left[ \mathbf{f}(\mathbf{x}, t) - \frac{1}{2}g(t)^2 \nabla_{\mathbf{x}} \log p_t(\mathbf{x}) \right]dt\]</p>
+				<p>Notice what happened:</p>
+				<ol><li>The random noise term \(g(t)d\bar{\mathbf{w}}\) is completely gone.</li><li>The score term is multiplied by exactly \(\frac{1}{2}\).</li></ol>
+				<p>Because this equation has no random noise injection, the trajectory from pure noise to a clean image is completely smooth and deterministic. It represents a fluid flowing through high-dimensional space.</p>
+				<h2>The Grand Conclusion</h2>
+				<p>If you take this continuous-time Probability Flow ODE, discretize it using a simple first-order Euler method, and substitute our U-Net noise predictor back in for the score term... <strong>the resulting algebraic equation is the exact DDIM sampling equation with </strong>\(\sigma_t = 0\)<strong>.</strong></p>
+				<p>DDIM was derived from a discrete, non-Markovian probabilistic perspective. Score-based modeling derived the Probability Flow ODE from continuous-time calculus. They arrived at the exact same mathematical destination from completely different directions.</p>
+				<hr />
+				<p>Since this deterministic ODE framework maps a simple Gaussian base distribution to a complex data distribution, it perfectly sets the stage for methods like <strong>Flow Matching</strong> and continuous normalizing flows.</p>
+				</div>
+			</article>
+		</div>
+	</div>
+	<script src="../../assets/js/jquery.min.js"></script>
+	<script src="../../assets/js/browser.min.js"></script>
+	<script src="../../assets/js/breakpoints.min.js"></script>
+	<script src="../../assets/js/util.js"></script>
+	<script src="../../assets/js/main.js"></script>
+</body>
+</html>

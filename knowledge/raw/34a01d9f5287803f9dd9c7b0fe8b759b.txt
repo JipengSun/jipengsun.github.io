@@ -1,0 +1,53 @@
+Here is the result of "view" for the Page with URL https://www.notion.so/34a01d9f5287803f9dd9c7b0fe8b759b as of 2026-05-04T01:08:45.812Z:
+<page url="https://www.notion.so/34a01d9f5287803f9dd9c7b0fe8b759b">
+<ancestor-path></ancestor-path>
+<properties>
+{"title":"Bundle Adjustment (todo)"}
+</properties>
+<content>
+Bundle adjustment is the cornerstone of 3D reconstruction, Structure from Motion (SfM), and visual SLAM. At its core, it is a large-scale, non-linear least squares optimization problem. The goal is to simultaneously refine the 3D coordinates of scene points and the parameters of the cameras that observe them, minimizing the discrepancy between the observed 2D image locations and the predicted 2D locations.
+Here is the rigorous mathematical formulation.
+### 1. The Projection Model
+Let’s define the elements of the system:
+- $`N`$** 3D Points:** Let the 3D coordinates of the $`j`$-th point be $`\mathbf{X}_j \in \mathbb{R}^3`$, for $`j \in \{1, \dots, N\}`$.
+- $`M`$** Cameras:** Let the parameters of the $`i`$-th camera be denoted by vector $`\mathbf{P}_i`$, for $`i \in \{1, \dots, M\}`$. This vector encapsulates:
+	- **Extrinsics:** The rotation matrix $`\mathbf{R}_i \in SO(3)`$ and translation vector $`\mathbf{t}_i \in \mathbb{R}^3`$ (camera pose).
+	- **Intrinsics:** The internal camera matrix $`\mathbf{K}_i`$ (focal length, principal point) and distortion coefficients.
+- **Observations:** Let $`\mathbf{x}_{ij} \in \mathbb{R}^2`$ be the observed 2D pixel coordinates of the $`j`$-th 3D point in the $`i`$-th camera.
+- **Visibility:** Let $`v_{ij} \in \{0, 1\}`$ be an indicator variable where $`v_{ij} = 1`$ if point $`j`$ is visible in camera $`i`$, and $`v_{ij} = 0`$ otherwise.
+The predicted 2D location of a 3D point $`\mathbf{X}_j`$ projected onto camera $`i`$ is given by a non-linear projection function $`\pi`$:
+$`\mathbf{\hat{x}}_{ij} = \pi(\mathbf{P}_i, \mathbf{X}_j)`$
+### 2. The Objective Function
+Bundle adjustment seeks to minimize the **reprojection error**, which is the sum of squared Euclidean distances between the observed image points $`\mathbf{x}_{ij}`$ and the predicted projections $`\pi(\mathbf{P}_i, \mathbf{X}_j)`$.
+The objective function to be minimized is:
+$`E(\mathbf{P}, \mathbf{X}) = \sum_{i=1}^{M} \sum_{j=1}^{N} v_{ij} \| \mathbf{x}_{ij} - \pi(\mathbf{P}_i, \mathbf{X}_j) \|^2_{\mathbf{\Sigma}_{ij}^{-1}}`$
+Here, $`\| \mathbf{e} \|^2_{\mathbf{\Sigma}^{-1}} = \mathbf{e}^T \mathbf{\Sigma}^{-1} \mathbf{e}`$ represents the Mahalanobis distance, where $`\mathbf{\Sigma}_{ij}`$ is the covariance matrix of the measurement noise (often assumed to be isotropic Gaussian noise, reducing the weight to a simple scalar or identity matrix).
+For robustness against outliers (mismatched feature points), a robust loss function $`\rho`$ (such as Huber or Cauchy) is often applied to the squared residuals:
+$`E(\mathbf{P}, \mathbf{X}) = \sum_{i=1}^{M} \sum_{j=1}^{N} v_{ij} \rho \left( \| \mathbf{x}_{ij} - \pi(\mathbf{P}_i, \mathbf{X}_j) \|^2 \right)`$
+### 3. Optimization via Levenberg-Marquardt
+Because the projection function $`\pi`$ involves perspective division and rotational transformations, the objective function is highly non-linear. This requires iterative solvers, predominantly the **Levenberg-Marquardt (LM)** algorithm, which interpolates between Gauss-Newton and gradient descent.
+Let $`\theta`$ be the concatenated state vector of all camera parameters and 3D points:
+$`\theta = [\mathbf{P}_1^T, \dots, \mathbf{P}_M^T, \mathbf{X}_1^T, \dots, \mathbf{X}_N^T]^T`$
+Let $`\mathbf{r}(\theta)`$ be the stacked residual vector containing all $`v_{ij}(\mathbf{x}_{ij} - \pi(\mathbf{P}_i, \mathbf{X}_j))`$. The objective is to minimize $`\frac{1}{2} \|\mathbf{r}(\theta)\|^2`$.
+At each iteration, we linearize the projection function around the current estimate $`\theta`$ using a first-order Taylor expansion:
+$`\mathbf{r}(\theta + \Delta \theta) \approx \mathbf{r}(\theta) + \mathbf{J} \Delta \theta`$
+where $`\mathbf{J} = \frac{\partial \mathbf{r}}{\partial \theta}`$ is the Jacobian matrix.
+To find the optimal update step $`\Delta \theta`$, we solve the LM normal equations:
+$`(\mathbf{J}^T \mathbf{J} + \lambda \mathbf{I}) \Delta \theta = -\mathbf{J}^T \mathbf{r}`$
+- $`\mathbf{J}^T \mathbf{J}`$ is the approximate Hessian $`\mathbf{H}`$.
+- $`\lambda`$ is the damping factor. When $`\lambda`$ is large, the step behaves like gradient descent; when $`\lambda`$ is small, it behaves like Gauss-Newton optimization.
+### 4. Exploiting Sparsity (The Schur Complement)
+In large-scale reconstructions, computing and inverting $`\mathbf{H} = \mathbf{J}^T \mathbf{J}`$ directly is computationally intractable because $`\theta`$ can contain millions of parameters. However, the Jacobian $`\mathbf{J}`$ is incredibly sparse. A camera parameter $`\mathbf{P}_i`$ only affects the residuals of points observed by that camera, and a point $`\mathbf{X}_j`$ only affects the residuals in cameras where it is visible.
+We can partition the Jacobian into camera derivatives and point derivatives: $`\mathbf{J} = [\mathbf{J}_c \quad \mathbf{J}_p]`$.
+The normal equations can be rewritten in block form:
+$`\begin{bmatrix} \mathbf{U} + \lambda \mathbf{I} & \mathbf{W} \\ \mathbf{W}^T & \mathbf{V} + \lambda \mathbf{I} \end{bmatrix} \begin{bmatrix} \Delta \mathbf{P} \\ \Delta \mathbf{X} \end{bmatrix} = \begin{bmatrix} \mathbf{e}_c \\ \mathbf{e}_p \end{bmatrix}`$
+- \$\\mathbf\{U\} = \\mathbf\{J\}_c\^T \\mathbf\{J\}_c\$ is a block-diagonal matrix (since cameras don't directly couple with each other in the reprojection error).
+- \$\\mathbf\{V\} = \\mathbf\{J\}_p\^T \\mathbf\{J\}_p\$ is also a block-diagonal matrix (since points don't couple with other points).
+- \$\\mathbf\{W\} = \\mathbf\{J\}_c\^T \\mathbf\{J\}_p\$ contains the cross-correlations between cameras and points.
+Because \$\\mathbf\{V\}\$ is block-diagonal, it is trivial and highly efficient to invert. We apply the **Schur Complement** to eliminate the point update variables \$\\Delta \\mathbf\{X\}\$, reducing the system to solve only for the camera updates \$\\Delta \\mathbf\{P\}\$:
+$`(\mathbf{U} + \lambda \mathbf{I} - \mathbf{W}(\mathbf{V} + \lambda \mathbf{I})^{-1}\mathbf{W}^T) \Delta \mathbf{P} = \mathbf{e}_c - \mathbf{W}(\mathbf{V} + \lambda \mathbf{I})^{-1}\mathbf{e}_p`$
+The matrix $`\mathbf{S} = \mathbf{U} + \lambda \mathbf{I} - \mathbf{W}(\mathbf{V} + \lambda \mathbf{I})^{-1}\mathbf{W}^T`$ is the **reduced camera matrix** (Schur complement). You solve this much smaller system for \$\\Delta \\mathbf\{P\}\$ using Cholesky factorization or Preconditioned Conjugate Gradient (PCG), and then back-substitute \$\\Delta \\mathbf\{P\}\$ to easily solve for the 3D point updates \$\\Delta \\mathbf\{X\}\$:
+$`\Delta \mathbf{X} = (\mathbf{V} + \lambda \mathbf{I})^{-1} (\mathbf{e}_p - \mathbf{W}^T \Delta \mathbf{P})`$
+This block-elimination strategy makes bundle adjustment tractable for massive datasets, turning an otherwise impossibly dense matrix inversion into an efficient, sparse problem.
+</content>
+</page>

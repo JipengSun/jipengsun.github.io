@@ -1,0 +1,528 @@
+<!DOCTYPE HTML>
+<html lang="en">
+	<head>
+		<title>Knowledge Share — Jipeng Sun</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<meta name="description" content="Study notes on machine learning, computer vision, optimization, and computational imaging." />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<link rel="stylesheet" href="assets/css/knowledge-share.css" />
+		<script async src="https://www.googletagmanager.com/gtag/js?id=G-LCC4R0HD24"></script>
+		<script>
+		  window.dataLayer = window.dataLayer || [];
+		  function gtag(){dataLayer.push(arguments);}
+		  gtag('js', new Date());
+		  gtag('config', 'G-LCC4R0HD24');
+		</script>
+		<script src="assets/js/ga-events.js"></script>
+	</head>
+	<body class="is-preload ks-page">
+
+		<div id="wrapper">
+
+			<header id="header">
+				<h1><a href="index.html">Jipeng Sun</a></h1>
+				<nav class="links">
+					<ul>
+						<li><a href="index.html">Home</a></li>
+						<li><a href="research.html">Research</a></li>
+						<li class="active"><a href="knowledge-share.html">Knowledge Share</a></li>
+						<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course">VR/AR Course</a></li>
+					</ul>
+				</nav>
+				<nav class="main">
+					<ul>
+						<li class="search">
+							<a class="fa-search" href="#search">Search</a>
+							<form id="search" method="get" action="#">
+								<input type="text" name="query" placeholder="Search" />
+							</form>
+						</li>
+						<li class="menu">
+							<a class="fa-bars" href="#menu">Menu</a>
+						</li>
+					</ul>
+				</nav>
+			</header>
+
+			<section id="menu">
+				<section>
+					<form class="search" method="get" action="#">
+						<input type="text" name="query" placeholder="Search" />
+					</form>
+				</section>
+				<section>
+					<ul class="links">
+						<li>
+							<a href="index.html">
+								<h3>Home</h3>
+								<p>Jipeng Sun's Homepage</p>
+							</a>
+						</li>
+						<li>
+							<a href="research.html">
+								<h3>Research</h3>
+								<p>Publications &amp; Papers</p>
+							</a>
+						</li>
+						<li>
+							<a href="knowledge-share.html">
+								<h3>Knowledge Share</h3>
+								<p>Study notes &amp; references</p>
+							</a>
+						</li>
+						<li>
+							<a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course">
+								<h3>Teaching</h3>
+								<p>VR Summer Course</p>
+							</a>
+						</li>
+					</ul>
+				</section>
+			</section>
+
+			<div id="main">
+				<article class="post">
+					<header><div class="title"><h2>Knowledge Share</h2></div></header>
+
+					<div class="ks-shell">
+
+						<section class="ks-topics" aria-label="Browse by topic">
+							<div class="ks-topics-head">
+								<h3>Browse by topic</h3>
+							</div>
+							<div class="ks-topic-grid">
+								<a class="ks-topic-chip" href="knowledge/articles/machine-learning.html">
+									<strong>Machine Learning</strong>
+									<span>Attention, diffusion, flow matching, autodiff</span>
+								</a>
+								<a class="ks-topic-chip" href="knowledge/articles/computer-vision.html">
+									<strong>Computer Vision</strong>
+									<span>Optical flow, cameras, COLMAP, SfM</span>
+								</a>
+								<a class="ks-topic-chip" href="knowledge/articles/optimization.html">
+									<strong>Optimization</strong>
+									<span>Proximal methods, ADMM, HQS</span>
+								</a>
+								<a class="ks-topic-chip" href="knowledge/articles/computer-graphics.html">
+									<strong>Computer Graphics</strong>
+									<span>NeRF, Gaussian splatting, rendering</span>
+								</a>
+								<a class="ks-topic-chip" href="knowledge/articles/computational-imaging.html">
+									<strong>Computational Imaging</strong>
+									<span>PnP, deconvolution, inverse problems</span>
+								</a>
+							</div>
+						</section>
+
+						<section class="ks-feed" id="ks-feed" aria-label="All notes">
+							<div class="ks-feed-head">
+								<h3>All notes</h3>
+							</div>
+
+							<div class="ks-toolbar">
+								<div class="ks-search-wrap">
+									<span class="icon solid fa-search" aria-hidden="true"></span>
+									<input type="search" id="ks-filter" placeholder="Search notes…" autocomplete="off" aria-label="Filter notes" />
+								</div>
+								<ul class="ks-filters" aria-label="Filter by topic">
+									<li><button type="button" class="is-active" data-ks-topic="all">All</button></li>
+									<li><button type="button" data-ks-topic="machine-learning">ML</button></li>
+									<li><button type="button" data-ks-topic="computer-vision">Vision</button></li>
+									<li><button type="button" data-ks-topic="optimization">Optimization</button></li>
+									<li><button type="button" data-ks-topic="computer-graphics">Graphics</button></li>
+									<li><button type="button" data-ks-topic="computational-imaging">Imaging</button></li>
+								</ul>
+							</div>
+
+							<p class="ks-result-count" id="ks-result-count" aria-live="polite"></p>
+
+							<ol class="ks-story-list" id="ks-story-list">
+					<li class="ks-story" data-ks-topic="machine-learning" data-ks-keywords="self attention machine learning self attention">
+						<a class="ks-story-link" href="knowledge/articles/self-attention.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">Machine Learning</span>
+								<span class="ks-story-title">Self Attention</span>
+								<span class="ks-story-dek">At its core, self-attention is a sequence-to-sequence operation. It takes a sequence of vectors and produces a new sequence of vectors of the same…</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story" data-ks-topic="machine-learning" data-ks-keywords="vision transformer (vit) machine learning vision transformer vit">
+						<a class="ks-story-link" href="knowledge/articles/vision-transformer-vit.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">Machine Learning</span>
+								<span class="ks-story-title">Vision Transformer (ViT)</span>
+								<span class="ks-story-dek">The Vision Transformer (ViT) represents a massive paradigm shift in computer vision. Introduced by Google in 2020 (&quot;An Image is Worth 16x16 Words&quot;), it…</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story" data-ks-topic="machine-learning" data-ks-keywords="diffusion transformer (dit) machine learning diffusion transformer dit">
+						<a class="ks-story-link" href="knowledge/articles/diffusion-transformer-dit.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">Machine Learning</span>
+								<span class="ks-story-title">Diffusion Transformer (DiT)</span>
+								<span class="ks-story-dek">To understand the math behind the Diffusion Transformer (DiT), we have to separate it into two distinct parts: the mathematical framework (the…</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story" data-ks-topic="machine-learning" data-ks-keywords="classifier-free guidance (cfg) machine learning classifier free guidance cfg">
+						<a class="ks-story-link" href="knowledge/articles/classifier-free-guidance-cfg.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">Machine Learning</span>
+								<span class="ks-story-title">Classifier-Free Guidance (CFG)</span>
+								<span class="ks-story-dek">Classifier-Free Guidance (CFG) is arguably the most critical technique for achieving high-fidelity, strongly aligned generations in modern diffusion…</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story" data-ks-topic="machine-learning" data-ks-keywords="backpropagation machine learning backpropagation">
+						<a class="ks-story-link" href="knowledge/articles/backpropagation.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">Machine Learning</span>
+								<span class="ks-story-title">Backpropagation</span>
+								<span class="ks-story-dek">Backpropagation (short for &quot;backward propagation of errors&quot;) is the mathematical engine that allows neural networks to learn. At its core, it is an…</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story" data-ks-topic="machine-learning" data-ks-keywords="autodiff machine learning autodiff">
+						<a class="ks-story-link" href="knowledge/articles/autodiff.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">Machine Learning</span>
+								<span class="ks-story-title">AutoDiff</span>
+								<span class="ks-story-dek">Automatic differentiation (AutoDiff) is the algorithmic foundation that makes modern machine learning frameworks like PyTorch and JAX possible. While…</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story" data-ks-topic="machine-learning" data-ks-keywords="kl divergence machine learning kl divergence">
+						<a class="ks-story-link" href="knowledge/articles/kl-divergence.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">Machine Learning</span>
+								<span class="ks-story-title">KL Divergence</span>
+								<span class="ks-story-dek">At its core, Kullback-Leibler (KL) Divergence is a statistical measure of how much one probability distribution differs from a second, reference…</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story" data-ks-topic="machine-learning" data-ks-keywords="elbo (evidence lower bound) machine learning elbo">
+						<a class="ks-story-link" href="knowledge/articles/elbo.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">Machine Learning</span>
+								<span class="ks-story-title">ELBO (Evidence Lower Bound)</span>
+								<span class="ks-story-dek">In Bayesian inference and generative modeling, the Evidence Lower Bound (ELBO) is a crucial quantity used to approximate the marginal likelihood (the…</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story" data-ks-topic="machine-learning" data-ks-keywords="diffusion model machine learning diffusion model">
+						<a class="ks-story-link" href="knowledge/articles/diffusion-model.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">Machine Learning</span>
+								<span class="ks-story-title">Diffusion Model</span>
+								<span class="ks-story-dek">Diffusion models, specifically Denoising Diffusion Probabilistic Models (DDPMs), are generative models that learn to create data by reversing a gradual…</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story" data-ks-topic="machine-learning" data-ks-keywords="diffusion from stochastic differential equations (sdes) perspective machine learning diffusion from sdes">
+						<a class="ks-story-link" href="knowledge/articles/diffusion-from-sdes.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">Machine Learning</span>
+								<span class="ks-story-title">Diffusion from Stochastic Differential Equations (SDEs) Perspective</span>
+								<span class="ks-story-dek">From a mathematical perspective, diffusion models are fundamentally about defining a trajectory between a complex, intractable data distribution and a…</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story" data-ks-topic="machine-learning" data-ks-keywords="vae vs. diffusion from elbo perspective machine learning vae vs diffusion elbo">
+						<a class="ks-story-link" href="knowledge/articles/vae-vs-diffusion-elbo.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">Machine Learning</span>
+								<span class="ks-story-title">VAE vs. Diffusion from ELBO Perspective</span>
+								<span class="ks-story-dek">It is fascinating that two entirely different generative paradigms—Variational Autoencoders (VAEs) and Diffusion Models—are mathematically rooted in…</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story" data-ks-topic="machine-learning" data-ks-keywords="ddim (denoising diffusion implicit models) machine learning ddim">
+						<a class="ks-story-link" href="knowledge/articles/ddim.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">Machine Learning</span>
+								<span class="ks-story-title">DDIM (Denoising Diffusion Implicit Models)</span>
+								<span class="ks-story-dek">The fundamental difference between DDPM (Denoising Diffusion Probabilistic Models) and DDIM (Denoising Diffusion Implicit Models) lies entirely in the…</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story" data-ks-topic="machine-learning" data-ks-keywords="ddpms, ddims, and score-based methods machine learning ddpms ddims amp score based">
+						<a class="ks-story-link" href="knowledge/articles/ddpms-ddims-amp-score-based.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">Machine Learning</span>
+								<span class="ks-story-title">DDPMs, DDIMs, and Score-Based Methods</span>
+								<span class="ks-story-dek">The connection between DDPMs, DDIMs, and Score-Based Generative Models is one of the most elegant unifying theories in modern machine learning…</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story" data-ks-topic="machine-learning" data-ks-keywords="flow matching machine learning flow matching">
+						<a class="ks-story-link" href="knowledge/articles/flow-matching.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">Machine Learning</span>
+								<span class="ks-story-title">Flow Matching</span>
+								<span class="ks-story-dek">Flow matching is a highly effective mathematical framework for generative modeling. It serves as an alternative to Diffusion Models and provides a more…</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story" data-ks-topic="machine-learning" data-ks-keywords="mean flow machine learning mean flow">
+						<a class="ks-story-link" href="knowledge/articles/mean-flow.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">Machine Learning</span>
+								<span class="ks-story-title">Mean Flow</span>
+								<span class="ks-story-dek">Notes on mean-flow generative modeling and its connection to flow matching.</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story" data-ks-topic="machine-learning" data-ks-keywords="improved mean flow (imf) machine learning improved mean flow imf">
+						<a class="ks-story-link" href="knowledge/articles/improved-mean-flow-imf.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">Machine Learning</span>
+								<span class="ks-story-title">Improved Mean Flow (iMF)</span>
+								<span class="ks-story-dek">Improved mean flow (iMF) — faster sampling and training for flow-based generative models.</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story" data-ks-topic="computer-vision" data-ks-keywords="optical flow computer vision optical flow">
+						<a class="ks-story-link" href="knowledge/articles/optical-flow.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">Computer Vision</span>
+								<span class="ks-story-title">Optical Flow</span>
+								<span class="ks-story-dek">Optical flow is the pattern of apparent motion of objects, surfaces, and edges in a visual scene, caused by the relative motion between an observer (an…</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story" data-ks-topic="computer-vision" data-ks-keywords="lucas-kanade method example computer vision lucas kanade example">
+						<a class="ks-story-link" href="knowledge/articles/lucas-kanade-example.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">Computer Vision</span>
+								<span class="ks-story-title">Lucas-Kanade Method Example</span>
+								<span class="ks-story-dek">To see exactly how the Lucas-Kanade (LK) method solves for optical flow, we need to walk through the least-squares approximation.</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story" data-ks-topic="computer-vision" data-ks-keywords="raft(recurrent all-pairs field transforms) computer vision raft">
+						<a class="ks-story-link" href="knowledge/articles/raft.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">Computer Vision</span>
+								<span class="ks-story-title">RAFT(Recurrent All-Pairs Field Transforms)</span>
+								<span class="ks-story-dek">RAFT (Recurrent All-Pairs Field Transforms) represents a major paradigm shift from traditional optical flow methods like Lucas-Kanade.</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story" data-ks-topic="computer-vision" data-ks-keywords="camera intrinsic matrix computer vision camera intrinsic matrix">
+						<a class="ks-story-link" href="knowledge/articles/camera-intrinsic-matrix.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">Computer Vision</span>
+								<span class="ks-story-title">Camera Intrinsic Matrix</span>
+								<span class="ks-story-dek">Intrinsics K, focal length, principal point, and pixel skew.</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story" data-ks-topic="computer-vision" data-ks-keywords="camera extrinsic matrix computer vision camera extrinsic matrix">
+						<a class="ks-story-link" href="knowledge/articles/camera-extrinsic-matrix.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">Computer Vision</span>
+								<span class="ks-story-title">Camera Extrinsic Matrix</span>
+								<span class="ks-story-dek">Estimating the camera extrinsic matrix—which defines the rigid transformation from the world coordinate system to the camera&#x27;s local 3D coordinate…</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story" data-ks-topic="computer-vision" data-ks-keywords="colmap computer vision colmap">
+						<a class="ks-story-link" href="knowledge/articles/colmap.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">Computer Vision</span>
+								<span class="ks-story-title">COLMAP</span>
+								<span class="ks-story-dek">COLMAP is an end-to-end pipeline for Structure-from-Motion (SfM) and Multi-View Stereo (MVS). It takes a collection of 2D images and mathematically…</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story" data-ks-topic="computer-vision" data-ks-keywords="bundle adjustment computer vision bundle adjustment">
+						<a class="ks-story-link" href="knowledge/articles/bundle-adjustment.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">Computer Vision</span>
+								<span class="ks-story-title">Bundle Adjustment</span>
+								<span class="ks-story-dek">Bundle adjustment is the cornerstone of 3D reconstruction, Structure from Motion (SfM), and visual SLAM. At its core, it is a large-scale, non-linear…</span>
+								<div class="ks-story-meta"><span class="ks-tag">todo</span></div>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story" data-ks-topic="optimization" data-ks-keywords="proximal algorithms optimization proximal algorithms">
+						<a class="ks-story-link" href="knowledge/articles/proximal-algorithms.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">Optimization</span>
+								<span class="ks-story-title">Proximal Algorithms</span>
+								<span class="ks-story-dek">Proximal algorithms are a class of optimization methods designed to handle objective functions that are non-smooth, constrained, or split into multiple…</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story" data-ks-topic="optimization" data-ks-keywords="neural proximal operators optimization neural proximal operators">
+						<a class="ks-story-link" href="knowledge/articles/neural-proximal-operators.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">Optimization</span>
+								<span class="ks-story-title">Neural Proximal Operators</span>
+								<span class="ks-story-dek">This is the exact conceptual leap that birthed the Plug-and-Play (PnP) and Regularization by Denoising (RED) frameworks, revolutionizing how we solve…</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story" data-ks-topic="optimization" data-ks-keywords="analytical proximal operators optimization analytical proximal operators">
+						<a class="ks-story-link" href="knowledge/articles/analytical-proximal-operators.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">Optimization</span>
+								<span class="ks-story-title">Analytical Proximal Operators</span>
+								<span class="ks-story-dek">As a quick refresher, the proximal operator of a scaled convex function \(\lambda f(x)\) evaluated at a point \(v\) is defined as:</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story" data-ks-topic="optimization" data-ks-keywords="hqs (half-quadratic splitting) optimization hqs">
+						<a class="ks-story-link" href="knowledge/articles/hqs.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">Optimization</span>
+								<span class="ks-story-title">HQS (Half-Quadratic Splitting)</span>
+								<span class="ks-story-dek">It is designed to minimize an objective function that consists of two competing terms: a data fidelity term (how well the solution matches the…</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story" data-ks-topic="optimization" data-ks-keywords="admm (alternating direction method of multipliers) optimization admm">
+						<a class="ks-story-link" href="knowledge/articles/admm.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">Optimization</span>
+								<span class="ks-story-title">ADMM (Alternating Direction Method of Multipliers)</span>
+								<span class="ks-story-dek">The Alternating Direction Method of Multipliers (ADMM) is a powerful algorithm that solves convex optimization problems by breaking them into smaller,…</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story" data-ks-topic="optimization" data-ks-keywords="lagrangian method optimization lagrangian method">
+						<a class="ks-story-link" href="knowledge/articles/lagrangian-method.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">Optimization</span>
+								<span class="ks-story-title">Lagrangian Method</span>
+								<span class="ks-story-dek">The standard Lagrangian is a mathematical trick to turn a *constrained* problem into an *unconstrained* one. It does this by taking the hard rules…</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story" data-ks-topic="computer-graphics" data-ks-keywords="3d gaussian splatting computer graphics 3d gaussian splatting">
+						<a class="ks-story-link" href="knowledge/articles/3d-gaussian-splatting.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">Computer Graphics</span>
+								<span class="ks-story-title">3D Gaussian Splatting</span>
+								<span class="ks-story-dek">3D Gaussian Splatting (3DGS) is a breakthrough technique in computer graphics and computer vision for novel view synthesis. It emerged as a faster,…</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story" data-ks-topic="computer-graphics" data-ks-keywords="nerf computer graphics nerf">
+						<a class="ks-story-link" href="knowledge/articles/nerf.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">Computer Graphics</span>
+								<span class="ks-story-title">NeRF</span>
+								<span class="ks-story-dek">Neural Radiance Fields (NeRF) represent a breakthrough approach to synthesizing novel views of complex 3D scenes from a sparse set of 2D images.…</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story" data-ks-topic="geometry-generation" data-ks-keywords="geometry generation geometry generation geometry generation">
+						<a class="ks-story-link" href="knowledge/articles/geometry-generation.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">Geometry Generation</span>
+								<span class="ks-story-title">Geometry Generation</span>
+								<span class="ks-story-dek">3D shape synthesis, neural implicit surfaces, and mesh generation methods.</span>
+								<div class="ks-story-meta"><span class="ks-tag">todo</span></div>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story" data-ks-topic="computational-imaging" data-ks-keywords="pnp with diffusion computational imaging pnp with diffusion">
+						<a class="ks-story-link" href="knowledge/articles/pnp-with-diffusion.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">Computational Imaging</span>
+								<span class="ks-story-title">PnP with Diffusion</span>
+								<span class="ks-story-dek">Plug-and-play priors with diffusion models for computational imaging inverse problems.</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story" data-ks-topic="computational-imaging" data-ks-keywords="generative methods for deconv computational imaging generative methods for deconv">
+						<a class="ks-story-link" href="knowledge/articles/generative-methods-for-deconv.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">Computational Imaging</span>
+								<span class="ks-story-title">Generative Methods for Deconv</span>
+								<span class="ks-story-dek">At its core, deconvolution is fundamentally ill-posed. Information is lost when an image is blurred, meaning multiple different sharp images could…</span>
+							</div>
+						</a>
+					</li>
+</ol>
+
+							<p class="ks-empty" id="ks-no-results">No notes match your search.</p>
+						</section>
+
+						<p class="ks-footer-note">Notes are hosted on this site · <span class="ks-tag">todo</span> = in progress</p>
+
+					</div>
+				</article>
+			</div>
+
+		</div>
+
+		<script src="assets/js/jquery.min.js"></script>
+		<script src="assets/js/browser.min.js"></script>
+		<script src="assets/js/breakpoints.min.js"></script>
+		<script src="assets/js/util.js"></script>
+		<script src="assets/js/main.js"></script>
+		<script>
+			(function () {
+				var input = document.getElementById('ks-filter');
+				var stories = document.querySelectorAll('.ks-story');
+				var empty = document.getElementById('ks-no-results');
+				var countEl = document.getElementById('ks-result-count');
+				var filterBtns = document.querySelectorAll('.ks-filters [data-ks-topic]');
+				var activeTopic = 'all';
+
+				if (!input) return;
+
+				function renumberStories() {
+					var n = 0;
+					stories.forEach(function (story) {
+						if (story.classList.contains('is-hidden')) return;
+						n++;
+						story.style.setProperty('--ks-num', '"' + n + '"');
+					});
+				}
+
+				function setTopic(topic) {
+					activeTopic = topic;
+					filterBtns.forEach(function (btn) {
+						btn.classList.toggle('is-active', btn.getAttribute('data-ks-topic') === topic);
+					});
+					filter();
+				}
+
+				function filter() {
+					var q = input.value.trim().toLowerCase();
+					var visible = 0;
+					stories.forEach(function (story) {
+						var keywords = (story.getAttribute('data-ks-keywords') || '') + ' ' + story.textContent;
+						var topic = story.getAttribute('data-ks-topic') || '';
+						var matchTopic = activeTopic === 'all' || topic === activeTopic;
+						var matchQuery = !q || keywords.toLowerCase().indexOf(q) !== -1;
+						var match = matchTopic && matchQuery;
+						story.classList.toggle('is-hidden', !match);
+						if (match) visible++;
+					});
+					renumberStories();
+					if (empty) empty.classList.toggle('is-visible', visible === 0);
+					if (countEl) {
+						countEl.textContent = visible === stories.length
+							? visible + ' notes'
+							: 'Showing ' + visible + ' of ' + stories.length + ' notes';
+					}
+				}
+
+				input.addEventListener('input', filter);
+				filterBtns.forEach(function (btn) {
+					btn.addEventListener('click', function () {
+						setTopic(btn.getAttribute('data-ks-topic'));
+					});
+				});
+
+				filter();
+			})();
+		</script>
+
+	</body>
+</html>

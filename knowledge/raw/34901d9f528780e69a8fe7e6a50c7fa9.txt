@@ -1,0 +1,62 @@
+Here is the result of "view" for the Page with URL https://www.notion.so/34901d9f528780e69a8fe7e6a50c7fa9 as of 2026-04-21T17:18:23.064Z:
+<page url="https://www.notion.so/34901d9f528780e69a8fe7e6a50c7fa9">
+<ancestor-path></ancestor-path>
+<properties>
+{"title":"AutoDiff"}
+</properties>
+<content>
+Automatic differentiation (AutoDiff) is the algorithmic foundation that makes modern machine learning frameworks like PyTorch and JAX possible. While backpropagation is specifically the algorithm used to train neural networks, AutoDiff is the generalized mathematical framework that evaluates the derivatives of *any* function specified by a computer program.
+It is fundamentally different from **symbolic differentiation** (which manipulates math expressions to output exact new formulas but suffers from "expression swell") and **numerical differentiation** (which uses finite differences $`f(x+h) - f(x) / h`$ and suffers from floating-point rounding errors).
+AutoDiff computes exact derivatives to machine precision by breaking down every program into a sequence of elementary operations (addition, multiplication, sine, cosine, etc.) and repeatedly applying the **chain rule**.
+Here is the math behind how it works, using a **computational graph**.
+### 1. The Computational Graph
+Any function, no matter how complex, can be decomposed into a sequence of intermediate variables $`v_i`$.
+Let's evaluate the function $`f(x_1, x_2) = \sin(x_1) + x_1 x_2`$ at the inputs $`x_1 = 2, x_2 = 3`$. We break this down into a forward trace of elementary operations:
+- **Inputs:** \* $`v_1 = x_1 = 2`$
+	- $`v_2 = x_2 = 3`$
+- **Intermediates:**
+	- $`v_3 = \sin(v_1) = \sin(2) \approx 0.909`$
+	- $`v_4 = v_1 \cdot v_2 = 2 \cdot 3 = 6`$
+- **Output:**
+	- $`v_5 = v_3 + v_4 \approx 6.909 = y`$
+AutoDiff evaluates the derivatives of this graph using one of two primary modes: **Forward Mode** or **Reverse Mode**.
+---
+### 2. Forward Mode AutoDiff (Tangent Mode)
+Forward mode computes the derivative of all intermediate variables with respect to *one* specific input variable simultaneously with the forward pass. It calculates **Jacobian-Vector Products (JVPs)**.
+We define a "tangent" variable $`\dot{v}_i`$, which represents the derivative of $`v_i`$ with respect to our chosen input (let's say $`x_1`$):
+$`\dot{v}_i = \frac{\partial v_i}{\partial x_1}`$
+We seed the inputs based on the variable we are differentiating against. Since we want derivatives with respect to $`x_1`$:
+- $`\dot{v}_1 = \frac{\partial x_1}{\partial x_1} = 1`$
+- $`\dot{v}_2 = \frac{\partial x_2}{\partial x_1} = 0`$
+Now, we evaluate the forward equations and their derivatives simultaneously, applying basic calculus rules to each elementary step:
+- $`v_3 = \sin(v_1)`$ $`\rightarrow`$ $`\dot{v}_3 = \cos(v_1) \dot{v}_1 = \cos(2) \cdot 1 \approx -0.416`$
+- $`v_4 = v_1 \cdot v_2`$ $`\rightarrow`$ $`\dot{v}_4 = \dot{v}_1 v_2 + v_1 \dot{v}_2 = (1 \cdot 3) + (2 \cdot 0) = 3`$ *(Product Rule)*
+- $`v_5 = v_3 + v_4`$ $`\rightarrow`$ $`\dot{v}_5 = \dot{v}_3 + \dot{v}_4 \approx -0.416 + 3 = 2.584`$
+**Result:** $`\frac{\partial y}{\partial x_1} = \dot{v}_5 = 2.584`$.
+*Note: To get the derivative with respect to *$`x_2`$*, we would have to run the entire forward mode pass a second time, seeding *$`\dot{v}_1 = 0`$* and *$`\dot{v}_2 = 1`$*.*
+---
+### 3. Reverse Mode AutoDiff (Adjoint Mode)
+Reverse mode is exactly what deep learning relies on (it *is* generalized backpropagation). Instead of tracking how an input affects everything downstream, it tracks how the final output is affected by every intermediate variable upstream. It calculates **Vector-Jacobian Products (VJPs)**.
+We define an "adjoint" variable $`\bar{v}_i`$, which represents the derivative of the *final output* $`y`$ with respect to the intermediate variable $`v_i`$:
+$`\bar{v}_i = \frac{\partial y}{\partial v_i}`$
+Reverse mode happens in two phases:
+1. **Forward Pass:** Compute and store all the intermediate variables $`v_i`$ (as done in Section 1).
+2. **Reverse Pass:** Start from the output and apply the chain rule backwards.
+We seed the output adjoint:
+- $`\bar{v}_5 = \frac{\partial y}{\partial y} = 1`$
+Now, we step backwards through the graph. For each node, we calculate its adjoint by multiplying the adjoint of its "child" node by the local derivative:
+- $`v_5 = v_3 + v_4`$ \* $`\bar{v}_4 = \bar{v}_5 \frac{\partial v_5}{\partial v_4} = 1 \cdot 1 = 1`$
+	- $`\bar{v}_3 = \bar{v}_5 \frac{\partial v_5}{\partial v_3} = 1 \cdot 1 = 1`$
+- $`v_4 = v_1 \cdot v_2`$
+	- $`\bar{v}_2 = \bar{v}_4 \frac{\partial v_4}{\partial v_2} = 1 \cdot v_1 = 2`$
+- $`v_3 = \sin(v_1)`$ \* Wait! $`v_1`$ branches out to both $`v_3`$ and $`v_4`$. In reverse mode, if a variable has multiple consumers, its adjoint is the **sum** of the gradients from all its consumers (Multivariable Chain Rule).
+	- $`\bar{v}_1 = \bar{v}_3 \frac{\partial v_3}{\partial v_1} + \bar{v}_4 \frac{\partial v_4}{\partial v_1} = \bar{v}_3 \cos(v_1) + \bar{v}_4 v_2 = (1 \cdot \cos(2)) + (1 \cdot 3) \approx -0.416 + 3 = 2.584`$
+**Result:** In a *single* backward pass, we computed both $`\frac{\partial y}{\partial x_1} = \bar{v}_1 \approx 2.584`$ and $`\frac{\partial y}{\partial x_2} = \bar{v}_2 = 2`$.
+---
+### 4. Why Deep Learning Uses Reverse Mode
+The choice between Forward and Reverse mode depends purely on the shape of the function $`f: \mathbb{R}^n \rightarrow \mathbb{R}^m`$.
+- **Forward Mode is **$`O(n)`$**:** It requires one pass per input dimension. If you have $`n = 100`$ inputs and $`m = 1`$ output, you must run it 100 times. It is ideal for functions with few inputs and many outputs.
+- **Reverse Mode is **$`O(m)`$**:** It requires one forward pass and one backward pass per output dimension. A neural network has millions of inputs (weights/parameters) but only **one** scalar output (the loss function).
+Because $`m = 1`$ and $`n`$ is massive, Reverse Mode AutoDiff allows us to compute the gradient for millions of parameters in just a single backward sweep.
+</content>
+</page>

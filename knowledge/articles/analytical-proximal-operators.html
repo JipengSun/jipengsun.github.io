@@ -1,0 +1,124 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<title>Analytical Proximal Operators — Knowledge Share — Jipeng Sun</title>
+	<link rel="stylesheet" href="../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="(function(){var b=document.querySelector('.kn-body');if(!b)return;b.querySelectorAll('span').forEach(function(s){if(s.children.length)return;var t=s.textContent.trim();if(/^\\\([\s\S]*\\\)$/.test(t)||/^\\\[[\s\S]*\\\]$/.test(t))s.replaceWith(document.createTextNode(t));});renderMathInElement(b,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false,ignoredTags:['script','noscript','style','textarea','pre','code']});})();"></script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-LCC4R0HD24"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'G-LCC4R0HD24');
+	</script>
+	<script src="../../assets/js/ga-events.js"></script>
+</head>
+<body class="is-preload kn-page">
+	<div id="wrapper">
+		<header id="header">
+			<h1><a href="../../index.html">Jipeng Sun</a></h1>
+			<nav class="links">
+				<ul>
+					<li><a href="../../index.html">Home</a></li>
+					<li><a href="../../research.html">Research</a></li>
+					<li class="active"><a href="../../knowledge-share.html">Knowledge Share</a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course">VR/AR Course</a></li>
+				</ul>
+			</nav>
+			<nav class="main">
+				<ul>
+					<li class="search"><a class="fa-search" href="#search">Search</a><form id="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></li>
+					<li class="menu"><a class="fa-bars" href="#menu">Menu</a></li>
+				</ul>
+			</nav>
+		</header>
+		<section id="menu">
+			<section><form class="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></section>
+			<section>
+				<ul class="links">
+					<li><a href="../../index.html"><h3>Home</h3><p>Jipeng Sun's Homepage</p></a></li>
+					<li><a href="../../research.html"><h3>Research</h3><p>Publications &amp; Papers</p></a></li>
+					<li><a href="../../knowledge-share.html"><h3>Knowledge Share</h3><p>Study notes</p></a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course"><h3>Teaching</h3><p>VR Summer Course</p></a></li>
+				</ul>
+			</section>
+		</section>
+		<div id="main">
+			<article class="post">
+				<header><div class="title"><h2>Analytical Proximal Operators</h2></div></header>
+				<p class="kn-back"><a href="../../knowledge-share.html">&larr; Back to Knowledge Share</a></p>
+				<div class="kn-body">
+				<p>As a quick refresher, the proximal operator of a scaled convex function \(\lambda f(x)\) evaluated at a point \(v\) is defined as:</p>
+				<p class="kn-math-display">\[\text{prox}_{\lambda f}(v) = \underset{x}{\text{argmin}} \left( f(x) + \frac{1}{2\lambda} \|x - v\|_2^2 \right)\]</p>
+				<p>Here are the derivations for three of the most fundamental proximal operators used in inverse problems and imaging: the L2 norm (Ridge), the L1 norm (Lasso/Sparsity), and the Indicator function (Physical Constraints).</p>
+				<hr />
+				<h3>1. The L2 Norm Squared (Tikhonov / Ridge Regularization)</h3>
+				<p>This is the easiest derivation because the objective function is smooth and strictly convex everywhere, so we can just use standard vector calculus.</p>
+				<p>Let \(f(x) = \frac{1}{2}\|x\|_2^2\). Our goal is to find the minimum of the objective function \(J(x)\):</p>
+				<p class="kn-math-display">\[J(x) = \frac{1}{2}\|x\|_2^2 + \frac{1}{2\lambda}\|x - v\|_2^2\]</p>
+				<p><strong>Derivation:</strong></p>
+				<p>Because \(J(x)\) is differentiable, the minimum occurs exactly where the gradient with respect to \(x\) is zero.</p>
+				<p class="kn-math-display">\[\nabla J(x) = x + \frac{1}{\lambda}(x - v) = 0\]</p>
+				<p>Now, we just solve for \(x\):</p>
+				<p class="kn-math-display">\[x + \frac{1}{\lambda}x - \frac{1}{\lambda}v = 0\]</p>
+				<p class="kn-math-display">\[x \left(1 + \frac{1}{\lambda}\right) = \frac{1}{\lambda}v\]</p>
+				<p class="kn-math-display">\[x \left(\frac{\lambda + 1}{\lambda}\right) = \frac{1}{\lambda}v\]</p>
+				<p class="kn-math-display">\[x = \frac{1}{\lambda + 1} v\]</p>
+				<p><strong>Result:</strong></p>
+				<p class="kn-math-display">\[\text{prox}_{\lambda (\frac{1}{2}\|\cdot\|_2^2)}(v) = \frac{1}{\lambda + 1} v\]</p>
+				<p>*Intuition:* The L2 proximal operator simply scales the input vector \(v\) down toward zero. It shrinks everything proportionally without ever forcing any value to become exactly zero.</p>
+				<hr />
+				<h3>2. The L1 Norm (Soft Thresholding for Sparsity)</h3>
+				<p>This is the workhorse of sparse optimization. Let \(f(x) = \|x\|_1\).</p>
+				<p>Because the L1 norm (\(\sum |x_i|\)) and the L2 distance squared (\(\sum (x_i - v_i)^2\)) are both separable, we can break this massive vector problem down and solve it for a single scalar coordinate \(x_i\) at a time.</p>
+				<p class="kn-math-display">\[J(x_i) = |x_i| + \frac{1}{2\lambda}(x_i - v_i)^2\]</p>
+				<p><strong>Derivation:</strong></p>
+				<p>The absolute value function \(|x_i|\) is not differentiable at \(x_i = 0\). Instead of a gradient, we must use the <strong>subdifferential</strong> (\(\partial\)). The optimality condition dictates that \(0\) must be in the subdifferential of \(J(x_i)\):</p>
+				<p class="kn-math-display">\[0 \in \partial |x_i| + \frac{1}{\lambda}(x_i - v_i)\]</p>
+				<p>The subdifferential of the absolute value is:</p>
+				<ul><li>\(\partial |x_i| = {1}\) if \(x_i > 0\)</li><li>\(\partial |x_i| = {-1}\) if \(x_i < 0\)</li><li>\(\partial |x_i| = [-1, 1]\) if \(x_i = 0\)</li></ul>
+				<p>We analyze this in three cases to solve for \(x_i\):</p>
+				<p><strong>Case 1: Assume </strong>\(x_i > 0\)</p>
+				<p class="kn-math-display">\[1 + \frac{1}{\lambda}(x_i - v_i) = 0 \implies x_i = v_i - \lambda\]</p>
+				<p>For our assumption (\(x_i > 0\)) to be true, it must be that \(v_i - \lambda > 0\), meaning \(v_i > \lambda\).</p>
+				<p><strong>Case 2: Assume </strong>\(x_i < 0\)</p>
+				<p class="kn-math-display">\[-1 + \frac{1}{\lambda}(x_i - v_i) = 0 \implies x_i = v_i + \lambda\]</p>
+				<p>For this assumption to be true, \(v_i + \lambda < 0\), meaning \(v_i < -\lambda\).</p>
+				<p><strong>Case 3: Assume </strong>\(x_i = 0\)</p>
+				<p class="kn-math-display">\[0 \in [-1, 1] + \frac{1}{\lambda}(0 - v_i) \implies \frac{v_i}{\lambda} \in [-1, 1] \implies v_i \in [-\lambda, \lambda]\]</p>
+				<p>This means if the incoming data \(v_i\) is trapped between \(-\lambda\) and \(\lambda\), the optimal choice is to snap it exactly to zero.</p>
+				<p><strong>Result (The Soft Thresholding Operator):</strong></p>
+				<p class="kn-math-display">\[\text{prox}_{\lambda \|\cdot\|_1}(v_i) = \text{sign}(v_i) \max(|v_i| - \lambda, 0)\]</p>
+				<p>*Intuition:* Unlike L2 which shrinks proportionally, L1 lops off a flat amount (\(\lambda\)) from the magnitude of the signal. If the signal is too weak (below \(\lambda\)), it gets completely crushed to zero, inducing exact sparsity.</p>
+				<hr />
+				<h3>3. The Indicator Function (Euclidean Projection)</h3>
+				<p>Often in physical systems (like measuring light intensity in optics), we know our signal \(x\) must belong to a strictly defined convex set \(C\) (e.g., all values must be non-negative).</p>
+				<p>We enforce this using an indicator function:</p>
+				<ul><li>\(I_C(x) = 0\) if \(x \in C\)</li><li>\(I_C(x) = \infty\) if \(x \notin C\)</li></ul>
+				<p>Let \(f(x) = I_C(x)\).</p>
+				<p><strong>Derivation:</strong></p>
+				<p>Plug the indicator function into the proximal definition:</p>
+				<p class="kn-math-display">\[\text{prox}_{I_C}(v) = \underset{x}{\text{argmin}} \left( I_C(x) + \frac{1}{2\lambda} \|x - v\|_2^2 \right)\]</p>
+				<p>Because \(I_C(x)\) acts as an infinite penalty outside of \(C\) and contributes nothing (\(0\)) inside of \(C\), the minimization problem is strictly restricted to the domain of \(C\). The \(\frac{1}{2\lambda}\) scaling factor becomes irrelevant since we are just minimizing distance.</p>
+				<p>The equation simplifies entirely to:</p>
+				<p class="kn-math-display">\[\text{prox}_{I_C}(v) = \underset{x \in C}{\text{argmin}} \|x - v\|_2^2\]</p>
+				<p><strong>Result:</strong></p>
+				<p class="kn-math-display">\[\text{prox}_{I_C}(v) = \text{P}_C(v)\]</p>
+				<p>*Intuition:* The proximal operator of an indicator function is simply the <strong>Euclidean projection</strong> onto that set. For example, if \(C\) is the non-negative orthant (representing physical light), the proximal operator simply takes all negative values in \(v\) and sets them to \(0\), leaving positive values untouched.</p>
+				<hr />
+				</div>
+			</article>
+		</div>
+	</div>
+	<script src="../../assets/js/jquery.min.js"></script>
+	<script src="../../assets/js/browser.min.js"></script>
+	<script src="../../assets/js/breakpoints.min.js"></script>
+	<script src="../../assets/js/util.js"></script>
+	<script src="../../assets/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+Here is the result of "view" for the Page with URL https://app.notion.com/p/33b01d9f528780809920d77feccea568 as of 2026-04-07T15:15:30.236Z:
+<page url="https://app.notion.com/p/33b01d9f528780809920d77feccea568">
+<ancestor-path></ancestor-path>
+<properties>
+{"title":"Classifier-Free Guidance (CFG)"}
+</properties>
+<content>
+Classifier-Free Guidance (CFG) is arguably the most critical technique for achieving high-fidelity, strongly aligned generations in modern diffusion models. To understand it mathematically, we first need to look at its predecessor, **Classifier Guidance**, and how CFG elegantly derives from it using Bayes' Theorem.
+### 1. The Foundation: Classifier Guidance
+In a diffusion model, the reverse process involves sampling from a probability distribution \$p(x_\{t-1\} \| x_t)\$, which is guided by the score function—the gradient of the log probability of the data:
+\$\$\\nabla_\{x_t\} \\log p(x_t)\$\$
+If we want to condition this generation on some class or text \$y\$, we need the conditional score \$\\nabla_\{x_t\} \\log p(x_t \| y)\$.
+Before CFG, *Classifier Guidance* achieved this by training a completely separate, noise-robust classifier \$p_\\phi(y \| x_t)\$. Using Bayes' rule, \$p(x_t \| y) \\propto p(x_t) p(y \| x_t)\$, we can write the conditional score as:
+$`\nabla_{x_t} \log p(x_t | y) = \nabla_{x_t} \log p(x_t) + \nabla_{x_t} \log p_\phi(y | x_t)`$
+To force the model to adhere more strictly to the condition \$y\$, researchers introduced a gradient scale \$s \> 1\$:
+$`\tilde{\nabla}_{x_t} = \nabla_{x_t} \log p(x_t) + s \nabla_{x_t} \log p_\phi(y | x_t)`$
+While mathematically sound, training a separate classifier on noisy latent states across all timesteps is computationally expensive and introduces a bottleneck.
+### 2. The Derivation of Classifier-Free Guidance
+Classifier-Free Guidance (proposed by Ho & Salimans) eliminates the need for a separate classifier. Instead, we train a single neural network capable of *both* conditional and unconditional generation. During training, we randomly drop the conditioning \$y\$ (replacing it with a null token, \$\\emptyset\$) typically 10-20% of the time.
+Now, we have access to both the unconditional score \$\\nabla_\{x_t\} \\log p(x_t)\$ and the conditional score \$\\nabla_\{x_t\} \\log p(x_t \| y)\$ directly from the same model.
+Let's re-examine Bayes' rule to isolate the classifier gradient that we want to replace:
+$`p(y | x_t) = \frac{p(x_t | y) p(y)}{p(x_t)}`$
+Taking the logarithm and then the gradient with respect to \$x_t\$ (noting that \$p(y)\$ does not depend on \$x_t\$):
+$`\nabla_{x_t} \log p(y | x_t) = \nabla_{x_t} \log p(x_t | y) - \nabla_{x_t} \log p(x_t)`$
+This is the brilliant insight of CFG: **The gradient of an implicit classifier can be represented perfectly as the difference between the conditional and unconditional scores.**
+Substitute this implicit classifier back into our guidance equation (using \$w\$ as the guidance scale instead of \$s\$):
+$`\tilde{\nabla}_{x_t} = \nabla_{x_t} \log p(x_t) + w \big( \nabla_{x_t} \log p(x_t | y) - \nabla_{x_t} \log p(x_t) \big)`$
+Rearranging this gives us the final CFG score formula:
+$`\tilde{\nabla}_{x_t} = (1 - w) \nabla_{x_t} \log p(x_t) + w \nabla_{x_t} \log p(x_t | y)`$
+### 3. Translation to Noise Prediction
+In standard formulations, the neural network (like a UNet or DiT) doesn't predict the score directly; it predicts the added noise \$\\epsilon_\\theta\$. The predicted noise is proportional to the negative score:
+$`\epsilon_\theta(x_t) \approx -\sigma_t \nabla_{x_t} \log p(x_t)`$
+Translating the CFG score formula into noise prediction yields the equation used in inference codebases:
+$`\tilde{\epsilon}_\theta = \epsilon_{uncond} + w (\epsilon_{cond} - \epsilon_{uncond})`$
+Where:
+- \$\\epsilon_\{uncond\} = \\epsilon_\\theta(x_t, t, \\emptyset)\$
+- \$\\epsilon_\{cond\} = \\epsilon_\\theta(x_t, t, y)\$
+- \$w\$ is the guidance scale.
+	- If \$w = 0\$, you get pure unconditional generation.
+	- If \$w = 1\$, you get standard conditional generation (no extra guidance).
+	- If \$w \> 1\$ (typically 3 to 7.5), you are performing **vector extrapolation**. You push the noise prediction further in the direction that separates the conditional from the unconditional.
+### 4. Implementation Note: Batched Execution
+When implementing this in PyTorch, running the network twice sequentially at every timestep is slow. To optimize this, it is standard practice to concatenate the inputs along the batch dimension. If your latent tensor \$x_t\$ has a shape of `[B, C, H, W]`, you duplicate it to `[2B, C, H, W]`.
+You feed this doubled batch into the network alongside a stacked context tensor (containing \$B\$ null tokens and \$B\$ condition tokens). After a single forward pass, you chunk the output `[2B, C, H, W]` back into two `[B, C, H, W]` tensors (\$\\epsilon_\{uncond\}\$ and \$\\epsilon_\{cond\}\$) and apply the algebraic CFG equation: `uncond + w * (cond - uncond)`.
+This mathematical extrapolation trades diversity for semantic alignment.
+</content>
+</page>

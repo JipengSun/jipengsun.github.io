@@ -1,0 +1,42 @@
+Here is the result of "view" for the Page with URL https://app.notion.com/p/31801d9f52878017a966fe9c0b3fb4dd as of 2026-03-03T19:16:58.346Z:
+<page url="https://app.notion.com/p/31801d9f52878017a966fe9c0b3fb4dd">
+<ancestor-path></ancestor-path>
+<properties>
+{"title":"Generative Methods for Deconv"}
+</properties>
+<content>
+At its core, deconvolution is fundamentally **ill-posed**. Information is lost when an image is blurred, meaning multiple different sharp images could theoretically produce the exact same blurry result. Generative models solve this ambiguity.
+Here is the mathematical and conceptual breakdown of why they work.
+---
+### 1. The Inverse Problem Framework
+In deconvolution, the physical process of blurring (the forward model) is described as:
+$`y = Hx + n`$
+Where:
+- \$y\$ is your blurry observation.
+- \$H\$ is the convolution matrix (the blur kernel).
+- \$x\$ is the true, sharp image you want to recover.
+- \$n\$ is random sensor noise.
+Because \$H\$ destroys high-frequency information, you cannot simply invert it ($`x = H^{-1}y`$). Doing so will explosively amplify the noise \$n\$. You need a way to guess the missing information.
+### 2. The Bayesian Perspective
+To find the best possible \$x\$, we use Bayes' theorem to find the most probable sharp image given our blurry observation. We want to maximize the posterior probability, $`p(x|y)`$:
+$`p(x|y) \propto p(y|x) \cdot p(x)`$
+If we take the logarithm to make the math easier, we get the Maximum A Posteriori (MAP) estimation:
+$`\hat{x} = \arg\max_x [\log p(y|x) + \log p(x)]`$
+This equation splits deconvolution into two competing forces:
+1. **Data Consistency (**$`\log p(y|x)`$**):** This ensures the reconstructed image, when blurred by \$H\$, actually matches your observation \$y\$.
+2. **The Prior (**$`\log p(x)`$**):** This is where generative models come in. It represents the probability that \$x\$ is a realistic, natural image, completely independent of your observation.
+### 3. Why Generative Models are the Ultimate Prior
+Historically, researchers had to invent mathematical approximations for $`p(x)`$. A classic example is Total Variation (TV), which assumes natural images are mostly piecewise constant (flat areas separated by sharp edges). These hand-crafted priors work decently but often result in "blocky" or unnatural textures because they don't capture the true complexity of the world.
+Generative models (like Diffusion models, Flow Matching, GANs, or VAEs) change the paradigm because they explicitly or implicitly learn the **true probability distribution** of natural images from millions of examples.
+When you use a generative model as a prior for deconvolution:
+- You are mapping the space of all possible images.
+- The model acts as a "manifold constraint." It essentially says: *"I will only allow solutions that exist on the manifold of real, sharp images."*
+### 4. How the "Push and Pull" Works in Practice
+When you use a generative model (like a diffusion model) for deconvolution, the sampling process alternates between two steps:
+1. **The Prior Step (Unconditional Generation):** The generative model's learned vector field or score function ($`\nabla_x \log p(x)`$) pushes the noisy/intermediate image toward the nearest pocket of high probability—making it look like a realistic, sharp image.
+2. **The Measurement Step (Data Consistency):** You calculate the gradient of the physical forward model ($`\nabla_x \|y - Hx\|^2`$) and use it to pull the image back toward a state that physically matches your blurry input.
+Because the generative model knows exactly what fine details, textures, and structures look like, it hallucinates the high-frequency information that the blur kernel $`H`$ destroyed, while the data consistency step ensures those hallucinations perfectly align with your underlying blurry image.
+---
+<empty-block/>
+</content>
+</page>

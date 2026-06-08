@@ -1,0 +1,134 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<title>COLMAP — Knowledge Share — Jipeng Sun</title>
+	<link rel="stylesheet" href="../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="(function(){var b=document.querySelector('.kn-body');if(!b)return;b.querySelectorAll('span').forEach(function(s){if(s.children.length)return;var t=s.textContent.trim();if(/^\\\([\s\S]*\\\)$/.test(t)||/^\\\[[\s\S]*\\\]$/.test(t))s.replaceWith(document.createTextNode(t));});renderMathInElement(b,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false,ignoredTags:['script','noscript','style','textarea','pre','code']});})();"></script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-LCC4R0HD24"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'G-LCC4R0HD24');
+	</script>
+	<script src="../../assets/js/ga-events.js"></script>
+</head>
+<body class="is-preload kn-page">
+	<div id="wrapper">
+		<header id="header">
+			<h1><a href="../../index.html">Jipeng Sun</a></h1>
+			<nav class="links">
+				<ul>
+					<li><a href="../../index.html">Home</a></li>
+					<li><a href="../../research.html">Research</a></li>
+					<li class="active"><a href="../../knowledge-share.html">Knowledge Share</a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course">VR/AR Course</a></li>
+				</ul>
+			</nav>
+			<nav class="main">
+				<ul>
+					<li class="search"><a class="fa-search" href="#search">Search</a><form id="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></li>
+					<li class="menu"><a class="fa-bars" href="#menu">Menu</a></li>
+				</ul>
+			</nav>
+		</header>
+		<section id="menu">
+			<section><form class="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></section>
+			<section>
+				<ul class="links">
+					<li><a href="../../index.html"><h3>Home</h3><p>Jipeng Sun's Homepage</p></a></li>
+					<li><a href="../../research.html"><h3>Research</h3><p>Publications &amp; Papers</p></a></li>
+					<li><a href="../../knowledge-share.html"><h3>Knowledge Share</h3><p>Study notes</p></a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course"><h3>Teaching</h3><p>VR Summer Course</p></a></li>
+				</ul>
+			</section>
+		</section>
+		<div id="main">
+			<article class="post">
+				<header><div class="title"><h2>COLMAP</h2></div></header>
+				<p class="kn-back"><a href="../../knowledge-share.html">&larr; Back to Knowledge Share</a></p>
+				<div class="kn-body">
+				<p>COLMAP is an end-to-end pipeline for Structure-from-Motion (SfM) and Multi-View Stereo (MVS). It takes a collection of 2D images and mathematically reconstructs the 3D geometry of the scene alongside the exact positions and intrinsic properties of the cameras used to capture it.</p>
+				<p>Here is the mathematical engine driving each stage of the COLMAP pipeline.</p>
+				<h3>1. The Camera Projection Model</h3>
+				<p>The foundation of COLMAP is mapping a 3D world coordinate \(X = [X, Y, Z, 1]^T\) to a 2D pixel coordinate \(x = [u, v, 1]^T\) on an image plane. This is governed by the standard pinhole camera projection model:</p>
+				<p class="kn-math-display">\[x \sim K [R | t] X\]</p>
+				<ul><li><strong>Extrinsics (</strong>\(R, t\)<strong>):</strong> The rotation matrix \(R \in SO(3)\) and translation vector \(t \in \mathbb{R}^3\) map the point from world coordinates to the local camera coordinate system.</li><li><strong>Intrinsics (</strong>\(K\)<strong>):</strong> The calibration matrix containing the focal length and principal point, which projects the 3D camera coordinates onto the 2D image plane.</li></ul>
+				<p>Because physical lenses are imperfect, COLMAP rigorously models complex non-linear lens distortions (both radial and tangential) to map these ideal projected points to the actual observed pixel coordinates.</p>
+				<h3>2. Two-View Geometry (Initialization)</h3>
+				<p>Before building a global map, COLMAP must determine the relative mathematical relationship between pairs of images. By extracting and matching 2D features (like SIFT) across two images, it establishes correspondences.</p>
+				<p>For two calibrated cameras viewing the exact same 3D point, their normalized image coordinates \(x_1\) and \(x_2\) are strictly bound by the <strong>Epipolar Constraint</strong>:</p>
+				<p class="kn-math-display">\[x_2^T E x_1 = 0\]</p>
+				<p>Here, \(E\) is the Essential Matrix, mathematically defined as \(E = [t]_\times R\), where \([t]_\times\) is the skew-symmetric matrix of the translation vector. COLMAP robustly solves for \(E\) using algorithms like the 5-point algorithm within a RANSAC loop. Decomposing the Essential Matrix yields the relative rotation and translation between those two specific views.</p>
+				<h3>3. Triangulation</h3>
+				<p>Once the relative camera projection matrices \(P_1 = K_1[I | 0]\) and \(P_2 = K_2[R | t]\) are known, the depth of the matched features can be recovered. Since the projected point \(x_i\) must lie on the line created by \(P_i X\), their cross product is zero:</p>
+				<p class="kn-math-display">\[x_i \times (P_i X) = 0\]</p>
+				<p>Expanding this across multiple views yields a system of linear equations in the form \(AX = 0\). COLMAP solves this using Singular Value Decomposition (SVD) via the Direct Linear Transform (DLT) method to estimate the initial 3D position of point \(X\).</p>
+				<h3>4. Bundle Adjustment (The SfM Core)</h3>
+				<p>As COLMAP incrementally registers more cameras and triangulates more points, tiny numerical errors accumulate into massive drift. <strong>Bundle Adjustment (BA)</strong> is the massive non-linear optimization engine that solves this. It jointly refines all camera parameters \(\Theta\) (both extrinsics and intrinsics) and 3D point coordinates \(X\) by minimizing the total <strong>Reprojection Error</strong>:</p>
+				<p class="kn-math-display">\[\min_{\Theta, X} \sum_{i=1}^{N} \sum_{j=1}^{M} v_{ij} \| x_{ij} - \pi(\Theta_i, X_j) \|^2\]</p>
+				<ul><li>\(v_{ij}\) is an indicator variable (1 if point \(j\) is visible in camera \(i\), 0 otherwise).</li><li>\(x_{ij}\) is the actual 2D pixel observation.</li><li>\(\pi(\Theta_i, X_j)\) is the mathematical projection of our estimated 3D point into the estimated camera model.</li></ul>
+				<p>This is a massive, highly non-convex least-squares problem, which COLMAP solves efficiently using the Levenberg-Marquardt algorithm alongside Schur complement tricks to exploit the sparse structure of the problem.</p>
+				<h3>5. Multi-View Stereo (Dense Reconstruction)</h3>
+				<p>SfM outputs a sparse point cloud and the camera poses. To generate dense, continuous surfaces, COLMAP utilizes Multi-View Stereo (MVS), specifically a technique called PatchMatch Stereo.</p>
+				<p>For every single pixel in a reference image, MVS estimates a depth \(d\) and a surface normal \(n\). It tests these hypotheses by warping a small patch of pixels from a reference image to a neighboring source image using a homography matrix \(H\):</p>
+				<p class="kn-math-display">\[H = K_s \left( R_{sr} - \frac{t_{sr} n^T}{d} \right) K_r^{-1}\]</p>
+				<p>Where \(R_{sr}\) and \(t_{sr}\) represent the relative transformation between the reference (\(r\)) and source (\(s\)) cameras. The algorithm iteratively optimizes \(d\) and \(n\) to maximize the photometric consistency—usually measured by the Normalized Cross-Correlation (NCC)—between the reference patch and the homography-warped source patch.</p>
+				<h2><strong>Epipolar Constraint</strong></h2>
+				<p>At its core, the equation \(x_2^T E x_1 = 0\) is a purely geometric constraint expressed algebraically. It states that an observed 3D point and the optical centers of the two cameras viewing it must all lie on the exact same 2D plane in 3D space. This is known as the <strong>coplanarity constraint</strong>.</p>
+				<p>Here is the step-by-step mathematical derivation of why this holds true.</p>
+				<h3>1. The Geometric Setup</h3>
+				<p>Imagine a 3D point \(X\). It is observed by Camera 1 and Camera 2.</p>
+				<ul><li>Let Camera 1 be the origin of our coordinate system, with its optical center at \(O_1 = [0, 0, 0]^T\).</li><li>Let Camera 2 have an optical center at \(O_2\).</li><li>The coordinate system of Camera 2 is related to Camera 1 by a rigid body transformation: a rotation matrix \(R\) and a translation vector \(t\). Note that \(t\) is effectively the baseline vector pointing from \(O_1\) to \(O_2\).</li></ul>
+				<p>The three points—\(O_1\), \(O_2\), and \(X\)—form a triangle in 3D space. The plane containing this triangle is called the <strong>epipolar plane</strong>.</p>
+				<h3>2. The Algebraic Derivation</h3>
+				<p>Let \(X_1\) be the 3D coordinates of point \(X\) relative to Camera 1.</p>
+				<p>Let \(X_2\) be the 3D coordinates of the same point \(X\) relative to Camera 2.</p>
+				<p>Because both vectors point to the same physical location in space, we can map \(X_1\) into Camera 2's coordinate system using our rigid transformation:</p>
+				<p class="kn-math-display">\[X_2 = R X_1 + t\]</p>
+				<p>To isolate the geometric relationship, we want to eliminate the addition of \(t\). We can do this by taking the cross product of \(t\) on both sides of the equation.</p>
+				<p class="kn-math-display">\[t \times X_2 = t \times (R X_1 + t)\]</p>
+				<p>Since the cross product distributes over addition, and the cross product of any vector with itself is zero (\(t \times t = 0\)), this simplifies to:</p>
+				<p class="kn-math-display">\[t \times X_2 = t \times R X_1\]</p>
+				<p>Geometrically, the vector \((t \times R X_1)\) is perpendicular to both the translation vector \(t\) and the rotated ray \(R X_1\). Therefore, this cross product represents the <strong>normal vector</strong> to the epipolar plane.</p>
+				<p>Because \(X_2\) lies *inside* that epipolar plane, it must be perpendicular to the plane's normal vector. We express this by taking the dot product of \(X_2\) with both sides of our equation:</p>
+				<p class="kn-math-display">\[X_2^T (t \times X_2) = X_2^T (t \times R X_1)\]</p>
+				<p>The left side of the equation is the dot product of \(X_2\) and a vector orthogonal to \(X_2\). This strictly equals zero:</p>
+				<p class="kn-math-display">\[0 = X_2^T (t \times R X_1)\]</p>
+				<p>This is the scalar triple product, formally proving that \(X_2\), \(t\), and \(R X_1\) are coplanar.</p>
+				<h3>3. Introducing the Essential Matrix</h3>
+				<p>To write this cleanly as a matrix multiplication, we replace the cross product operation \(t \times (\cdot)\) with its equivalent matrix multiplication using the skew-symmetric matrix of \(t\), denoted as \([t]_\times\):</p>
+				<p class="kn-math-display">\[0 = X_2^T [t]_\times R X_1\]</p>
+				<p>We group the camera extrinsics into a single matrix. This is the <strong>Essential Matrix (\(E\))</strong>:</p>
+				<p class="kn-math-display">\[E = [t]_\times R\]</p>
+				<p>Substituting \(E\) back into our coplanarity equation gives:</p>
+				<p class="kn-math-display">\[X_2^T E X_1 = 0\]</p>
+				<h3>4. From 3D Points to 2D Pixels</h3>
+				<p>The final step is relating the 3D coordinates (\(X_1, X_2\)) to the 2D normalized image coordinates (\(x_1, x_2\)) captured by the camera sensor.</p>
+				<p>Under the pinhole camera model, the 3D point is just a scaled version of the 2D image point along the ray defined by depth \(Z\):</p>
+				<p class="kn-math-display">\[X_1 = Z_1 x_1\]</p>
+				<p>Substituting these into our equation:</p>
+				<p class="kn-math-display">\[(Z_2 x_2)^T E (Z_1 x_1) = 0\]</p>
+				<p class="kn-math-display">\[Z_1 Z_2 (x_2^T E x_1) = 0\]</p>
+				<p>Since the depths \(Z_1\) and \(Z_2\) are strictly positive non-zero scalars for any point visible in front of the camera, we can divide them out. This leaves us with the fundamental Epipolar Constraint:</p>
+				<p class="kn-math-display">\[x_2^T E x_1 = 0\]</p>
+				<h3>The Geometric Intuition in 2D</h3>
+				<p>If you bracket the equation as \(x_2^T (E x_1) = 0\), it reveals a powerful tool for search algorithms in computer vision.</p>
+				<p>The term \((E x_1)\) is actually a 3-vector that defines the coefficients of a 2D line in the second image—specifically, the <strong>epipolar line</strong> \(l_2\). The equation then becomes \(x_2^T l_2 = 0\), which is the standard algebraic condition for a point \(x_2\) to lie on a line \(l_2\).</p>
+				<p>Instead of searching the entire 2D pixel grid of image 2 to find the match for \(x_1\), the Epipolar Constraint proves you only need to search along the 1D epipolar line \(E x_1\).</p>
+				</div>
+			</article>
+		</div>
+	</div>
+	<script src="../../assets/js/jquery.min.js"></script>
+	<script src="../../assets/js/browser.min.js"></script>
+	<script src="../../assets/js/breakpoints.min.js"></script>
+	<script src="../../assets/js/util.js"></script>
+	<script src="../../assets/js/main.js"></script>
+</body>
+</html>

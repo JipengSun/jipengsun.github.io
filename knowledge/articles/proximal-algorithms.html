@@ -1,0 +1,98 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<title>Proximal Algorithms — Knowledge Share — Jipeng Sun</title>
+	<link rel="stylesheet" href="../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="(function(){var b=document.querySelector('.kn-body');if(!b)return;b.querySelectorAll('span').forEach(function(s){if(s.children.length)return;var t=s.textContent.trim();if(/^\\\([\s\S]*\\\)$/.test(t)||/^\\\[[\s\S]*\\\]$/.test(t))s.replaceWith(document.createTextNode(t));});renderMathInElement(b,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false,ignoredTags:['script','noscript','style','textarea','pre','code']});})();"></script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-LCC4R0HD24"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'G-LCC4R0HD24');
+	</script>
+	<script src="../../assets/js/ga-events.js"></script>
+</head>
+<body class="is-preload kn-page">
+	<div id="wrapper">
+		<header id="header">
+			<h1><a href="../../index.html">Jipeng Sun</a></h1>
+			<nav class="links">
+				<ul>
+					<li><a href="../../index.html">Home</a></li>
+					<li><a href="../../research.html">Research</a></li>
+					<li class="active"><a href="../../knowledge-share.html">Knowledge Share</a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course">VR/AR Course</a></li>
+				</ul>
+			</nav>
+			<nav class="main">
+				<ul>
+					<li class="search"><a class="fa-search" href="#search">Search</a><form id="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></li>
+					<li class="menu"><a class="fa-bars" href="#menu">Menu</a></li>
+				</ul>
+			</nav>
+		</header>
+		<section id="menu">
+			<section><form class="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></section>
+			<section>
+				<ul class="links">
+					<li><a href="../../index.html"><h3>Home</h3><p>Jipeng Sun's Homepage</p></a></li>
+					<li><a href="../../research.html"><h3>Research</h3><p>Publications &amp; Papers</p></a></li>
+					<li><a href="../../knowledge-share.html"><h3>Knowledge Share</h3><p>Study notes</p></a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course"><h3>Teaching</h3><p>VR Summer Course</p></a></li>
+				</ul>
+			</section>
+		</section>
+		<div id="main">
+			<article class="post">
+				<header><div class="title"><h2>Proximal Algorithms</h2></div></header>
+				<p class="kn-back"><a href="../../knowledge-share.html">&larr; Back to Knowledge Share</a></p>
+				<div class="kn-body">
+				<p>Proximal algorithms are a class of optimization methods designed to handle objective functions that are non-smooth, constrained, or split into multiple terms. They are exceptionally useful in solving ill-posed inverse problems where you need to balance a smooth data fidelity term with a non-smooth regularization term.</p>
+				<p>Here is the mathematical breakdown of how they work.</p>
+				<h3>1. The Proximal Operator: Definition</h3>
+				<p>Let \(f: \mathbb{R}^n \to \mathbb{R} \cup {+\infty}\) be a closed proper convex function. The <strong>proximal operator</strong> of \(f\) with parameter \(\lambda > 0\), denoted as \(\text{prox}_{\lambda f}(v)\), is defined as:</p>
+				<p class="kn-math-display">\[\text{prox}_{\lambda f}(v) = \arg\min_x \left( f(x) + \frac{1}{2\lambda} \|x - v\|_2^2 \right)\]</p>
+				<p><strong>Intuition:</strong></p>
+				<p>This operator takes a point \(v\) and returns a new point \(x\) that balances two competing goals:</p>
+				<ol><li><strong>Minimize </strong>\(f(x)\)<strong>:</strong> We want the new point to reduce the value of our target function.</li><li><strong>Stay close to </strong>\(v\)<strong>:</strong> The penalty term \(\frac{1}{2\lambda} \|x - v\|_2^2\) forces the new point \(x\) to not stray too far from the input \(v\).</li></ol>
+				<p>The parameter \(\lambda\) acts as a trade-off parameter or "step size." As \(\lambda \to 0\), the penalty dominates, and \(\text{prox}_{\lambda f}(v) \to v\). As \(\lambda \to \infty\), the operator simply returns the global minimum of \(f(x)\).</p>
+				<h3>2. Connection to Implicit Gradient Descent</h3>
+				<p>To understand why this is a generalized form of gradient descent, assume for a moment that \(f\) is smooth and differentiable. To find the minimum of the proximal objective, we take the gradient with respect to \(x\) and set it to zero:</p>
+				<p class="kn-math-display">\[\nabla f(x) + \frac{1}{\lambda}(x - v) = 0\]</p>
+				<p>Rearranging this gives:</p>
+				<p class="kn-math-display">\[x = v - \lambda \nabla f(x)\]</p>
+				<p>Notice that the gradient is evaluated at the *future* point \(x\), not the current point \(v\). This means the proximal operator is equivalent to a <strong>backward (implicit) Euler step</strong>. Because it is implicit, it is inherently more stable than standard forward gradient descent, allowing it to easily handle non-smooth functions where standard gradients are undefined.</p>
+				<h3>3. A Classic Example: \(L_1\) Regularization</h3>
+				<p>In computational imaging, \(L_1\) sparsity priors are foundational for recovering signals. If we set \(f(x) = \|x\|_1\), the proximal operator has a beautifully simple closed-form solution known as the <strong>soft-thresholding operator</strong>:</p>
+				<p class="kn-math-display">\[\text{prox}_{\lambda \| \cdot \|_1}(v)_i = \text{sign}(v_i) \max(|v_i| - \lambda, 0)\]</p>
+				<p>Instead of just scaling values down, this operation cleanly shrinks small values (representing noise or negligible artifacts) exactly to zero, actively promoting sparsity.</p>
+				<h3>4. The Proximal Gradient Method (Forward-Backward Splitting)</h3>
+				<p>In practice, we rarely minimize just \(f(x)\). We usually want to minimize a composite objective function typical of inverse problems:</p>
+				<p class="kn-math-display">\[\min_x g(x) + h(x)\]</p>
+				<p>Where:</p>
+				<ul><li>\(g(x)\) is convex and differentiable (e.g., a data fidelity term like \(\|Ax - y\|_2^2\)).</li><li>\(h(x)\) is convex but non-differentiable (e.g., a regularization term like Total Variation or an \(L_1\) norm).</li></ul>
+				<p>We cannot use standard gradient descent because \(h\) is non-smooth. We cannot easily use the proximal operator on the whole \(g + h\) function because it might lack a closed-form solution.</p>
+				<p>The <strong>Proximal Gradient Method</strong> solves this by splitting the problem. It updates \(x\) iteratively using the following rule:</p>
+				<p class="kn-math-display">\[x^{(k+1)} = \text{prox}_{\lambda h} \left( x^{(k)} - \lambda \nabla g(x^{(k)}) \right)\]</p>
+				<p>This is a two-step process:</p>
+				<ol><li><strong>Forward Step (Gradient):</strong> Take a standard explicit gradient descent step on the smooth data fidelity term \(g\) to get an intermediate point \(z = x^{(k)} - \lambda \nabla g(x^{(k)})\).</li><li><strong>Backward Step (Proximal):</strong> Apply the proximal operator of the non-smooth prior \(h\) to that intermediate point \(z\).</li></ol>
+				<h3>Modern Context: Generative Priors</h3>
+				<p>When bridging classical optimization with modern generative AI, this mathematical framework remains critical. In architectures like Plug-and-Play (PnP) networks, the formal proximal operator \(\text{prox}_{\lambda h}\) is entirely swapped out for an off-the-shelf denoiser, such as a neural network or a step in a diffusion model. The proximal framework provides the theoretical scaffolding that allows these complex, learned models to act as mathematically sound regularizers for noisy image reconstruction.</p>
+				<hr />
+				</div>
+			</article>
+		</div>
+	</div>
+	<script src="../../assets/js/jquery.min.js"></script>
+	<script src="../../assets/js/browser.min.js"></script>
+	<script src="../../assets/js/breakpoints.min.js"></script>
+	<script src="../../assets/js/util.js"></script>
+	<script src="../../assets/js/main.js"></script>
+</body>
+</html>

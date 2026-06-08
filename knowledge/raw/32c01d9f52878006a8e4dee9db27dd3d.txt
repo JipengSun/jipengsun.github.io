@@ -1,0 +1,50 @@
+Here is the result of "view" for the Page with URL https://app.notion.com/p/32c01d9f52878006a8e4dee9db27dd3d as of 2026-03-23T15:53:44.182Z:
+<page url="https://app.notion.com/p/32c01d9f52878006a8e4dee9db27dd3d">
+<ancestor-path></ancestor-path>
+<properties>
+{"title":"DDPMs, DDIMs, and Score-Based Methods"}
+</properties>
+<content>
+The connection between DDPMs, DDIMs, and Score-Based Generative Models is one of the most elegant unifying theories in modern machine learning (formalized beautifully by Yang Song et al. in 2020).
+It proves that predicting the noise in a discrete Markov chain is mathematically identical to learning the vector field that points toward the data manifold in continuous time.
+Here is how we cross the bridge from discrete noise prediction to continuous Score-Based Modeling and the Probability Flow ODE.
+## 1. What is a "Score"?
+In statistics, the **score** of a probability distribution $`p(\mathbf{x})`$ is defined as the gradient of the log-probability density with respect to the data:
+$`\nabla_{\mathbf{x}} \log p(\mathbf{x})`$
+Why is this useful? Calculating the actual probability $`p(\mathbf{x})`$ usually requires computing an intractable normalization constant (the partition function). However, taking the derivative $`\nabla_{\mathbf{x}}`$ eliminates this constant.
+Visually, the score is a **vector field**. At any point in high-dimensional space, the score vector points in the direction of higher data density (i.e., it points toward where the real images are).
+## 2. The Noise-Score Equivalence (Tweedie's Formula)
+How does this relate to predicting noise $`\boldsymbol{\epsilon}`$?
+Recall our discrete forward process marginal:
+$`q(\mathbf{x}_t | \mathbf{x}_0) = \mathcal{N}(\mathbf{x}_t; \sqrt{\bar{\alpha}_t}\mathbf{x}_0, (1 - \bar{\alpha}_t)\mathbf{I})`$
+If we take the gradient of the log of this Gaussian distribution with respect to $`\mathbf{x}_t`$, the math simplifies incredibly. Through a principle related to Tweedie's formula, the score of the perturbed data is directly proportional to the noise added:
+$`\nabla_{\mathbf{x}_t} \log q(\mathbf{x}_t) = -\frac{\boldsymbol{\epsilon}}{\sqrt{1 - \bar{\alpha}_t}}`$
+This is the "Aha!" moment. When you train a U-Net in a diffusion model to predict the noise $`\boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t)`$, **you are actually training a Score Network** $`\mathbf{s}_\theta(\mathbf{x}_t, t)`$ in disguise. The U-Net is learning the continuous vector field that points away from pure noise and toward the clean data manifold.
+$`\mathbf{s}_\theta(\mathbf{x}_t, t) = -\frac{\boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t)}{\sqrt{1 - \bar{\alpha}_t}}`$
+## 3. Moving to Continuous Time (The SDE)
+To fully utilize this score, we must abandon discrete timesteps $`t \in \{1, 2, \dots, T\}`$ and move to continuous time $`t \in [0, 1]`$.
+As the step size approaches zero, the forward diffusion process (adding noise) becomes a **Stochastic Differential Equation (SDE)**:
+$`d\mathbf{x} = \mathbf{f}(\mathbf{x}, t)dt + g(t)d\mathbf{w}`$
+- $`\mathbf{f}(\mathbf{x}, t)dt`$: The deterministic drift (how the data scales down over time).
+- $`g(t)d\mathbf{w}`$: The stochastic diffusion (the Brownian motion/Gaussian noise being injected).
+## 4. The Reverse SDE
+A fundamental theorem by Anderson (1982) states that any forward SDE has a corresponding reverse-time SDE. If we run time backward from $`t=1`$ to $`t=0`$, the equation is:
+$`d\mathbf{x} = [\mathbf{f}(\mathbf{x}, t) - g(t)^2 \nabla_{\mathbf{x}} \log p_t(\mathbf{x})]dt + g(t)d\bar{\mathbf{w}}`$
+Notice the crucial term: $`\nabla_{\mathbf{x}} \log p_t(\mathbf{x})`$. To run the generation process backward, **all we need is the score**. Since our U-Net $`\boldsymbol{\epsilon}_\theta`$ has already learned the score, we can plug it directly into this SDE and solve it using numerical SDE solvers (like Euler-Maruyama) to generate images. This is the continuous-time equivalent of DDPM.
+## 5. The Probability Flow ODE (The Bridge to DDIM)
+Solving SDEs is notoriously slow because the random Brownian motion $`d\bar{\mathbf{w}}`$ forces you to take tiny step sizes to avoid massive integration errors.
+However, the authors of the continuous-time framework discovered something remarkable: for every SDE, there exists a deterministic **Ordinary Differential Equation (ODE)** whose trajectories perfectly share the exact same marginal probability densities $`p_t(\mathbf{x})`$ at every moment in time $`t`$.
+This is the **Probability Flow ODE**:
+$`d\mathbf{x} = \left[ \mathbf{f}(\mathbf{x}, t) - \frac{1}{2}g(t)^2 \nabla_{\mathbf{x}} \log p_t(\mathbf{x}) \right]dt`$
+Notice what happened:
+1. The random noise term $`g(t)d\bar{\mathbf{w}}`$ is completely gone.
+2. The score term is multiplied by exactly $`\frac{1}{2}`$.
+Because this equation has no random noise injection, the trajectory from pure noise to a clean image is completely smooth and deterministic. It represents a fluid flowing through high-dimensional space.
+## The Grand Conclusion
+If you take this continuous-time Probability Flow ODE, discretize it using a simple first-order Euler method, and substitute our U-Net noise predictor back in for the score term... **the resulting algebraic equation is the exact DDIM sampling equation with **$`\sigma_t = 0`$**.**
+DDIM was derived from a discrete, non-Markovian probabilistic perspective. Score-based modeling derived the Probability Flow ODE from continuous-time calculus. They arrived at the exact same mathematical destination from completely different directions.
+---
+Since this deterministic ODE framework maps a simple Gaussian base distribution to a complex data distribution, it perfectly sets the stage for methods like **Flow Matching** and continuous normalizing flows. 
+<empty-block/>
+</content>
+</page>

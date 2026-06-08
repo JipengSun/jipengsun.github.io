@@ -1,0 +1,16 @@
+Here is the result of "view" for the Page with URL https://app.notion.com/p/33001d9f5287801ba5ccd81fa27b4263 as of 2026-03-30T17:30:11.927Z:
+<page url="https://app.notion.com/p/33001d9f5287801ba5ccd81fa27b4263">
+<ancestor-path></ancestor-path>
+<properties>
+{"title":"Optimization"}
+</properties>
+<content>
+<mention-page url="https://app.notion.com/p/33301d9f52878014b40ff77d90d4ae7b"/> 
+	<mention-page url="https://app.notion.com/p/33301d9f5287807dbac3cc0b43950e45"/> 
+	<mention-page url="https://app.notion.com/p/33301d9f5287806d911bd48dbf8729cf"/> 
+<mention-page url="https://app.notion.com/p/33301d9f52878038a6f0d88e61ba2406"/> 
+<mention-page url="https://app.notion.com/p/33001d9f5287806db4bef231ce5d0355"/> 
+	<mention-page url="https://app.notion.com/p/33301d9f5287808b81ace1893b7a4282"/> 
+<empty-block/>
+</content>
+</page>

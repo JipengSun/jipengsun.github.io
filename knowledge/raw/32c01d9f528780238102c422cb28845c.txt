@@ -1,0 +1,69 @@
+Here is the result of "view" for the Page with URL https://app.notion.com/p/32c01d9f528780238102c422cb28845c as of 2026-03-23T02:09:19.548Z:
+<page url="https://app.notion.com/p/32c01d9f528780238102c422cb28845c">
+<ancestor-path></ancestor-path>
+<properties>
+{"title":"KL Divergence"}
+</properties>
+<content>
+At its core, **Kullback-Leibler (KL) Divergence** is a statistical measure of how much one probability distribution differs from a second, reference probability distribution.
+You can think of it as the "penalty" or "surprise" you experience if you use an approximation (a model) to represent reality, instead of the true distribution itself. In information theory, it is often referred to as **relative entropy**.
+Here is the mathematical breakdown of how it works.
+## The Formal Definition
+The mathematical definition of KL divergence depends on whether your probability distributions are discrete (like rolling dice) or continuous (like measuring exact temperatures). We denote the divergence of distribution $`Q`$ from distribution $`P`$ as $`D_{KL}(P \parallel Q)`$.
+Typically, $`P`$ represents the "true" distribution of the data, and $`Q`$ represents the "model" or approximation of $`P`$.
+**1. For Discrete Distributions**
+If $`P`$ and $`Q`$ are defined on the same discrete sample space $`\mathcal{X}`$, the KL divergence is:
+$`D_{KL}(P \parallel Q) = \sum_{x \in \mathcal{X}} P(x) \log\left(\frac{P(x)}{Q(x)}\right)`$
+**2. For Continuous Distributions**
+If $`P`$ and $`Q`$ are continuous distributions with probability density functions $`p(x)`$ and $`q(x)`$, the sum becomes an integral:
+$`D_{KL}(P \parallel Q) = \int_{-\infty}^{\infty} p(x) \log\left(\frac{p(x)}{q(x)}\right) dx`$
+*(Note: The logarithm base can be 2 if information is measured in bits, or *$`e`$* if measured in nats, which is more common in machine learning.)*
+## Deconstructing the Equation
+To really understand what the math is doing, we can rewrite the equation using the expected value operator ($`E`$). The KL divergence is simply the expected value of the logarithmic difference between the probabilities $`P`$ and $`Q`$, assuming the data is drawn from $`P`$:
+$`D_{KL}(P \parallel Q) = \mathbb{E}_{x \sim P} [\log P(x) - \log Q(x)]`$
+- $`\log P(x) - \log Q(x)`$: This difference measures how much less probable an event $`x`$ is under your model $`Q`$ compared to the truth \$P\$.
+- $`\mathbb{E}_{x \sim P}`$: By weighting this difference by $`P(x)`$, we care most about getting the probabilities right for the events that *actually happen most frequently* in the true distribution.
+## Three Crucial Properties
+1. **It is Non-Negative:** $`D_{KL}(P \parallel Q) \geq 0`$. This is known as Gibbs' inequality. The divergence is exactly zero if and only if $`P`$ and $`Q`$ are identical almost everywhere.
+2. **It is Asymmetric:** $`D_{KL}(P \parallel Q) \neq D_{KL}(Q \parallel P)`$. Because of this asymmetry, KL divergence is technically not a true mathematical "distance" metric (like Euclidean distance).
+3. **Undefined for Zero Probabilities:** If $`Q(x) = 0`$ for any event where $`P(x) > 0`$, the ratio $`\frac{P(x)}{0}`$ forces the KL divergence to go to infinity. This means if your model assigns a zero probability to an event that can actually happen in reality, the penalty is mathematically infinite.
+---
+<empty-block/>
+<empty-block/>
+## Why KL is Non-Negative?
+The fact that KL divergence can never be negative—a rule known as **Gibbs' inequality**—is the mathematical backbone of why it works as a "distance" or "penalty" metric in the first place.
+Intuitively, think of it from an information-theory perspective: the true distribution $`P`$ is the absolute most efficient way to represent your data. If you use *any* other model $`Q`$ to represent that data, you are introducing inefficiencies. You can never have a "negative" penalty for being wrong; the absolute best you can do is have zero penalty when your model $`Q`$ perfectly matches reality $`P`$.
+To prove this mathematically, we rely on a fundamental concept called **Jensen's Inequality**.
+## The Mathematical Proof
+Jensen's Inequality states that for any strictly concave function (like the logarithm function), the expected value of the function is always *less than or equal to* the function of the expected value.
+In mathematical terms, if $`f`$ is concave, then:
+$`\mathbb{E}[f(X)] \le f(\mathbb{E}[X])`$
+Here is how we use that to prove $`D_{KL}(P \parallel Q) \geq 0`$:
+**Step 1: Invert the ratio inside the logarithm**
+Let's start with the standard discrete formula for KL divergence:
+$`D_{KL}(P \parallel Q) = \sum_{x} P(x) \log\left(\frac{P(x)}{Q(x)}\right)`$
+Using the logarithmic rule that $`\log(a/b) = -\log(b/a)`$, we can rewrite this by flipping the fraction and pulling a negative sign out to the front:
+$`-D_{KL}(P \parallel Q) = \sum_{x} P(x) \log\left(\frac{Q(x)}{P(x)}\right)`$
+**Step 2: Express it as an Expectation**
+Notice that the right side of the equation is just the expected value of the term $`\log\left(\frac{Q(x)}{P(x)}\right)`$, weighted by the true probability $`P(x)`$.
+$`-D_{KL}(P \parallel Q) = \mathbb{E}_{x \sim P} \left[ \log\left(\frac{Q(x)}{P(x)}\right) \right]`$
+**Step 3: Apply Jensen's Inequality**
+Because the $`\log`$ function is strictly concave, we can apply Jensen's Inequality to pull the $`\log`$ *outside* the expectation. Doing this means the left side will be less than or equal to the right side:
+$`\mathbb{E}_{x \sim P} \left[ \log\left(\frac{Q(x)}{P(x)}\right) \right] \le \log \left( \mathbb{E}_{x \sim P} \left[ \frac{Q(x)}{P(x)} \right] \right)`$
+**Step 4: Solve the inner expectation**
+Now, let's look at that inner expectation mathematically. To find the expected value of $`\frac{Q(x)}{P(x)}`$ with respect to $`P`$, we multiply it by $`P(x)`$ and sum it up:
+$`\mathbb{E}_{x \sim P} \left[ \frac{Q(x)}{P(x)} \right] = \sum_{x} P(x) \left( \frac{Q(x)}{P(x)} \right) = \sum_{x} Q(x)`$
+Because $`Q`$ is a valid probability distribution, the sum of all its probabilities must equal exactly 1.
+**Step 5: The Final Conclusion**
+Substitute that $`1`$ back into our inequality from Step 3:
+$`-D_{KL}(P \parallel Q) \le \log(1)`$
+Since $`\log(1) = 0`$, we get:
+$`-D_{KL}(P \parallel Q) \le 0`$
+Multiply both sides by $`-1`$ (which flips the inequality sign), and we arrive at our proof:
+$`D_{KL}(P \parallel Q) \ge 0`$
+## When is it exactly zero?
+Because the logarithm is *strictly* concave, Jensen's inequality only becomes a perfect equality if the term inside is a constant. In this case, $`\frac{Q(x)}{P(x)}`$ must be a constant for all $`x`$. Since both distributions must sum to 1, that constant can only be 1.
+Therefore, $`D_{KL}(P \parallel Q) = 0`$ if and only if $`P(x) = Q(x)`$ for every single possible outcome.
+---
+</content>
+</page>

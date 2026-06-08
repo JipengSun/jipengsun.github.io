@@ -1,0 +1,49 @@
+Here is the result of "view" for the Page with URL https://app.notion.com/p/34901d9f528780b8a125f62ee430ac4d as of 2026-04-21T17:49:14.990Z:
+<page url="https://app.notion.com/p/34901d9f528780b8a125f62ee430ac4d">
+<ancestor-path></ancestor-path>
+<properties>
+{"title":"Camera Intrinsic Matrix"}
+</properties>
+<content>
+The camera intrinsic matrix is the fundamental mathematical bridge between the 3D physical world (in the camera's local coordinate system) and the 2D pixel grid of the image sensor.
+In the context of computational imaging and hardware design, the intrinsic matrix defines the **ideal paraxial geometric projection**. Any physical diffraction, optical aberrations, or engineered meta-optics behaviors are modeled as deviations or convolutions on top of this baseline geometric mapping.
+Here is the mathematical breakdown of how it works.
+### 1. The Pinhole Camera Model
+To map a 3D point in space to a 2D pixel, we use the pinhole camera model. Let's define our points:
+- A 3D point in the camera's local coordinate frame: $`P_c = [X, Y, Z]^T`$
+- The corresponding 2D projection on the image plane (in pixel coordinates): $`p = [u, v]^T`$
+Because this is a projective transformation, it is non-linear in standard Cartesian coordinates (due to the perspective divide by $`Z`$). To make it linear, we express the points in **homogeneous coordinates** by appending a $`1`$:
+- $`P_{c,h} = [X, Y, Z, 1]^T`$
+- $`p_h = [u, v, 1]^T`$
+![](https://prod-files-secure.s3.us-west-2.amazonaws.com/40d01d9f-5287-81ac-ac6b-00037c8b4f5f/f394dd95-99fe-4e3e-9037-e192225d8d17/image.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB466VG562J6N%2F20260607%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260607T135526Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjENT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCdlHNV%2Bu9ukx0S256qfNGvCd3PofdIPK9Sw6xjo%2BhC3AIhAPnMIkHdV5DX4INkyjtVbtfZ%2BDhHdG4zrfowt20SCtvKKogECJ3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQABoMNjM3NDIzMTgzODA1Igw24eDW4I2%2FbFq0Xwsq3AMVtHOMJeztyFSiCephemfbOZ1TrHeKDiyReavDWsjgkQPfDTVXYwEd3GhKmg%2FeuLIGxeH%2FOkqrcO1L%2BCrryfqxuL35BaYPKQbSE9QpUhdPu%2FgBGPmRjCWa4%2Bj%2BIR9Y16UTKm%2BGGHIFrgRMAixhR2Zgqj%2FsF4sQ96TVQKEP4N2WhTT15cPjvrfk%2FYn2cU08gzCpW8p8p0L3Vo8A10aLUPpfGh4%2BczQIPX%2F%2FHPH5bzEiPsggKdyG6yqSm6Xychi23M%2B9EZo8Y8qb%2FCwJYvS7X0liGVpppwMbxXZp0F0HX35A4P867RFU7T1%2F5w8EZKtpMDjPZY5TW35lKNz1OrQ7cyHu%2F8jbqSwFWoSN04QhBsOQBqwid9NFBf01O3StWFhpsvZ5QNX%2FyfzhtyxaVbTl%2FNW1vVNxIOr6NCrqON5JMdJeYBS2iBcUVXumRs605dSDwIISjYd6ieX7zdSNSc7SFLgdrZvz9beUe8nDuEgDNyTBKMUIhA608X9Mv9RAgIkPfMdBnOv55BeOIfnhWjCpNTQwtxsY5Yh4HonP5CIMFK6I7wMXhBuceq5s%2FNIuvo1kxaY3Evh1O1iL8Vggh9vaYl7uhmLksURXXOZ7bvwgm1QzeD9jFHdlnrqmuo5ouTD9rZXRBjqkATW5EIYIvsn3oWgY2Z3QZy5%2BmpM1J44WNNDZ99eF3oTxdhaRbMortGT9lqq6M2AzT%2BdsTYkm5lu6z4m51TTRI%2Ffcw9Eb1p6eRNtqS71bZ2XpgUEk%2FZXEDSYH34oPt8Oo9j%2BpDfIS8YXwGU5SRbAAbS2Rj7GcCGUDV2txjYqOq8d7FPp98ii3n2xsQFehVtug0mZYpLqyTSHBAewpJ%2FDWH3Q2FlvV&X-Amz-Signature=3167bb37fab8fd380d24c25945f125d1d8e9b28145989cbf4824fcba91a03203&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject)
+### 2. The Intrinsic Matrix ($`K`$)
+The intrinsic matrix $`K`$ is a $`3 \times 3`$ upper-triangular matrix that encodes the camera's internal parameters:
+$`K = \begin{bmatrix} f_x & \gamma & c_x \\ 0 & f_y & c_y \\ 0 & 0 & 1 \end{bmatrix}`$
+Here is what each parameter represents physically:
+- $`f_x, f_y`$** (Focal Lengths in Pixels):** These are the products of the physical focal length $`f`$ (e.g., in millimeters) and the scaling factors of the sensor $`m_x, m_y`$ (pixels per millimeter). If the pixels are perfectly square, $`f_x = f_y`$.
+	- $`f_x = f \cdot m_x`$
+	- $`f_y = f \cdot m_y`$
+- $`c_x, c_y`$** (Principal Point):** This is the optical center of the image sensor, given in pixel coordinates. Ideally, this is exactly the center of the sensor array (e.g., $`[W/2, H/2]`$), but manufacturing misalignments often shift it slightly.
+- $`\gamma`$** (Skew Coefficient):** This accounts for non-rectangular pixels (where the $`x`$ and $`y`$ axes of the sensor are not perfectly orthogonal). In almost all modern digital cameras and imaging pipelines, $`\gamma = 0`$.
+### 3. The Projection Equation
+To find where the 3D point $`P_c`$ lands on the sensor, we multiply it by the intrinsic matrix. We drop the appended $`1`$ from the 3D point since we are already in the camera coordinate frame (ignoring the extrinsic rotation/translation matrix for now):
+$`\lambda \begin{bmatrix} u \\ v \\ 1 \end{bmatrix} = \begin{bmatrix} f_x & \gamma & c_x \\ 0 & f_y & c_y \\ 0 & 0 & 1 \end{bmatrix} \begin{bmatrix} X \\ Y \\ Z \end{bmatrix}`$
+Here, $`\lambda`$ is a scalar scaling factor that equals the depth $`Z`$. If we perform the matrix multiplication, we get the following system of equations:
+$`\lambda u = f_x X + \gamma Y + c_x Z`$
+$`\lambda v = f_y Y + c_y Z`$
+$`\lambda = Z`$
+To get the final 2D pixel coordinates $`(u, v)`$, we perform the **perspective divide** (dividing by $`\lambda`$, which is $`Z`$):
+$`u = f_x \frac{X}{Z} + \gamma \frac{Y}{Z} + c_x`$
+$`v = f_y \frac{Y}{Z} + c_y`$
+<columns>
+	<column>
+		![](https://prod-files-secure.s3.us-west-2.amazonaws.com/40d01d9f-5287-81ac-ac6b-00037c8b4f5f/0bdf3c03-bd47-474a-9435-d7dd4c0b6741/image.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB466VG562J6N%2F20260607%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260607T135526Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjENT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCdlHNV%2Bu9ukx0S256qfNGvCd3PofdIPK9Sw6xjo%2BhC3AIhAPnMIkHdV5DX4INkyjtVbtfZ%2BDhHdG4zrfowt20SCtvKKogECJ3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQABoMNjM3NDIzMTgzODA1Igw24eDW4I2%2FbFq0Xwsq3AMVtHOMJeztyFSiCephemfbOZ1TrHeKDiyReavDWsjgkQPfDTVXYwEd3GhKmg%2FeuLIGxeH%2FOkqrcO1L%2BCrryfqxuL35BaYPKQbSE9QpUhdPu%2FgBGPmRjCWa4%2Bj%2BIR9Y16UTKm%2BGGHIFrgRMAixhR2Zgqj%2FsF4sQ96TVQKEP4N2WhTT15cPjvrfk%2FYn2cU08gzCpW8p8p0L3Vo8A10aLUPpfGh4%2BczQIPX%2F%2FHPH5bzEiPsggKdyG6yqSm6Xychi23M%2B9EZo8Y8qb%2FCwJYvS7X0liGVpppwMbxXZp0F0HX35A4P867RFU7T1%2F5w8EZKtpMDjPZY5TW35lKNz1OrQ7cyHu%2F8jbqSwFWoSN04QhBsOQBqwid9NFBf01O3StWFhpsvZ5QNX%2FyfzhtyxaVbTl%2FNW1vVNxIOr6NCrqON5JMdJeYBS2iBcUVXumRs605dSDwIISjYd6ieX7zdSNSc7SFLgdrZvz9beUe8nDuEgDNyTBKMUIhA608X9Mv9RAgIkPfMdBnOv55BeOIfnhWjCpNTQwtxsY5Yh4HonP5CIMFK6I7wMXhBuceq5s%2FNIuvo1kxaY3Evh1O1iL8Vggh9vaYl7uhmLksURXXOZ7bvwgm1QzeD9jFHdlnrqmuo5ouTD9rZXRBjqkATW5EIYIvsn3oWgY2Z3QZy5%2BmpM1J44WNNDZ99eF3oTxdhaRbMortGT9lqq6M2AzT%2BdsTYkm5lu6z4m51TTRI%2Ffcw9Eb1p6eRNtqS71bZ2XpgUEk%2FZXEDSYH34oPt8Oo9j%2BpDfIS8YXwGU5SRbAAbS2Rj7GcCGUDV2txjYqOq8d7FPp98ii3n2xsQFehVtug0mZYpLqyTSHBAewpJ%2FDWH3Q2FlvV&X-Amz-Signature=afbe0649fb29056d0fbc043c87f6fbe2e461e2b505922b6c7c7e373de44249af&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject)
+		<empty-block/>
+	</column>
+	<column>
+		![](https://prod-files-secure.s3.us-west-2.amazonaws.com/40d01d9f-5287-81ac-ac6b-00037c8b4f5f/a0db348f-1276-42ae-b165-6eaf14c03e2e/image.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=ASIAZI2LB466VG562J6N%2F20260607%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20260607T135526Z&X-Amz-Expires=3600&X-Amz-Security-Token=IQoJb3JpZ2luX2VjENT%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQCdlHNV%2Bu9ukx0S256qfNGvCd3PofdIPK9Sw6xjo%2BhC3AIhAPnMIkHdV5DX4INkyjtVbtfZ%2BDhHdG4zrfowt20SCtvKKogECJ3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQABoMNjM3NDIzMTgzODA1Igw24eDW4I2%2FbFq0Xwsq3AMVtHOMJeztyFSiCephemfbOZ1TrHeKDiyReavDWsjgkQPfDTVXYwEd3GhKmg%2FeuLIGxeH%2FOkqrcO1L%2BCrryfqxuL35BaYPKQbSE9QpUhdPu%2FgBGPmRjCWa4%2Bj%2BIR9Y16UTKm%2BGGHIFrgRMAixhR2Zgqj%2FsF4sQ96TVQKEP4N2WhTT15cPjvrfk%2FYn2cU08gzCpW8p8p0L3Vo8A10aLUPpfGh4%2BczQIPX%2F%2FHPH5bzEiPsggKdyG6yqSm6Xychi23M%2B9EZo8Y8qb%2FCwJYvS7X0liGVpppwMbxXZp0F0HX35A4P867RFU7T1%2F5w8EZKtpMDjPZY5TW35lKNz1OrQ7cyHu%2F8jbqSwFWoSN04QhBsOQBqwid9NFBf01O3StWFhpsvZ5QNX%2FyfzhtyxaVbTl%2FNW1vVNxIOr6NCrqON5JMdJeYBS2iBcUVXumRs605dSDwIISjYd6ieX7zdSNSc7SFLgdrZvz9beUe8nDuEgDNyTBKMUIhA608X9Mv9RAgIkPfMdBnOv55BeOIfnhWjCpNTQwtxsY5Yh4HonP5CIMFK6I7wMXhBuceq5s%2FNIuvo1kxaY3Evh1O1iL8Vggh9vaYl7uhmLksURXXOZ7bvwgm1QzeD9jFHdlnrqmuo5ouTD9rZXRBjqkATW5EIYIvsn3oWgY2Z3QZy5%2BmpM1J44WNNDZ99eF3oTxdhaRbMortGT9lqq6M2AzT%2BdsTYkm5lu6z4m51TTRI%2Ffcw9Eb1p6eRNtqS71bZ2XpgUEk%2FZXEDSYH34oPt8Oo9j%2BpDfIS8YXwGU5SRbAAbS2Rj7GcCGUDV2txjYqOq8d7FPp98ii3n2xsQFehVtug0mZYpLqyTSHBAewpJ%2FDWH3Q2FlvV&X-Amz-Signature=8693cfe143e61a22038745cf0782efccc2a498414f0a2e663028f53438f81123&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject)
+	</column>
+</columns>
+<empty-block/>
+</content>
+</page>

@@ -1,0 +1,74 @@
+Here is the result of "view" for the Page with URL https://app.notion.com/p/32c01d9f528780789c4ff2887d8083bf as of 2026-03-23T15:37:28.233Z:
+<page url="https://app.notion.com/p/32c01d9f528780789c4ff2887d8083bf">
+<ancestor-path></ancestor-path>
+<properties>
+{"title":"DDIM (Denoising Diffusion Implicit Models)"}
+</properties>
+<content>
+The fundamental difference between DDPM (Denoising Diffusion Probabilistic Models) and DDIM (Denoising Diffusion Implicit Models) lies entirely in the **reverse sampling process**.
+Remarkably, DDIM uses the **exact same trained neural network** ($`\boldsymbol{\epsilon}_\theta`$) and the exact same objective function as DDPM. What changes is the mathematical assumption about how the noise was added in the first place, which drastically alters how we remove it.
+Here is the mathematical breakdown of how DDIM diverges from the DDPM foundation established in the first question.
+## 1. Dropping the Markovian Assumption
+In DDPM, the forward process is strictly a **Markov chain**: $`\mathbf{x}_t`$ depends *only* on $`\mathbf{x}_{t-1}`$. Because of this, the reverse sampling must also be a strict step-by-step Markov chain. You cannot skip steps without breaking the mathematical guarantee of recovering the data distribution, which is why DDPM requires evaluating the U-Net hundreds or thousands of times.
+DDIM (Song et al., 2020) makes a brilliant observation: the training objective $`L_{simple}`$ only depends on the marginal distribution $`q(\mathbf{x}_t | \mathbf{x}_0)`$. It does *not* actually depend on the joint distribution $`q(\mathbf{x}_{1:T} | \mathbf{x}_0)`$.
+Therefore, DDIM proposes a **non-Markovian** forward process that results in the exact same marginals:
+$`q(\mathbf{x}_t | \mathbf{x}_0) = \mathcal{N}(\mathbf{x}_t; \sqrt{\bar{\alpha}_t}\mathbf{x}_0, (1 - \bar{\alpha}_t)\mathbf{I})`$
+Because the marginals are identical, a model trained with DDPM is perfectly valid for DDIM.
+## 2. The Generalized Sampling Equation
+By redefining the forward process to be non-Markovian, we can derive a generalized, parameterized equation for the reverse step $`q_\sigma(\mathbf{x}_{t-1} | \mathbf{x}_t, \mathbf{x}_0)`$.
+To compute $`\mathbf{x}_{t-1}`$, DDIM reconstructs it using three distinct components:
+1. **Predicted Original Image (**$`\hat{\mathbf{x}}_0`$**):** Using the current noisy image $`\mathbf{x}_t`$ and the network's noise prediction.
+2. **Direction Pointing to **$`\mathbf{x}_t`$**:** The deterministic portion of the noise.
+3. **Random Noise:** The stochastic variance.
+The generalized sampling equation becomes:
+$`\mathbf{x}_{t-1} = \underbrace{\sqrt{\bar{\alpha}_{t-1}} \left( \frac{\mathbf{x}_t - \sqrt{1 - \bar{\alpha}_t} \boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t)}{\sqrt{\bar{\alpha}_t}} \right)}_{\text{1. Predicted } \mathbf{x}_0} + \underbrace{\sqrt{1 - \bar{\alpha}_{t-1} - \sigma_t^2} \cdot \boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t)}_{\text{2. Direction pointing to } \mathbf{x}_t} + \underbrace{\sigma_t \mathbf{z}}_{\text{3. Random Noise}}`$
+Where $`\mathbf{z} \sim \mathcal{N}(\mathbf{0}, \mathbf{I})`$ is standard Gaussian noise, and $`\sigma_t`$ is a variance parameter we control.
+## 3. The $`\sigma_t`$ Toggle: From Probabilistic to Implicit
+The power of this equation is that $`\sigma_t`$ acts as a toggle that controls the stochasticity of the generative process.
+- **Recovering DDPM:** If we set $`\sigma_t = \sqrt{\frac{1 - \bar{\alpha}_{t-1}}{1 - \bar{\alpha}_t}} \sqrt{1 - \frac{\bar{\alpha}_t}{\bar{\alpha}_{t-1}}}`$, the equation mathematically collapses back into the exact DDPM sampling equation. The process is a stochastic Markov chain.
+- **Creating DDIM:** If we set $`\sigma_t = 0`$, the random noise term $`\sigma_t \mathbf{z}`$ is completely eliminated.
+When $`\sigma_t = 0`$, the sampling process becomes entirely **deterministic** given a fixed initial latent noise $`\mathbf{x}_T`$. Because there is no random noise injection at each step, it is an "implicit" probabilistic model.
+## 4. The Continuous-Time Perspective (Probability Flow ODE)
+When you set $`\sigma_t = 0`$, the discrete steps of DDIM can be viewed as the Euler method for solving a specific Ordinary Differential Equation (ODE), known as the **Probability Flow ODE**.
+This is the crucial advantage of DDIM. Because it is solving an ODE rather than a Stochastic Differential Equation (SDE like DDPM), the trajectory from pure noise to a clean image is smooth and deterministic.
+## 5. Why this matters: Accelerated Sampling
+Because ODEs can be solved using numerical methods with much larger step sizes, DDIM allows for **sub-sequence sampling**.
+Instead of evaluating the network at every $`t \in \{1, 2, \dots, T\}`$, we can define a much shorter sub-sequence $`\tau`$ (e.g., just 50 steps out of 1000). We simply update the $`\bar{\alpha}`$ values in the DDIM equation to match the new, larger stride lengths. DDIM will reliably construct the image in those 50 steps, whereas DDPM would fail and produce severe artifacts if you tried to skip that many steps stochastically.
+---
+<empty-block/>
+## Derivation of the Generalized Sampling Equation
+$`\mathbf{x}_{t-1} = \underbrace{\sqrt{\bar{\alpha}_{t-1}} \left( \frac{\mathbf{x}_t - \sqrt{1 - \bar{\alpha}_t} \boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t)}{\sqrt{\bar{\alpha}_t}} \right)}_{\text{1. Predicted } \mathbf{x}_0} + \underbrace{\sqrt{1 - \bar{\alpha}_{t-1} - \sigma_t^2} \cdot \boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t)}_{\text{2. Direction pointing to } \mathbf{x}_t} + \underbrace{\sigma_t \mathbf{z}}_{\text{3. Random Noise}}`$
+In the original DDIM paper, this equation is not derived from a forward chronological process; instead, it is reverse-engineered. The authors essentially asked: *"What equation can we build that perfectly satisfies the mathematical rules of our marginal distributions, while letting us control the randomness?"*
+Here is the step-by-step derivation of how they constructed that exact equation.
+## 1. The Marginal Requirement (The Anchor)
+Everything in DDIM hinges on one strict mathematical rule: the marginal distribution at any timestep $`t`$ must remain identical to the original DDPM model.
+By definition, if we know the original clean image $`\mathbf{x}_0`$, the noisy image at step $`t-1`$ is defined as:
+$`\mathbf{x}_{t-1}=\sqrt{\bar{\alpha}_{t-1}}\mathbf{x}_0+\sqrt{1-\bar{\alpha}_{t-1}}\boldsymbol{\epsilon}_{t-1}`$
+Here, $`\sqrt{1-\bar{\alpha}_{t-1}}`$ represents the **total amount of noise** present in the image at timestep $`t-1`$.
+## 2. The Noise Decomposition (The "Aha!" Moment)
+The brilliance of DDIM is recognizing that we do not have to draw all of that noise entirely at random. We can split the total noise at step $`t-1`$ into two separate, independent pieces:
+1. **Known Noise (Direction):** A portion of the noise that points in the exact same direction as the noise we just identified at step $`t`$.
+2. **Random Noise (Stochasticity):** A completely fresh, randomly sampled noise vector.
+Because the variances of independent Gaussian distributions add together, we can define a parameter $`\sigma_t^2`$ to represent the variance of the random noise. To ensure the *total* variance still equals $`(1-\bar{\alpha}_{t-1})`$, the variance of the known noise must be the remainder: $`(1-\bar{\alpha}_{t-1}-\sigma_t^2)`$.
+Substituting these two split noise components back into our equation for $`\mathbf{x}_{t-1}`$ gives us:
+$`\mathbf{x}_{t-1}=\sqrt{\bar{\alpha}_{t-1}}\mathbf{x}_0+\underbrace{\sqrt{1-\bar{\alpha}_{t-1}-\sigma_t^2}\boldsymbol{\epsilon}_t}_{\text{Known Noise}}+\underbrace{\sigma_t\mathbf{z}}_{\text{Random Noise}}`$
+## 3. Predicting the Missing Variables
+The equation above is mathematically sound, but in practice, during the reverse generation process, we are missing two critical pieces of information:
+- We do not have the real original image $`\mathbf{x}_0`$.
+- We do not have the real noise $`\boldsymbol{\epsilon}_t`$.
+However, we *do* have our current noisy image $`\mathbf{x}_t`$, and we have a trained neural network designed to predict the noise: $`\boldsymbol{\epsilon}_\theta(\mathbf{x}_t,t)`$.
+We can estimate the real noise by simply swapping in our network's prediction:
+$`\boldsymbol{\epsilon}_t\approx\boldsymbol{\epsilon}_\theta(\mathbf{x}_t,t)`$
+Next, we need to estimate $`\mathbf{x}_0`$. We know the standard forward equation for step $`t`$ is:
+$`\mathbf{x}_t=\sqrt{\bar{\alpha}_t}\mathbf{x}_0+\sqrt{1-\bar{\alpha}_t}\boldsymbol{\epsilon}_t`$
+By rearranging this algebra to isolate $`\mathbf{x}_0`$, and substituting our network's noise prediction, we get a working estimate for the original image:
+$`\hat{\mathbf{x}}_0=\frac{\mathbf{x}_t-\sqrt{1-\bar{\alpha}_t}\boldsymbol{\epsilon}_\theta(\mathbf{x}_t,t)}{\sqrt{\bar{\alpha}_t}}`$
+## 4. The Final Assembly
+Now, we simply take our reverse-engineered equation from Step 2:
+$`\mathbf{x}_{t-1}=\sqrt{\bar{\alpha}_{t-1}}\mathbf{x}_0+\sqrt{1-\bar{\alpha}_{t-1}-\sigma_t^2}\boldsymbol{\epsilon}_t+\sigma_t\mathbf{z}`$
+And substitute our practical estimates ($`\hat{\mathbf{x}}_0`$ and $`\boldsymbol{\epsilon}_\theta`$) in place of the unknown, perfect variables:
+$`\mathbf{x}_{t-1}=\underbrace{\sqrt{\bar{\alpha}_{t-1}}\left(\frac{\mathbf{x}_t-\sqrt{1-\bar{\alpha}_t}\boldsymbol{\epsilon}_\theta(\mathbf{x}_t,t)}{\sqrt{\bar{\alpha}_t}}\right)}_{\text{1. Predicted }\mathbf{x}_0}+\underbrace{\sqrt{1-\bar{\alpha}_{t-1}-\sigma_t^2}\cdot\boldsymbol{\epsilon}_\theta(\mathbf{x}_t,t)}_{\text{2. Direction pointing to }\mathbf{x}_t}+\underbrace{\sigma_t\mathbf{z}}_{\text{3. Random Noise}}`$
+This yields the exact generalized sampling equation you asked about. By decomposing the variance and estimating $`\mathbf{x}_0`$ on the fly, the model can navigate backward from noise to image while perfectly respecting the required marginal distributions.
+---
+</content>
+</page>
