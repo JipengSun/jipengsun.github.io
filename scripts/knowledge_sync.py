@@ -28,6 +28,7 @@ if str(ROOT / "scripts") not in sys.path:
     sys.path.insert(0, str(ROOT / "scripts"))
 
 from notion_md_to_html import NOTION_TO_SLUG, build_full_page, extract_from_mcp_view, notion_body_to_html  # noqa: E402
+from notion_images import mirror_images_in_markdown  # noqa: E402
 from notion_sync import (  # noqa: E402
     IN_DIR,
     RAW,
@@ -54,9 +55,10 @@ def write_raw_from_fetch(data: dict) -> tuple[str, str]:
     return page_id, text
 
 
-def build_article(page_id: str, slug: str) -> None:
+def build_article(page_id: str, slug: str, *, force_images: bool = False) -> None:
     raw = (RAW / f"{page_id}.txt").read_text(encoding="utf-8")
     title, body = extract_from_mcp_view(raw)
+    body, _ = mirror_images_in_markdown(body, force=force_images)
     inner = notion_body_to_html(body)
     patched = "\t\t\t\t" + inner.replace("\n", "\n\t\t\t\t")
     html_out = build_full_page(title, patched, slug)
@@ -116,7 +118,7 @@ def apply_sync(force: bool = False, rebuild_index: bool = True) -> int:
 
         page_id, text = write_raw_from_fetch(data)
         title, _ = extract_from_mcp_view(text)
-        build_article(page_id, slug)
+        build_article(page_id, slug, force_images=True)
         set_page_record(state, page_id, slug=slug, title=title, notion_fetched_at=incoming_at)
 
         if local_at is None:

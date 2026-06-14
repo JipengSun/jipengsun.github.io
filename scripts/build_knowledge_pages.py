@@ -23,6 +23,7 @@ from notion_md_to_html import (  # noqa: E402
     extract_from_mcp_view,
     notion_body_to_html,
 )
+from notion_images import mirror_images_in_markdown  # noqa: E402
 from notion_sync import load_state, parse_notion_fetched_at, save_state, set_page_record  # noqa: E402
 
 
@@ -42,6 +43,7 @@ def main() -> None:
             continue
         raw = path.read_text(encoding="utf-8")
         title, body = extract_from_mcp_view(raw)
+        body, n_img = mirror_images_in_markdown(body)
         inner = notion_body_to_html(body)
         patched = "\t\t\t\t" + inner.replace("\n", "\n\t\t\t\t")
         html_out = build_full_page(title, patched, slug)
@@ -49,7 +51,8 @@ def main() -> None:
         fetched_at = parse_notion_fetched_at(raw)
         if fetched_at is not None:
             set_page_record(state, pid, slug=slug, title=title, notion_fetched_at=fetched_at)
-        print(slug)
+        suffix = f" ({n_img} images)" if n_img else ""
+        print(f"{slug}{suffix}")
     save_state(state)
 
 
