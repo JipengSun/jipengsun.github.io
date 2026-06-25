@@ -1,0 +1,139 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<title>Graph Fourier Transform — Knowledge Share — Jipeng Sun</title>
+	<link rel="stylesheet" href="../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="(function(){var b=document.querySelector('.kn-body');if(!b)return;b.querySelectorAll('span').forEach(function(s){if(s.children.length)return;var t=s.textContent.trim();if(/^\\\([\s\S]*\\\)$/.test(t)||/^\\\[[\s\S]*\\\]$/.test(t))s.replaceWith(document.createTextNode(t));});renderMathInElement(b,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false,ignoredTags:['script','noscript','style','textarea','pre','code']});})();"></script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-LCC4R0HD24"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'G-LCC4R0HD24');
+	</script>
+	<script src="../../assets/js/ga-events.js"></script>
+</head>
+<body class="is-preload kn-page">
+	<div id="wrapper">
+		<header id="header">
+			<h1><a href="../../index.html">Jipeng Sun</a></h1>
+			<nav class="links">
+				<ul>
+					<li><a href="../../index.html">Home</a></li>
+					<li><a href="../../research.html">Research</a></li>
+					<li class="active"><a href="../../knowledge-share.html">Knowledge Share</a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course">VR/AR Course</a></li>
+				</ul>
+			</nav>
+			<nav class="main">
+				<ul>
+					<li class="search"><a class="fa-search" href="#search">Search</a><form id="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></li>
+					<li class="menu"><a class="fa-bars" href="#menu">Menu</a></li>
+				</ul>
+			</nav>
+		</header>
+		<section id="menu">
+			<section><form class="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></section>
+			<section>
+				<ul class="links">
+					<li><a href="../../index.html"><h3>Home</h3><p>Jipeng Sun's Homepage</p></a></li>
+					<li><a href="../../research.html"><h3>Research</h3><p>Publications &amp; Papers</p></a></li>
+					<li><a href="../../knowledge-share.html"><h3>Knowledge Share</h3><p>Study notes</p></a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course"><h3>Teaching</h3><p>VR Summer Course</p></a></li>
+				</ul>
+			</section>
+		</section>
+		<div id="main">
+			<article class="post">
+				<header><div class="title"><h2>Graph Fourier Transform</h2></div></header>
+				<p class="kn-back"><a href="../../knowledge-share.html">&larr; Back to Knowledge Share</a></p>
+				<div class="kn-body">
+				<p>In a classical setting, if you have a signal sampled on a perfectly regular grid—like an audio wave over uniform time intervals or an image on a 2D pixel grid—the classical Fourier Transform decomposes that signal into a combination of sine and cosine waves of varying frequencies.</p>
+				<p>But what happens when your data doesn't live on a neat, regular grid? What if your "sensors" or data points are scattered irregularly, like weather stations across a continent, or nodes in a complex computer network? The classical Fourier Transform fails here because there is no uniform "translation" or "shift" operator.</p>
+				<p><strong>This is where the Graph Fourier Transform comes in.</strong> It generalizes the traditional Fourier Transform so it can be applied to data residing on arbitrary, irregular structures (graphs).</p>
+				<p>When the literature states that <strong>"graph Fourier transforms decompose signals on graphs,"</strong> here is exactly what that means, broken down into its core components:</p>
+				<h3>1. The "Graph" and the "Signal"</h3>
+				<ul><li><strong>The Graph (</strong>\(G\)<strong>):</strong> This is the underlying structure. It consists of nodes (data points) and edges (the connections or relationships between those points).</li><li><strong>The Signal (</strong>\(x\)<strong>):</strong> This is the actual data living *on top* of the graph. Mathematically, it is a vector \(x \in \mathbb{R}^N\), where each node \(i\) has a specific scalar value \(x_i\) (e.g., the temperature reading at a specific weather station).</li></ul>
+				<h3>2. Redefining "Frequency" using the Laplacian</h3>
+				<p>In classical physics, frequency dictates how rapidly a signal changes over time or space. High frequency means rapid oscillation; low frequency means smooth, gradual changes.</p>
+				<p>On a graph, we measure "frequency" by looking at how rapidly a signal changes *across connected edges*.</p>
+				<ul><li><strong>Low Graph Frequency:</strong> Connected nodes have very similar signal values (the signal is "smooth" across the graph structure).</li><li><strong>High Graph Frequency:</strong> Connected nodes have drastically different or opposite values (the signal "oscillates" rapidly across edges).</li></ul>
+				<p>To calculate this, we use the <strong>Graph Laplacian (</strong>\(L\)<strong>)</strong>. It is defined as:</p>
+				<p class="kn-math-display">\[L = D - A\]</p>
+				<p>Where \(A\) is the Adjacency matrix (showing which nodes are connected) and \(D\) is the Degree matrix (a diagonal matrix showing how many connections each node has). The Laplacian acts exactly like the second-derivative operator in calculus—it measures the local roughness or curvature of the signal on the graph.</p>
+				<h3>3. The Decomposition (The Core Concept)</h3>
+				<p>To decompose the signal, we perform an eigenvalue decomposition on the Graph Laplacian:</p>
+				<p class="kn-math-display">\[L = U \Lambda U^T\]</p>
+				<p>This yields two critical pieces of information:</p>
+				<ol><li><strong>The Eigenvectors (</strong>\(U\)<strong>):</strong> These form our new "sine and cosine waves." They are an orthogonal set of basis vectors. Each eigenvector represents a fundamental "graph wave."</li><li><strong>The Eigenvalues (</strong>\(\Lambda\)<strong>):</strong> These represent the specific "frequencies" of those graph waves. A low eigenvalue means the corresponding eigenvector is very smooth across the graph. A high eigenvalue means it is highly oscillatory.</li></ol>
+				<p><strong>The Graph Fourier Transform</strong> is simply the projection of your original signal \(x\) onto these eigenvectors.</p>
+				<p>If \(\hat{x}\) is the transformed signal in the frequency domain, the GFT is calculated as:</p>
+				<p class="kn-math-display">\[\hat{x} = U^T x\]</p>
+				<h2>Why \(L = D - A\)?</h2>
+				<p>The definition \(L = D - A\) is not arbitrary; it is the exact mathematical formulation required to measure the <strong>local roughness</strong> or <strong>variation</strong> of a signal across a graph.</p>
+				<p>Think about what happens when you multiply the Laplacian matrix \(L\) by a signal vector \(x\).</p>
+				<p>Because matrix multiplication is distributive, \(Lx = (D - A)x = Dx - Ax\). Let's look at what each part does to a specific node \(i\):</p>
+				<ul><li><strong>The Degree part (</strong>\(Dx\)<strong>):</strong> The degree matrix is diagonal. Multiplying \(D\) by \(x\) simply takes the signal value at node \(i\) (\(x_i\)) and multiplies it by the number of neighbors it has (\(d_i\)). So, \((Dx)_i = d_i x_i\).</li><li><strong>The Adjacency part (</strong>\(Ax\)<strong>):</strong> The adjacency matrix \(A\) has a 1 wherever there is a connection. Multiplying \(A\) by \(x\) effectively sums up the signal values of all immediate neighbors of node \(i\). So, \((Ax)_i = \sum_{j \in \text{neighbors}(i)} x_j\).</li></ul>
+				<p>Putting them together for a single node \(i\):</p>
+				<p class="kn-math-display">\[(Lx)_i = d_i x_i - \sum_{j \in \text{neighbors}(i)} x_j\]</p>
+				<p>If you factor out the degree \(d_i\), you get:</p>
+				<p class="kn-math-display">\[(Lx)_i = d_i \left( x_i - \frac{1}{d_i} \sum_{j \in \text{neighbors}(i)} x_j \right)\]</p>
+				<p><strong>The Intuition:</strong> The operation \(L = D - A\) compares the value of a node to the *average value of its neighbors*. If a node's value is exactly the average of its neighbors, \((Lx)_i = 0\) (the signal is perfectly smooth locally). If it differs greatly from its neighbors, \((Lx)_i\) is large. Therefore, \(L\) is a "roughness operator."</p>
+				<h2>Example</h2>
+				<p>Let's walk through a concrete, step-by-step mathematical example using the simplest possible irregular structure: a <strong>3-node line graph</strong>.</p>
+				<p>Imagine three connected rooms in a hallway, and we are measuring the temperature in each room.</p>
+				<p><strong>The Graph Structure:</strong></p>
+				<p>Room 1 --- Room 2 --- Room 3</p>
+				<h3>Step 1: Form the Graph Laplacian (\(L\))</h3>
+				<p>First, we need to map the geometry of our hallway into the Graph Laplacian matrix (\(L = D - A\)).</p>
+				<ul><li><strong>Adjacency Matrix (</strong>\(A\)<strong>):</strong> Represents the connections. Room 1 connects to 2. Room 2 connects to 1 and 3. Room 3 connects to 2.</li></ul>
+				<p class="kn-math-display">\[A = \begin{bmatrix} 0 & 1 & 0 \ 1 & 0 & 1 \ 0 & 1 & 0 \end{bmatrix}\]</p>
+				<ul><li><strong>Degree Matrix (</strong>\(D\)<strong>):</strong> A diagonal matrix showing how many connections each room has. Room 1 has one connection, Room 2 has two, Room 3 has one.</li></ul>
+				<p class="kn-math-display">\[D = \begin{bmatrix} 1 & 0 & 0 \ 0 & 2 & 0 \ 0 & 0 & 1 \end{bmatrix}\]</p>
+				<ul><li><strong>The Laplacian (</strong>\(L\)<strong>):</strong> Subtracting the two gives us our "second-derivative" operator for this specific graph.</li></ul>
+				<p class="kn-math-display">\[L = \begin{bmatrix} 1 & -1 & 0 \ -1 & 2 & -1 \ 0 & -1 & 1 \end{bmatrix}\]</p>
+				<h3>Step 2: Find the Graph Frequencies (Eigen-decomposition)</h3>
+				<p>To find our "sine and cosine waves" for this specific hallway, we perform an eigen-decomposition on \(L\) (\(L = U \Lambda U^T\)).</p>
+				<p>Calculating this yields three eigenvalues (\(\lambda\)) and three corresponding eigenvectors (\(u\)):</p>
+				<ol><li><strong>Low Frequency (</strong>\(\lambda_0 = 0\)<strong>):</strong></li></ol>
+				<p class="kn-math-display">\[u_0 = \begin{bmatrix} 0.57 \ 0.57 \ 0.57 \end{bmatrix}\]</p>
+				<p>*Interpretation:* The "DC component" or global average. Notice how the values are identical across all three rooms. It represents a perfectly smooth signal with no variation.</p>
+				<ol><li><strong>Medium Frequency (</strong>\(\lambda_1 = 1\)<strong>):</strong></li></ol>
+				<p class="kn-math-display">\[u_1 = \begin{bmatrix} 0.71 \ 0 \ -0.71 \end{bmatrix}\]</p>
+				<p>*Interpretation:* A gradual gradient. Room 1 is positive, Room 2 is neutral, Room 3 is negative. It represents a signal sloping from one end of the graph to the other.</p>
+				<ol><li><strong>High Frequency (</strong>\(\lambda_2 = 3\)<strong>):</strong></li></ol>
+				<p class="kn-math-display">\[u_2 = \begin{bmatrix} 0.41 \ -0.82 \ 0.41 \end{bmatrix}\]</p>
+				<p>*Interpretation:* High oscillation. The signal spikes up in Room 1, drops sharply in Room 2, and spikes back up in Room 3.</p>
+				<h3>Step 3: Introduce a Signal (\(x\))</h3>
+				<p>Now, let's put some actual temperature data onto our graph.</p>
+				<ul><li>Room 1: <strong>5°C</strong> (Near a heater)</li><li>Room 2: <strong>4°C</strong> (Middle of the hall)</li><li>Room 3: <strong>2°C</strong> (Near a drafty window)</li></ul>
+				<p>Our signal vector is:</p>
+				<p class="kn-math-display">\[x = \begin{bmatrix} 5 \ 4 \ 2 \end{bmatrix}\]</p>
+				<h3>Step 4: Perform the Graph Fourier Transform</h3>
+				<p>We want to decompose our temperature readings into the three graph frequencies we discovered in Step 2. We do this by calculating the dot product of our signal \(x\) against each eigenvector \(u\) (\(\hat{x} = U^T x\)).</p>
+				<ul><li><strong>Low Frequency Coefficient (</strong>\(\hat{x}_0\)<strong>):</strong></li></ul>
+				<p class="kn-math-display">\[0.57(5) + 0.57(4) + 0.57(2) \approx \mathbf{6.27}\]</p>
+				<ul><li><strong>Medium Frequency Coefficient (</strong>\(\hat{x}_1\)<strong>):</strong></li></ul>
+				<p class="kn-math-display">\[0.71(5) + 0(4) - 0.71(2) \approx \mathbf{2.13}\]</p>
+				<ul><li><strong>High Frequency Coefficient (</strong>\(\hat{x}_2\)<strong>):</strong></li></ul>
+				<p class="kn-math-display">\[0.41(5) - 0.82(4) + 0.41(2) \approx \mathbf{-0.41}\]</p>
+				<h3>Step 5: The Interpretation</h3>
+				<p>You have successfully performed a Graph Fourier Transform. The original spatial signal \(x = [5, 4, 2]\) has been transformed into the graph frequency domain as \(\hat{x} = [6.27, 2.13, -0.41]\).</p>
+				<p>What does this tell us about the data?</p>
+				<ol><li>The massive low-frequency coefficient (<strong>6.27</strong>) tells us the hallway has a strong underlying baseline temperature.</li><li>The moderate medium-frequency coefficient (<strong>2.13</strong>) captures the steady gradient (the heat flowing from the 5°C room toward the 2°C room).</li><li>The near-zero high-frequency coefficient (<strong>0.41</strong>) tells us there are almost no sharp, jagged anomalies in the hallway. The temperature changes smoothly across the connected edges.</li></ol>
+				</div>
+			</article>
+		</div>
+	</div>
+	<script src="../../assets/js/jquery.min.js"></script>
+	<script src="../../assets/js/browser.min.js"></script>
+	<script src="../../assets/js/breakpoints.min.js"></script>
+	<script src="../../assets/js/util.js"></script>
+	<script src="../../assets/js/main.js"></script>
+</body>
+</html>

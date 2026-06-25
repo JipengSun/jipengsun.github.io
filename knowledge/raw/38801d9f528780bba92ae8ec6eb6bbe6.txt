@@ -1,0 +1,90 @@
+Here is the result of "view" for the Page with URL https://app.notion.com/p/38801d9f528780bba92ae8ec6eb6bbe6 as of 2026-06-23T16:10:28.948Z:
+<page url="https://app.notion.com/p/38801d9f528780bba92ae8ec6eb6bbe6">
+<ancestor-path></ancestor-path>
+<properties>
+{"title":"Eigenvalue Decomposition"}
+</properties>
+<content>
+### 1. The Fundamental Equation
+For a square $`n \times n`$ matrix $`A`$, an eigenvector $`\mathbf{v}`$ and its corresponding eigenvalue $`\lambda`$ must satisfy the following equation:
+$`A\mathbf{v}=\lambda\mathbf{v}`$
+- $`A`$ is an $`n \times n`$ transformation matrix.
+- $`\mathbf{v}`$ is an $`n \times 1`$ non-zero vector (the eigenvector).
+- $`\lambda`$ is a scalar value (the eigenvalue).
+This equation states that multiplying the vector $`\mathbf{v}`$ by the matrix $`A`$ yields the exact same result as simply scaling $`\mathbf{v}`$ by the number $`\lambda`$.
+### 2. Solving for Eigenvalues
+To find the eigenvalues, we rearrange the fundamental equation. By introducing the identity matrix $`I`$ (which leaves $`\mathbf{v}`$ unchanged, so $`I\mathbf{v}=\mathbf{v}`$), we can rewrite the right side:
+$`A\mathbf{v}=\lambda I\mathbf{v}`$
+Subtracting $`\lambda I\mathbf{v}`$ from both sides gives:
+$`(A-\lambda I)\mathbf{v}=0`$
+For this equation to have a non-trivial solution (where $`\mathbf{v}`$ is not just a vector of zeros), the matrix $`(A-\lambda I)`$ must be non-invertible. In linear algebra, a matrix is non-invertible if its determinant is zero. This gives us the **characteristic equation**:
+$`\det(A-\lambda I)=0`$
+Solving this polynomial equation yields the eigenvalues ($`\lambda_1, \lambda_2, \dots, \lambda_n`$).
+### 3. Solving for Eigenvectors
+Once you have the eigenvalues, you substitute each one back into the equation $`(A-\lambda I)\mathbf{v}=0`$ to solve for its corresponding eigenvector $`\mathbf{v}`$.
+### 4. The Decomposition Formula
+If an $`n \times n`$ matrix $`A`$ has $`n`$ linearly independent eigenvectors, we can combine them into a single matrix equation.
+Let $`P`$ be a matrix whose columns are the eigenvectors of $`A`$, and let $`\Lambda`$ be a diagonal matrix whose non-zero entries are the corresponding eigenvalues:
+$`P=[\mathbf{v}_1, \mathbf{v}_2, \dots, \mathbf{v}_n]`$
+$`\Lambda=\begin{bmatrix} \lambda_1 & 0 & \dots & 0 \\ 0 & \lambda_2 & \dots & 0 \\ \vdots & \vdots & \ddots & \vdots \\ 0 & 0 & \dots & \lambda_n \end{bmatrix}`$
+Because $`A\mathbf{v}_i=\lambda_i\mathbf{v}_i`$ for every vector, we can express this for the entire matrix as:
+$`AP=P\Lambda`$
+To isolate $`A`$, we multiply both sides on the right by the inverse of $`P`$ (which is $`P^{-1}`$):
+$`A=P\Lambda P^{-1}`$
+This is the **Eigenvalue Decomposition**. You have successfully factored the original matrix $`A`$ into a change of basis matrix ($`P`$), a simple scaling matrix ($`\Lambda`$), and the undoing of that change of basis ($`P^{-1}`$).
+### A Concrete Mathematical Example
+Let's decompose the $`2 \times 2`$ matrix $`A`$:
+$`A=\begin{bmatrix} 2 & 1 \\ 1 & 2 \end{bmatrix}`$
+**Step 1: Find the eigenvalues using the characteristic equation.**
+$`\det\left(\begin{bmatrix} 2 & 1 \\ 1 & 2 \end{bmatrix} - \lambda\begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}\right)=0`$
+$`\det\left(\begin{bmatrix} 2-\lambda & 1 \\ 1 & 2-\lambda \end{bmatrix}\right)=0`$
+Calculate the determinant:
+$`(2-\lambda)(2-\lambda) - (1)(1)=0`$
+$`\lambda^2 - 4\lambda + 3=0`$
+$`(\lambda - 3)(\lambda - 1)=0`$
+Our eigenvalues are $`\lambda_1=3`$ and $`\lambda_2=1`$.
+**Step 2: Find the corresponding eigenvectors.**
+For $`\lambda_1=3`$:
+$`\begin{bmatrix} 2-3 & 1 \\ 1 & 2-3 \end{bmatrix}\begin{bmatrix} x \\ y \end{bmatrix}=\begin{bmatrix} 0 \\ 0 \end{bmatrix} \implies \begin{bmatrix} -1 & 1 \\ 1 & -1 \end{bmatrix}\begin{bmatrix} x \\ y \end{bmatrix}=\begin{bmatrix} 0 \\ 0 \end{bmatrix}`$
+This tells us $`-x + y = 0`$, so $`x = y`$. A simple eigenvector is $`\mathbf{v}_1=\begin{bmatrix} 1 \\ 1 \end{bmatrix}`$.
+For $`\lambda_2=1`$:
+$`\begin{bmatrix} 2-1 & 1 \\ 1 & 2-1 \end{bmatrix}\begin{bmatrix} x \\ y \end{bmatrix}=\begin{bmatrix} 0 \\ 0 \end{bmatrix} \implies \begin{bmatrix} 1 & 1 \\ 1 & 1 \end{bmatrix}\begin{bmatrix} x \\ y \end{bmatrix}=\begin{bmatrix} 0 \\ 0 \end{bmatrix}`$
+This tells us $`x + y = 0`$, so $`x = -y`$. A simple eigenvector is $`\mathbf{v}_2=\begin{bmatrix} -1 \\ 1 \end{bmatrix}`$.
+**Step 3: Construct **$`P`$**, **$`\Lambda`$**, and **$`P^{-1}`$**.**
+Put the eigenvectors into the columns of $`P`$:
+$`P=\begin{bmatrix} 1 & -1 \\ 1 & 1 \end{bmatrix}`$
+Put the eigenvalues on the diagonal of $`\Lambda`$:
+$`\Lambda=\begin{bmatrix} 3 & 0 \\ 0 & 1 \end{bmatrix}`$
+Calculate the inverse of $`P`$ ($`P^{-1}`$):
+$`P^{-1}=\frac{1}{(1)(1) - (-1)(1)}\begin{bmatrix} 1 & 1 \\ -1 & 1 \end{bmatrix}=\begin{bmatrix} 0.5 & 0.5 \\ -0.5 & 0.5 \end{bmatrix}`$
+**Step 4: The Final Decomposition.**
+We have now decomposed $`A=P\Lambda P^{-1}`$, which looks like this:
+$`\begin{bmatrix} 2 & 1 \\ 1 & 2 \end{bmatrix} = \begin{bmatrix} 1 & -1 \\ 1 & 1 \end{bmatrix} \begin{bmatrix} 3 & 0 \\ 0 & 1 \end{bmatrix} \begin{bmatrix} 0.5 & 0.5 \\ -0.5 & 0.5 \end{bmatrix}`$
+### Why EVD?
+### 1. Trivializing Matrix Powers and Exponentials
+If you are simulating a physical process over time (like light propagation through a medium) or running iterative optimization algorithms, you often need to multiply a matrix by itself many times ($`A^n`$) or calculate matrix exponentials ($`e^A`$).
+Computing $`A^{100}`$ directly requires a massive amount of computationally expensive, dense matrix multiplication. But look what happens when we use the decomposition:
+$`A^2 = (P\Lambda P^{-1})(P\Lambda P^{-1})`$
+Because $`P^{-1}P`$ cancels out to the identity matrix ($`I`$), this collapses to:
+$`A^2 = P\Lambda^2 P^{-1}`$
+This extends to any power $`n`$:
+$`A^n = P\Lambda^n P^{-1}`$
+Because $`\Lambda`$ is diagonal, calculating $`\Lambda^n`$ simply means raising the individual numbers on the diagonal to the $`n`$-th power. You turn millions of complex multiplication operations into a few simple scalar operations. This dramatically speeds up forward passes and makes gradient calculations much more numerically stable in end-to-end differentiable architectures.
+### 2. Decoupling Intertwined Systems
+In physical systems or complex optimization problems, variables are rarely independent. A change in $`x`$ might heavily impact $`y`$ and $`z`$. This "coupling" is what makes systems of differential equations extremely difficult to solve.
+The decomposition provides a mathematical escape hatch:
+- $`P^{-1}`$ translates your data from the messy, coupled "physical space" into the "eigenbasis."
+- In this new space governed by $`\Lambda`$, every single variable acts completely independently. You can solve, filter, or optimize each dimension in absolute isolation.
+- $`P`$ then translates your beautifully optimized, independent results back into the physical coordinate system.
+### 3. Dimensionality Reduction and Compression
+Eigenvalues ($`\lambda`$) aren't just scaling factors; they are a measure of **information** or **energy** along their respective eigenvectors.
+When dealing with high-dimensional data, most of the data is redundant or noisy. If you decompose the covariance matrix of that data, the eigenvalues tell you exactly which dimensions matter.
+- A massive eigenvalue means that specific eigenvector captures a huge amount of variance (important signal).
+- An eigenvalue close to zero means that direction is mostly noise or redundant data.
+By throwing away the eigenvectors with tiny eigenvalues, you can compress massive datasets down to just their "principal components" while preserving almost all of the critical information. This is the exact mathematical engine that powers Principal Component Analysis (PCA) in machine learning.
+### 4. System Stability Analysis
+You can instantly know how a dynamic system will behave over time just by looking at the eigenvalues in $`\Lambda`$, without ever having to actually run the simulation.
+- If all eigenvalues have a magnitude less than 1 (or real parts less than 0 for continuous systems), the system will eventually settle into a stable equilibrium.
+- If any eigenvalue is greater than 1, that component will grow exponentially, and the system will blow up or become unstable.
+</content>
+</page>

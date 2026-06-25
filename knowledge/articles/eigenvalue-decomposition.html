@@ -1,0 +1,141 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<title>Eigenvalue Decomposition — Knowledge Share — Jipeng Sun</title>
+	<link rel="stylesheet" href="../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="(function(){var b=document.querySelector('.kn-body');if(!b)return;b.querySelectorAll('span').forEach(function(s){if(s.children.length)return;var t=s.textContent.trim();if(/^\\\([\s\S]*\\\)$/.test(t)||/^\\\[[\s\S]*\\\]$/.test(t))s.replaceWith(document.createTextNode(t));});renderMathInElement(b,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false,ignoredTags:['script','noscript','style','textarea','pre','code']});})();"></script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-LCC4R0HD24"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'G-LCC4R0HD24');
+	</script>
+	<script src="../../assets/js/ga-events.js"></script>
+</head>
+<body class="is-preload kn-page">
+	<div id="wrapper">
+		<header id="header">
+			<h1><a href="../../index.html">Jipeng Sun</a></h1>
+			<nav class="links">
+				<ul>
+					<li><a href="../../index.html">Home</a></li>
+					<li><a href="../../research.html">Research</a></li>
+					<li class="active"><a href="../../knowledge-share.html">Knowledge Share</a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course">VR/AR Course</a></li>
+				</ul>
+			</nav>
+			<nav class="main">
+				<ul>
+					<li class="search"><a class="fa-search" href="#search">Search</a><form id="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></li>
+					<li class="menu"><a class="fa-bars" href="#menu">Menu</a></li>
+				</ul>
+			</nav>
+		</header>
+		<section id="menu">
+			<section><form class="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></section>
+			<section>
+				<ul class="links">
+					<li><a href="../../index.html"><h3>Home</h3><p>Jipeng Sun's Homepage</p></a></li>
+					<li><a href="../../research.html"><h3>Research</h3><p>Publications &amp; Papers</p></a></li>
+					<li><a href="../../knowledge-share.html"><h3>Knowledge Share</h3><p>Study notes</p></a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course"><h3>Teaching</h3><p>VR Summer Course</p></a></li>
+				</ul>
+			</section>
+		</section>
+		<div id="main">
+			<article class="post">
+				<header><div class="title"><h2>Eigenvalue Decomposition</h2></div></header>
+				<p class="kn-back"><a href="../../knowledge-share.html">&larr; Back to Knowledge Share</a></p>
+				<div class="kn-body">
+				<h3>1. The Fundamental Equation</h3>
+				<p>For a square \(n \times n\) matrix \(A\), an eigenvector \(\mathbf{v}\) and its corresponding eigenvalue \(\lambda\) must satisfy the following equation:</p>
+				<p class="kn-math-display">\[A\mathbf{v}=\lambda\mathbf{v}\]</p>
+				<ul><li>\(A\) is an \(n \times n\) transformation matrix.</li><li>\(\mathbf{v}\) is an \(n \times 1\) non-zero vector (the eigenvector).</li><li>\(\lambda\) is a scalar value (the eigenvalue).</li></ul>
+				<p>This equation states that multiplying the vector \(\mathbf{v}\) by the matrix \(A\) yields the exact same result as simply scaling \(\mathbf{v}\) by the number \(\lambda\).</p>
+				<h3>2. Solving for Eigenvalues</h3>
+				<p>To find the eigenvalues, we rearrange the fundamental equation. By introducing the identity matrix \(I\) (which leaves \(\mathbf{v}\) unchanged, so \(I\mathbf{v}=\mathbf{v}\)), we can rewrite the right side:</p>
+				<p class="kn-math-display">\[A\mathbf{v}=\lambda I\mathbf{v}\]</p>
+				<p>Subtracting \(\lambda I\mathbf{v}\) from both sides gives:</p>
+				<p class="kn-math-display">\[(A-\lambda I)\mathbf{v}=0\]</p>
+				<p>For this equation to have a non-trivial solution (where \(\mathbf{v}\) is not just a vector of zeros), the matrix \((A-\lambda I)\) must be non-invertible. In linear algebra, a matrix is non-invertible if its determinant is zero. This gives us the <strong>characteristic equation</strong>:</p>
+				<p class="kn-math-display">\[\det(A-\lambda I)=0\]</p>
+				<p>Solving this polynomial equation yields the eigenvalues (\(\lambda_1, \lambda_2, \dots, \lambda_n\)).</p>
+				<h3>3. Solving for Eigenvectors</h3>
+				<p>Once you have the eigenvalues, you substitute each one back into the equation \((A-\lambda I)\mathbf{v}=0\) to solve for its corresponding eigenvector \(\mathbf{v}\).</p>
+				<h3>4. The Decomposition Formula</h3>
+				<p>If an \(n \times n\) matrix \(A\) has \(n\) linearly independent eigenvectors, we can combine them into a single matrix equation.</p>
+				<p>Let \(P\) be a matrix whose columns are the eigenvectors of \(A\), and let \(\Lambda\) be a diagonal matrix whose non-zero entries are the corresponding eigenvalues:</p>
+				<p class="kn-math-display">\[P=[\mathbf{v}_1, \mathbf{v}_2, \dots, \mathbf{v}_n]\]</p>
+				<p class="kn-math-display">\[\Lambda=\begin{bmatrix} \lambda_1 & 0 & \dots & 0 \ 0 & \lambda_2 & \dots & 0 \ \vdots & \vdots & \ddots & \vdots \ 0 & 0 & \dots & \lambda_n \end{bmatrix}\]</p>
+				<p>Because \(A\mathbf{v}_i=\lambda_i\mathbf{v}_i\) for every vector, we can express this for the entire matrix as:</p>
+				<p class="kn-math-display">\[AP=P\Lambda\]</p>
+				<p>To isolate \(A\), we multiply both sides on the right by the inverse of \(P\) (which is \(P^{-1}\)):</p>
+				<p class="kn-math-display">\[A=P\Lambda P^{-1}\]</p>
+				<p>This is the <strong>Eigenvalue Decomposition</strong>. You have successfully factored the original matrix \(A\) into a change of basis matrix (\(P\)), a simple scaling matrix (\(\Lambda\)), and the undoing of that change of basis (\(P^{-1}\)).</p>
+				<h3>A Concrete Mathematical Example</h3>
+				<p>Let's decompose the \(2 \times 2\) matrix \(A\):</p>
+				<p class="kn-math-display">\[A=\begin{bmatrix} 2 & 1 \ 1 & 2 \end{bmatrix}\]</p>
+				<p><strong>Step 1: Find the eigenvalues using the characteristic equation.</strong></p>
+				<p class="kn-math-display">\[\det\left(\begin{bmatrix} 2 & 1 \ 1 & 2 \end{bmatrix} - \lambda\begin{bmatrix} 1 & 0 \ 0 & 1 \end{bmatrix}\right)=0\]</p>
+				<p class="kn-math-display">\[\det\left(\begin{bmatrix} 2-\lambda & 1 \ 1 & 2-\lambda \end{bmatrix}\right)=0\]</p>
+				<p>Calculate the determinant:</p>
+				<p class="kn-math-display">\[(2-\lambda)(2-\lambda) - (1)(1)=0\]</p>
+				<p class="kn-math-display">\[\lambda^2 - 4\lambda + 3=0\]</p>
+				<p class="kn-math-display">\[(\lambda - 3)(\lambda - 1)=0\]</p>
+				<p>Our eigenvalues are \(\lambda_1=3\) and \(\lambda_2=1\).</p>
+				<p><strong>Step 2: Find the corresponding eigenvectors.</strong></p>
+				<p>For \(\lambda_1=3\):</p>
+				<p class="kn-math-display">\[\begin{bmatrix} 2-3 & 1 \ 1 & 2-3 \end{bmatrix}\begin{bmatrix} x \ y \end{bmatrix}=\begin{bmatrix} 0 \ 0 \end{bmatrix} \implies \begin{bmatrix} -1 & 1 \ 1 & -1 \end{bmatrix}\begin{bmatrix} x \ y \end{bmatrix}=\begin{bmatrix} 0 \ 0 \end{bmatrix}\]</p>
+				<p>This tells us \(-x + y = 0\), so \(x = y\). A simple eigenvector is \(\mathbf{v}_1=\begin{bmatrix} 1 \ 1 \end{bmatrix}\).</p>
+				<p>For \(\lambda_2=1\):</p>
+				<p class="kn-math-display">\[\begin{bmatrix} 2-1 & 1 \ 1 & 2-1 \end{bmatrix}\begin{bmatrix} x \ y \end{bmatrix}=\begin{bmatrix} 0 \ 0 \end{bmatrix} \implies \begin{bmatrix} 1 & 1 \ 1 & 1 \end{bmatrix}\begin{bmatrix} x \ y \end{bmatrix}=\begin{bmatrix} 0 \ 0 \end{bmatrix}\]</p>
+				<p>This tells us \(x + y = 0\), so \(x = -y\). A simple eigenvector is \(\mathbf{v}_2=\begin{bmatrix} -1 \ 1 \end{bmatrix}\).</p>
+				<p><strong>Step 3: Construct </strong>\(P\)<strong>, </strong>\(\Lambda\)<strong>, and </strong>\(P^{-1}\)<strong>.</strong></p>
+				<p>Put the eigenvectors into the columns of \(P\):</p>
+				<p class="kn-math-display">\[P=\begin{bmatrix} 1 & -1 \ 1 & 1 \end{bmatrix}\]</p>
+				<p>Put the eigenvalues on the diagonal of \(\Lambda\):</p>
+				<p class="kn-math-display">\[\Lambda=\begin{bmatrix} 3 & 0 \ 0 & 1 \end{bmatrix}\]</p>
+				<p>Calculate the inverse of \(P\) (\(P^{-1}\)):</p>
+				<p class="kn-math-display">\[P^{-1}=\frac{1}{(1)(1) - (-1)(1)}\begin{bmatrix} 1 & 1 \ -1 & 1 \end{bmatrix}=\begin{bmatrix} 0.5 & 0.5 \ -0.5 & 0.5 \end{bmatrix}\]</p>
+				<p><strong>Step 4: The Final Decomposition.</strong></p>
+				<p>We have now decomposed \(A=P\Lambda P^{-1}\), which looks like this:</p>
+				<p class="kn-math-display">\[\begin{bmatrix} 2 & 1 \ 1 & 2 \end{bmatrix} = \begin{bmatrix} 1 & -1 \ 1 & 1 \end{bmatrix} \begin{bmatrix} 3 & 0 \ 0 & 1 \end{bmatrix} \begin{bmatrix} 0.5 & 0.5 \ -0.5 & 0.5 \end{bmatrix}\]</p>
+				<h3>Why EVD?</h3>
+				<h3>1. Trivializing Matrix Powers and Exponentials</h3>
+				<p>If you are simulating a physical process over time (like light propagation through a medium) or running iterative optimization algorithms, you often need to multiply a matrix by itself many times (\(A^n\)) or calculate matrix exponentials (\(e^A\)).</p>
+				<p>Computing \(A^{100}\) directly requires a massive amount of computationally expensive, dense matrix multiplication. But look what happens when we use the decomposition:</p>
+				<p class="kn-math-display">\[A^2 = (P\Lambda P^{-1})(P\Lambda P^{-1})\]</p>
+				<p>Because \(P^{-1}P\) cancels out to the identity matrix (\(I\)), this collapses to:</p>
+				<p class="kn-math-display">\[A^2 = P\Lambda^2 P^{-1}\]</p>
+				<p>This extends to any power \(n\):</p>
+				<p class="kn-math-display">\[A^n = P\Lambda^n P^{-1}\]</p>
+				<p>Because \(\Lambda\) is diagonal, calculating \(\Lambda^n\) simply means raising the individual numbers on the diagonal to the \(n\)-th power. You turn millions of complex multiplication operations into a few simple scalar operations. This dramatically speeds up forward passes and makes gradient calculations much more numerically stable in end-to-end differentiable architectures.</p>
+				<h3>2. Decoupling Intertwined Systems</h3>
+				<p>In physical systems or complex optimization problems, variables are rarely independent. A change in \(x\) might heavily impact \(y\) and \(z\). This "coupling" is what makes systems of differential equations extremely difficult to solve.</p>
+				<p>The decomposition provides a mathematical escape hatch:</p>
+				<ul><li>\(P^{-1}\) translates your data from the messy, coupled "physical space" into the "eigenbasis."</li><li>In this new space governed by \(\Lambda\), every single variable acts completely independently. You can solve, filter, or optimize each dimension in absolute isolation.</li><li>\(P\) then translates your beautifully optimized, independent results back into the physical coordinate system.</li></ul>
+				<h3>3. Dimensionality Reduction and Compression</h3>
+				<p>Eigenvalues (\(\lambda\)) aren't just scaling factors; they are a measure of <strong>information</strong> or <strong>energy</strong> along their respective eigenvectors.</p>
+				<p>When dealing with high-dimensional data, most of the data is redundant or noisy. If you decompose the covariance matrix of that data, the eigenvalues tell you exactly which dimensions matter.</p>
+				<ul><li>A massive eigenvalue means that specific eigenvector captures a huge amount of variance (important signal).</li><li>An eigenvalue close to zero means that direction is mostly noise or redundant data.</li></ul>
+				<p>By throwing away the eigenvectors with tiny eigenvalues, you can compress massive datasets down to just their "principal components" while preserving almost all of the critical information. This is the exact mathematical engine that powers Principal Component Analysis (PCA) in machine learning.</p>
+				<h3>4. System Stability Analysis</h3>
+				<p>You can instantly know how a dynamic system will behave over time just by looking at the eigenvalues in \(\Lambda\), without ever having to actually run the simulation.</p>
+				<ul><li>If all eigenvalues have a magnitude less than 1 (or real parts less than 0 for continuous systems), the system will eventually settle into a stable equilibrium.</li><li>If any eigenvalue is greater than 1, that component will grow exponentially, and the system will blow up or become unstable.</li></ul>
+				</div>
+			</article>
+		</div>
+	</div>
+	<script src="../../assets/js/jquery.min.js"></script>
+	<script src="../../assets/js/browser.min.js"></script>
+	<script src="../../assets/js/breakpoints.min.js"></script>
+	<script src="../../assets/js/util.js"></script>
+	<script src="../../assets/js/main.js"></script>
+</body>
+</html>

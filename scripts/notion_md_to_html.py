@@ -51,6 +51,9 @@ NOTION_TO_SLUG: dict[str, str] = {
     "35501d9f528780dabe98fe56ccb15d78": "3d-gaussian-splatting",
     "35501d9f528780ddafd2dcb09d9a6cb7": "computer-graphics",
     "35601d9f528780b1bebcdb71d1a4286a": "colmap",
+    "38a01d9f5287805b82fdcae26cf31b5d": "hilbert-transform",
+    "38801d9f5287800b9a19c373657d5f0f": "graph-fourier-transform",
+    "38801d9f528780bba92ae8ec6eb6bbe6": "eigenvalue-decomposition",
 }
 
 
@@ -67,6 +70,7 @@ def extract_from_mcp_view(raw: str) -> tuple[str, str]:
                 title = m_t.group(1).replace(r"\"", '"').replace(r"\\", "\\")
     m_c = re.search(r"<content>\s*([\s\S]*?)\s*</content>", raw)
     body = m_c.group(1).strip() if m_c else ""
+    title = re.sub(r"\*\*", "", title).strip()
     return title, body
 
 

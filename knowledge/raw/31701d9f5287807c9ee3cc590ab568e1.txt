@@ -1,13 +1,20 @@
-Here is the result of "view" for the Page with URL https://app.notion.com/p/31701d9f5287807c9ee3cc590ab568e1 as of 2026-03-23T02:11:05.595Z:
+Here is the result of "view" for the Page with URL https://app.notion.com/p/31701d9f5287807c9ee3cc590ab568e1 as of 2026-06-25T16:14:40.332Z:
 <page url="https://app.notion.com/p/31701d9f5287807c9ee3cc590ab568e1">
 <ancestor-path></ancestor-path>
 <properties>
 {"title":"Math"}
 </properties>
 <content>
-Euler Equation
-Fourier Transform
-<mention-page url="https://app.notion.com/p/32c01d9f528780238102c422cb28845c"/> 
-<mention-page url="https://app.notion.com/p/32c01d9f5287804792e1da18a5b91188"/>
+Linear Algebra
+	<mention-page url="https://app.notion.com/p/38801d9f528780bba92ae8ec6eb6bbe6"/> 
+Statistics
+	<mention-page url="https://app.notion.com/p/32c01d9f528780238102c422cb28845c"/> 
+	<mention-page url="https://app.notion.com/p/32c01d9f5287804792e1da18a5b91188"/> 
+Graph
+	<mention-page url="https://app.notion.com/p/38801d9f5287800b9a19c373657d5f0f"/> 
+Complex Analysis
+	Euler Equation
+	<mention-page url="https://app.notion.com/p/38a01d9f5287805b82fdcae26cf31b5d"/> 
+<empty-block/>
 </content>
 </page>

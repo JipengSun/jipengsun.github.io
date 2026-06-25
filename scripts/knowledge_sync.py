@@ -21,6 +21,7 @@ import argparse
 import json
 import subprocess
 import sys
+from dataclasses import dataclass
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -33,16 +34,37 @@ from notion_sync import (  # noqa: E402
     IN_DIR,
     RAW,
     ARTICLES,
-    load_incoming_fetch,
     load_state,
     parse_notion_fetched_at,
     plan_sync,
+    read_local_fetched_at,
     save_state,
     set_page_record,
 )
+from save_notion_fetch_json import save as save_fetch_json  # noqa: E402
 
-MCP = ROOT / "scripts" / "mcp_notion_to_raw.py"
 BUILD_INDEX = ROOT / "scripts" / "build_knowledge_index.py"
+
+
+@dataclass
+class SyncResult:
+    page_id: str
+    slug: str
+    status: str  # created | updated | skipped | unmapped | error
+    detail: str = ""
+
+
+def page_id_from_fetch(data: dict) -> str:
+    url = data.get("url") or ""
+    page_id = url.rsplit("/", 1)[-1].lower()
+    if len(page_id) != 32:
+        raise ValueError(f"bad page id in url: {url!r}")
+    return page_id
+
+
+def ingest_fetch(data: dict) -> str:
+    """Save a notion-fetch JSON object to knowledge/raw/_in/{id}.json."""
+    return save_fetch_json(data)
 
 
 def write_raw_from_fetch(data: dict) -> tuple[str, str]:
@@ -64,6 +86,80 @@ def build_article(page_id: str, slug: str, *, force_images: bool = False) -> Non
     html_out = build_full_page(title, patched, slug)
     ARTICLES.mkdir(parents=True, exist_ok=True)
     (ARTICLES / f"{slug}.html").write_text(html_out, encoding="utf-8")
+
+
+def needs_update(data: dict, *, force: bool = False) -> bool:
+    if force:
+        return True
+    page_id = page_id_from_fetch(data)
+    text = data.get("text") or ""
+    incoming_at = parse_notion_fetched_at(text)
+    if incoming_at is None:
+        return False
+    local_at = read_local_fetched_at(page_id)
+    return local_at is None or incoming_at > local_at
+
+
+def sync_one_fetch(
+    data: dict,
+    *,
+    force: bool = False,
+    force_images: bool = True,
+    state: dict | None = None,
+) -> SyncResult:
+    """Ingest one fetch and rebuild its article if Notion is newer."""
+    page_id = page_id_from_fetch(data)
+    slug = NOTION_TO_SLUG.get(page_id)
+    if not slug:
+        return SyncResult(page_id, "?", "unmapped", "add page id to NOTION_TO_SLUG")
+
+    text = data.get("text") or ""
+    incoming_at = parse_notion_fetched_at(text)
+    if incoming_at is None:
+        return SyncResult(page_id, slug, "error", "no 'as of' timestamp in fetch text")
+
+    local_at = read_local_fetched_at(page_id)
+    if not force and local_at is not None and incoming_at <= local_at:
+        return SyncResult(page_id, slug, "skipped", "already up to date")
+
+    ingest_fetch(data)
+    page_id, text = write_raw_from_fetch(data)
+    title, _ = extract_from_mcp_view(text)
+    build_article(page_id, slug, force_images=force_images)
+
+    if state is None:
+        state = load_state()
+    set_page_record(state, page_id, slug=slug, title=title, notion_fetched_at=incoming_at)
+    save_state(state)
+
+    status = "created" if local_at is None else "updated"
+    return SyncResult(page_id, slug, status)
+
+
+def sync_fetches(
+    fetches: list[dict],
+    *,
+    force: bool = False,
+    rebuild_index: bool = True,
+) -> list[SyncResult]:
+    """Sync multiple notion-fetch payloads; rebuild index if anything changed."""
+    state = load_state()
+    results: list[SyncResult] = []
+    changed = False
+    for data in fetches:
+        result = sync_one_fetch(data, force=force, state=state)
+        results.append(result)
+        if result.status in ("created", "updated"):
+            changed = True
+            print(f"{result.status} {result.slug} ({result.page_id})")
+        elif result.status == "skipped":
+            print(f"skip {result.slug} — {result.detail}")
+        else:
+            print(f"{result.status} {result.page_id} — {result.detail}", file=sys.stderr)
+
+    if changed and rebuild_index:
+        subprocess.run([sys.executable, str(BUILD_INDEX)], check=True)
+    return results
 
 
 def collect_incoming_exports(force_all: bool = False) -> list[tuple[str, dict]]:
@@ -93,47 +189,11 @@ def collect_incoming_exports(force_all: bool = False) -> list[tuple[str, dict]]:
 
 
 def apply_sync(force: bool = False, rebuild_index: bool = True) -> int:
-    state = load_state()
-    changed_slugs: list[str] = []
-    created = updated = skipped = 0
-
-    for page_id, data in collect_incoming_exports():
-        slug = NOTION_TO_SLUG.get(page_id)
-        if not slug:
-            print(f"skip unmapped {page_id}", file=sys.stderr)
-            continue
-
-        text = data.get("text") or ""
-        incoming_at = parse_notion_fetched_at(text)
-        if incoming_at is None:
-            print(f"skip {page_id}: no 'as of' timestamp in fetch text", file=sys.stderr)
-            continue
-
-        from notion_sync import read_local_fetched_at
-
-        local_at = read_local_fetched_at(page_id)
-        if not force and local_at is not None and incoming_at <= local_at:
-            skipped += 1
-            continue
-
-        page_id, text = write_raw_from_fetch(data)
-        title, _ = extract_from_mcp_view(text)
-        build_article(page_id, slug, force_images=True)
-        set_page_record(state, page_id, slug=slug, title=title, notion_fetched_at=incoming_at)
-
-        if local_at is None:
-            created += 1
-            print(f"create {slug} ({page_id})")
-        else:
-            updated += 1
-            print(f"update {slug} ({page_id})")
-        changed_slugs.append(slug)
-
-    save_state(state)
-
-    if changed_slugs and rebuild_index:
-        subprocess.run([sys.executable, str(BUILD_INDEX)], check=True)
-
+    fetches = [data for _, data in collect_incoming_exports()]
+    results = sync_fetches(fetches, force=force, rebuild_index=rebuild_index)
+    created = sum(1 for r in results if r.status == "created")
+    updated = sum(1 for r in results if r.status == "updated")
+    skipped = sum(1 for r in results if r.status == "skipped")
     print(f"done: created={created} updated={updated} skipped={skipped}")
     return 0
 

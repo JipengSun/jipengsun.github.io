@@ -21,8 +21,8 @@
     "31701d9f5287807c9ee3cc590ab568e1": {
       "slug": "math",
       "title": "Math",
-      "notion_fetched_at": "2026-03-23T02:11:05.595000+00:00",
-      "synced_at": "2026-06-14T22:50:31.107898+00:00"
+      "notion_fetched_at": "2026-06-25T16:14:40.332000+00:00",
+      "synced_at": "2026-06-25T16:34:00.875259+00:00"
     },
     "31701d9f528780deb467c76c3b117c63": {
       "slug": "machine-learning",
@@ -257,7 +257,25 @@
       "title": "COLMAP",
       "notion_fetched_at": "2026-05-04T00:59:03.305000+00:00",
       "synced_at": "2026-06-14T22:50:31.137735+00:00"
+    },
+    "38a01d9f5287805b82fdcae26cf31b5d": {
+      "slug": "hilbert-transform",
+      "title": "Hilbert Transform",
+      "notion_fetched_at": "2026-06-25T16:13:06.807000+00:00",
+      "synced_at": "2026-06-25T16:31:16.527124+00:00"
+    },
+    "38801d9f5287800b9a19c373657d5f0f": {
+      "slug": "graph-fourier-transform",
+      "title": "Graph Fourier Transform",
+      "notion_fetched_at": "2026-06-23T16:23:09.184000+00:00",
+      "synced_at": "2026-06-25T16:34:00.872158+00:00"
+    },
+    "38801d9f528780bba92ae8ec6eb6bbe6": {
+      "slug": "eigenvalue-decomposition",
+      "title": "Eigenvalue Decomposition",
+      "notion_fetched_at": "2026-06-23T16:10:28.948000+00:00",
+      "synced_at": "2026-06-25T16:34:00.873687+00:00"
     }
   },
-  "updated_at": "2026-06-14T22:50:31.137739+00:00"
+  "updated_at": "2026-06-25T16:34:00.875263+00:00"
 }

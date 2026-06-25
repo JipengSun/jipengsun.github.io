@@ -1,0 +1,97 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<title>Hilbert Transform — Knowledge Share — Jipeng Sun</title>
+	<link rel="stylesheet" href="../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="(function(){var b=document.querySelector('.kn-body');if(!b)return;b.querySelectorAll('span').forEach(function(s){if(s.children.length)return;var t=s.textContent.trim();if(/^\\\([\s\S]*\\\)$/.test(t)||/^\\\[[\s\S]*\\\]$/.test(t))s.replaceWith(document.createTextNode(t));});renderMathInElement(b,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false,ignoredTags:['script','noscript','style','textarea','pre','code']});})();"></script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-LCC4R0HD24"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'G-LCC4R0HD24');
+	</script>
+	<script src="../../assets/js/ga-events.js"></script>
+</head>
+<body class="is-preload kn-page">
+	<div id="wrapper">
+		<header id="header">
+			<h1><a href="../../index.html">Jipeng Sun</a></h1>
+			<nav class="links">
+				<ul>
+					<li><a href="../../index.html">Home</a></li>
+					<li><a href="../../research.html">Research</a></li>
+					<li class="active"><a href="../../knowledge-share.html">Knowledge Share</a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course">VR/AR Course</a></li>
+				</ul>
+			</nav>
+			<nav class="main">
+				<ul>
+					<li class="search"><a class="fa-search" href="#search">Search</a><form id="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></li>
+					<li class="menu"><a class="fa-bars" href="#menu">Menu</a></li>
+				</ul>
+			</nav>
+		</header>
+		<section id="menu">
+			<section><form class="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></section>
+			<section>
+				<ul class="links">
+					<li><a href="../../index.html"><h3>Home</h3><p>Jipeng Sun's Homepage</p></a></li>
+					<li><a href="../../research.html"><h3>Research</h3><p>Publications &amp; Papers</p></a></li>
+					<li><a href="../../knowledge-share.html"><h3>Knowledge Share</h3><p>Study notes</p></a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course"><h3>Teaching</h3><p>VR Summer Course</p></a></li>
+				</ul>
+			</section>
+		</section>
+		<div id="main">
+			<article class="post">
+				<header><div class="title"><h2>Hilbert Transform</h2></div></header>
+				<p class="kn-back"><a href="../../knowledge-share.html">&larr; Back to Knowledge Share</a></p>
+				<div class="kn-body">
+				<p>The <strong>Hilbert Transform</strong> is a fundamental mathematical operation in signal processing. While the Fourier Transform tells you *what frequencies* are in a signal, the Hilbert Transform shifts the phase of those frequencies to help you understand the *instantaneous properties* of the signal.</p>
+				<p>Here is a breakdown of why it exists and how the math works.</p>
+				<h3>The Motivation: The "Missing" Imaginary Part</h3>
+				<p>Imagine you are analyzing an Amplitude Modulated (AM) radio signal. It consists of a very fast "carrier" wave whose peak height varies over time. The shape of those varying peaks is the "envelope" (the actual audio signal you want to hear).</p>
+				<p>If you look at the real, physical signal \(x(t)\) on an oscilloscope, it is just a 1D line oscillating rapidly above and below zero. Finding the mathematical equation for that smooth, bounding envelope is surprisingly difficult if you strictly stay in the realm of real numbers.</p>
+				<p><strong>The Solution:</strong> Instead of viewing the signal as a 1D oscillation, what if we viewed it as the "shadow" (the real component) of a 2D rotating vector (a complex number)?</p>
+				<ul><li>The length of this rotating vector would be the perfect, smooth <strong>envelope</strong> (instantaneous amplitude).</li><li>The angle of the vector would be the <strong>instantaneous phase</strong>.</li></ul>
+				<p>To construct this 2D complex vector, we need the "imaginary" part. The Hilbert Transform is the mathematical tool that generates this exact missing imaginary part from a real signal.</p>
+				<h3>The Math</h3>
+				<h3>1. Time Domain (The Definition)</h3>
+				<p>Mathematically, the Hilbert transform of a real-valued continuous-time signal \(x(t)\), denoted as \(\hat{x}(t)\) or \(\mathcal{H}{x(t)}\), is defined as the convolution of \(x(t)\) with the function \(\frac{1}{\pi t}\):</p>
+				<p class="kn-math-display">\[\hat{x}(t) = \frac{1}{\pi} \text{p.v.} \int_{-\infty}^{\infty} \frac{x(\tau)}{t - \tau} d\tau\]</p>
+				<p>*(Note: "*\(\text{p.v.}\)*" stands for the Cauchy principal value, which is required because the integral has a singularity at *\(t = \tau\)*.)*</p>
+				<h3>2. Frequency Domain (The Intuition)</h3>
+				<p>The convolution integral above looks nasty, but the Hilbert transform is beautifully simple in the frequency domain.</p>
+				<p>Let \(X(f)\) be the Fourier Transform of \(x(t)\). The Fourier Transform of the Hilbert transform, \(\mathcal{F}{\hat{x}(t)}\), is:</p>
+				<p class="kn-math-display">\[\mathcal{F}{\hat{x}(t)} = -j \cdot \text{sgn}(f) \cdot X(f)\]</p>
+				<p>Where \(\text{sgn}(f)\) is the signum function (+1 for positive frequencies, -1 for negative frequencies).</p>
+				<p><strong>What this actually means:</strong></p>
+				<ul><li>For all <strong>positive frequencies</strong>, multiply the components by \(-j\). In the complex plane, multiplying by \(-j\) is equivalent to shifting the phase by \(-90^\circ\) (\(-\pi/2\) radians).</li><li>For all <strong>negative frequencies</strong>, multiply by \(+j\), which shifts the phase by \(+90^\circ\) (\(+\pi/2\) radians).</li></ul>
+				<p>The Hilbert transform simply takes your signal, looks at all its constituent sine waves, and shifts them all by a quarter-wavelength (\(90^\circ\)). A \(\cos(\omega t)\) becomes a \(\sin(\omega t)\).</p>
+				<h3>The Result: The Analytic Signal</h3>
+				<p>Once you have \(x(t)\) and its Hilbert transform \(\hat{x}(t)\), you can combine them to create the <strong>Analytic Signal</strong>, \(x_a(t)\):</p>
+				<p class="kn-math-display">\[x_a(t) = x(t) + j\hat{x}(t)\]</p>
+				<p>Because of the \(+90^\circ\) and \(-90^\circ\) phase shifts, all the negative frequencies perfectly cancel out. The analytic signal has *no negative frequencies*, which makes mathematical analysis significantly cleaner.</p>
+				<p>From the analytic signal, you can trivially extract the two most important instantaneous properties of the wave:</p>
+				<ul><li><strong>Instantaneous Amplitude (The Envelope):</strong></li></ul>
+				<p class="kn-math-display">\[A(t) = |x_a(t)| = \sqrt{x(t)^2 + \hat{x}(t)^2}\]</p>
+				<ul><li><strong>Instantaneous Phase:</strong></li></ul>
+				<p class="kn-math-display">\[\phi(t) = \angle x_a(t) = \arctan\left(\frac{\hat{x}(t)}{x(t)}\right)\]</p>
+				<p>Taking the derivative of the instantaneous phase \(\phi(t)\) with respect to time yields the <strong>instantaneous frequency</strong>.</p>
+				</div>
+			</article>
+		</div>
+	</div>
+	<script src="../../assets/js/jquery.min.js"></script>
+	<script src="../../assets/js/browser.min.js"></script>
+	<script src="../../assets/js/breakpoints.min.js"></script>
+	<script src="../../assets/js/util.js"></script>
+	<script src="../../assets/js/main.js"></script>
+</body>
+</html>
