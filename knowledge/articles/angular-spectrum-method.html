@@ -1,0 +1,79 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<title>Angular Spectrum Method — Knowledge Share — Jipeng Sun</title>
+	<link rel="stylesheet" href="../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="(function(){var b=document.querySelector('.kn-body');if(!b)return;b.querySelectorAll('span').forEach(function(s){if(s.children.length)return;var t=s.textContent.trim();if(/^\\\([\s\S]*\\\)$/.test(t)||/^\\\[[\s\S]*\\\]$/.test(t))s.replaceWith(document.createTextNode(t));});renderMathInElement(b,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false,ignoredTags:['script','noscript','style','textarea','pre','code']});})();"></script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-LCC4R0HD24"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'G-LCC4R0HD24');
+	</script>
+	<script src="../../assets/js/ga-events.js"></script>
+</head>
+<body class="is-preload kn-page">
+	<div id="wrapper">
+		<header id="header">
+			<h1><a href="../../index.html">Jipeng Sun</a></h1>
+			<nav class="links">
+				<ul>
+					<li><a href="../../index.html">Home</a></li>
+					<li><a href="../../research.html">Research</a></li>
+					<li class="active"><a href="../../knowledge-share.html">Knowledge Share</a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course">VR/AR Course</a></li>
+				</ul>
+			</nav>
+			<nav class="main">
+				<ul>
+					<li class="search"><a class="fa-search" href="#search">Search</a><form id="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></li>
+					<li class="menu"><a class="fa-bars" href="#menu">Menu</a></li>
+				</ul>
+			</nav>
+		</header>
+		<section id="menu">
+			<section><form class="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></section>
+			<section>
+				<ul class="links">
+					<li><a href="../../index.html"><h3>Home</h3><p>Jipeng Sun's Homepage</p></a></li>
+					<li><a href="../../research.html"><h3>Research</h3><p>Publications &amp; Papers</p></a></li>
+					<li><a href="../../knowledge-share.html"><h3>Knowledge Share</h3><p>Study notes</p></a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course"><h3>Teaching</h3><p>VR Summer Course</p></a></li>
+				</ul>
+			</section>
+		</section>
+		<div id="main">
+			<article class="post">
+				<header><div class="title"><h2>Angular Spectrum Method</h2></div></header>
+				<p class="kn-back"><a href="../../knowledge-share.html">&larr; Back to Knowledge Share</a></p>
+				<div class="kn-body">
+				<p>The ASM is the standard algorithm for simulating how light travels through space because it turns a massively complex 3D physics problem into a simple multiplication problem.</p>
+				<p>It works in three highly logical steps:</p>
+				<p><strong>1. Decompose the Wave (The Fourier Transform)</strong></p>
+				<p>Imagine trying to calculate how a chaotic, splashing wave moves across a pool. It is too complex to calculate all at once.</p>
+				<ul><li>Instead, the ASM takes the starting wave \(U(x,y,0)\) and applies a Fourier Transform (\(\mathcal{F}\)).</li><li>This breaks the chaotic wave down into a set of perfectly flat, uniform plane waves traveling in different directions (the angular spectrum).</li></ul>
+				<p><strong>2. Fly the Planes (The Transfer Function)</strong></p>
+				<p>Because a plane wave is perfectly flat and travels in a perfectly straight line, calculating its propagation is trivial. It doesn't change shape; it only changes its <strong>phase</strong> (the timing of its peaks and valleys) as it travels a distance \(z\).</p>
+				<ul><li>The algorithm multiplies the spectrum by a free-space transfer function \(H(f_x, f_y; z)\).</li><li>Mathematically, this transfer function is just a complex exponential that applies a specific phase delay to each plane wave based on the angle it is traveling and the distance \(z\).</li></ul>
+				<p><strong>3. Reassemble the Wave (The Inverse Fourier Transform)</strong></p>
+				<p>Once all the individual plane waves have been mathematically "flown" forward to distance \(z\) by shifting their phases, the algorithm uses an Inverse Fourier Transform (\(\mathcal{F}^{-1}\)) to add them all back together.</p>
+				<ul><li>The result is the exact, complex interference pattern \(U(x,y,z)\) at the new location.</li></ul>
+				<p>The entire propagation is summarized in one elegant equation:</p>
+				<p class="kn-math-display">\[U(x,y,z) = \mathcal{F}^{-1}{ \mathcal{F}[U(x,y,0)] \cdot H(f_x, f_y; z) }\]</p>
+				</div>
+			</article>
+		</div>
+	</div>
+	<script src="../../assets/js/jquery.min.js"></script>
+	<script src="../../assets/js/browser.min.js"></script>
+	<script src="../../assets/js/breakpoints.min.js"></script>
+	<script src="../../assets/js/util.js"></script>
+	<script src="../../assets/js/main.js"></script>
+</body>
+</html>

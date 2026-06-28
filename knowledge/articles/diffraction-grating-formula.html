@@ -1,0 +1,83 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<title>Diffraction Grating Formula — Knowledge Share — Jipeng Sun</title>
+	<link rel="stylesheet" href="../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="(function(){var b=document.querySelector('.kn-body');if(!b)return;b.querySelectorAll('span').forEach(function(s){if(s.children.length)return;var t=s.textContent.trim();if(/^\\\([\s\S]*\\\)$/.test(t)||/^\\\[[\s\S]*\\\]$/.test(t))s.replaceWith(document.createTextNode(t));});renderMathInElement(b,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false,ignoredTags:['script','noscript','style','textarea','pre','code']});})();"></script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-LCC4R0HD24"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'G-LCC4R0HD24');
+	</script>
+	<script src="../../assets/js/ga-events.js"></script>
+</head>
+<body class="is-preload kn-page">
+	<div id="wrapper">
+		<header id="header">
+			<h1><a href="../../index.html">Jipeng Sun</a></h1>
+			<nav class="links">
+				<ul>
+					<li><a href="../../index.html">Home</a></li>
+					<li><a href="../../research.html">Research</a></li>
+					<li class="active"><a href="../../knowledge-share.html">Knowledge Share</a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course">VR/AR Course</a></li>
+				</ul>
+			</nav>
+			<nav class="main">
+				<ul>
+					<li class="search"><a class="fa-search" href="#search">Search</a><form id="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></li>
+					<li class="menu"><a class="fa-bars" href="#menu">Menu</a></li>
+				</ul>
+			</nav>
+		</header>
+		<section id="menu">
+			<section><form class="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></section>
+			<section>
+				<ul class="links">
+					<li><a href="../../index.html"><h3>Home</h3><p>Jipeng Sun's Homepage</p></a></li>
+					<li><a href="../../research.html"><h3>Research</h3><p>Publications &amp; Papers</p></a></li>
+					<li><a href="../../knowledge-share.html"><h3>Knowledge Share</h3><p>Study notes</p></a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course"><h3>Teaching</h3><p>VR Summer Course</p></a></li>
+				</ul>
+			</section>
+		</section>
+		<div id="main">
+			<article class="post">
+				<header><div class="title"><h2>Diffraction Grating Formula</h2></div></header>
+				<p class="kn-back"><a href="../../knowledge-share.html">&larr; Back to Knowledge Share</a></p>
+				<div class="kn-body">
+				<figure class="kn-figure"><img src="../assets/e49566de-fad5-4ed6-b581-633785fdd3bc.png" alt="" loading="lazy" /></figure>
+				<figure class="kn-figure"><img src="../assets/42d112ab-bb1c-4055-901f-430b7f2ebdc0.png" alt="" loading="lazy" /></figure>
+				<p>You have identified a famous paradox: the Fourier transform is a global integral (requiring information from \(-\infty\) to \(\infty\)), so how can a local photon "know" how to behave?</p>
+				<p>The answer is that <strong>a light ray does not calculate spatial frequency, and it actually does not "decide" to bend in just one direction.</strong> To understand what is physically happening at the microscopic level, we have to stop thinking of light as straight "rays" and start thinking of it as a wave. Here is how the local physics creates the global math:</p>
+				<h3>1. The Local Reality: Scattering Everywhere (Huygens' Principle)</h3>
+				<p>When structures are on the scale of the wavelength of light (like the microscopic ripples etched into this hologram), the "ray" approximation of light completely breaks down.</p>
+				<p>Instead, light behaves according to the <strong>Huygens-Fresnel principle</strong> . This principle states that every single microscopic point on a wavefront acts as a tiny, independent source of a new spherical wave.</p>
+				<ul><li>When the incoming flat wave hits a single microscopic bump on the glass, it does not bend in one specific direction.</li><li>Instead, the bump scatters the light outwards in a spreading, spherical dome—literally in all forward directions at once.</li><li>The *only* thing the local bump does is <strong>delay</strong> the wave slightly based on its physical height (its phase delay). It does not need any global information to do this; it just physically slows the light down at that exact \((x,y)\) coordinate.</li></ul>
+				<h3>2. The Global Result: Constructive Interference</h3>
+				<p>So, if every microscopic point on the glass is just scattering light blindly in every direction, why do we see a clean, single beam of light bent at a specific angle \(\theta\)?</p>
+				<p>The answer is <strong>interference</strong>.</p>
+				<p>Because a spatial frequency (\(f\)) is a *repeating* periodic pattern, you have millions of these bumps spaced at a very specific, mathematically perfect distance from one another.</p>
+				<ul><li>As millions of these tiny spherical waves expand into the air, they overlap and crash into each other.</li><li>In almost every direction, the "peaks" of some waves hit the "troughs" of other waves. They cancel each other out completely into darkness. This is <strong>destructive interference</strong>.</li><li>However, because the bumps are spaced at exactly frequency \(f\), there is a magical geometric angle (\(\theta\)) where the peaks of *all* the scattered spherical waves line up perfectly. They add their energies together to form a bright, powerful new wavefront traveling in that specific direction. This is <strong>constructive interference</strong>.</li></ul>
+				<h3>The Resolution to the Paradox</h3>
+				<p>The spatial frequency (\(f\)) does not exist as a calculation inside the photon. The spatial frequency is simply the <strong>physical distance</strong> between the microscopic bumps on the glass.</p>
+				<p>The light hitting a single bump does not know about the bumps next to it. It just scatters. The "bending" of the light is actually a global macroscopic illusion. The light wave explores every possible path locally, but because of the physical spacing of the bumps (the frequency \(f\)), the universe cancels out every path except the one strictly dictated by the grating equation (\(\sin \theta = \lambda f\)).</p>
+				<p>So, the math requires global information to *calculate* the frequency, but the physical light simply scatters locally and lets interference do the sorting.</p>
+				</div>
+			</article>
+		</div>
+	</div>
+	<script src="../../assets/js/jquery.min.js"></script>
+	<script src="../../assets/js/browser.min.js"></script>
+	<script src="../../assets/js/breakpoints.min.js"></script>
+	<script src="../../assets/js/util.js"></script>
+	<script src="../../assets/js/main.js"></script>
+</body>
+</html>

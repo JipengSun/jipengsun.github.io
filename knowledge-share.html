@@ -92,57 +92,87 @@
 								<h3>Browse by topic</h3>
 							</div>
 							<div class="ks-topic-grid">
-								<a class="ks-topic-chip" href="knowledge/articles/machine-learning.html">
-									<strong>Machine Learning</strong>
-									<span>Attention, diffusion, flow matching, autodiff</span>
-								</a>
-								<a class="ks-topic-chip" href="knowledge/articles/math.html">
-									<strong>Math</strong>
-									<span>Linear algebra, graph Fourier, complex analysis</span>
-								</a>
-								<a class="ks-topic-chip" href="knowledge/articles/computer-vision.html">
-									<strong>Computer Vision</strong>
-									<span>Optical flow, cameras, COLMAP, SfM</span>
-								</a>
-								<a class="ks-topic-chip" href="knowledge/articles/optimization.html">
-									<strong>Optimization</strong>
-									<span>Proximal methods, ADMM, HQS</span>
-								</a>
-								<a class="ks-topic-chip" href="knowledge/articles/computer-graphics.html">
-									<strong>Computer Graphics</strong>
-									<span>NeRF, Gaussian splatting, rendering</span>
-								</a>
-								<a class="ks-topic-chip" href="knowledge/articles/computational-imaging.html">
-									<strong>Computational Imaging</strong>
-									<span>PnP, deconvolution, inverse problems</span>
-								</a>
+								<button type="button" class="ks-topic-chip is-active" data-ks-topic="all">All</button>
+								<button type="button" class="ks-topic-chip" data-ks-topic="machine-learning">Machine Learning</button>
+								<button type="button" class="ks-topic-chip" data-ks-topic="computer-vision">Computer Vision</button>
+								<button type="button" class="ks-topic-chip" data-ks-topic="optimization">Optimization</button>
+								<button type="button" class="ks-topic-chip" data-ks-topic="neuromorphic-computing">Neuromorphic Computing</button>
+								<button type="button" class="ks-topic-chip" data-ks-topic="optics">Optics</button>
+								<button type="button" class="ks-topic-chip" data-ks-topic="math">Math</button>
+								<button type="button" class="ks-topic-chip" data-ks-topic="computational-imaging">Computational Imaging</button>
+								<button type="button" class="ks-topic-chip" data-ks-topic="computer-graphics">Computer Graphics</button>
 							</div>
 						</section>
 
-						<section class="ks-feed" id="ks-feed" aria-label="All notes">
+						<section class="ks-feed" id="ks-feed" aria-label="Notes">
 							<div class="ks-feed-head">
-								<h3>All notes</h3>
+								<h3 id="ks-feed-title">All notes</h3>
 							</div>
 
 							<div class="ks-toolbar">
 								<div class="ks-search-wrap">
 									<span class="icon solid fa-search" aria-hidden="true"></span>
-									<input type="search" id="ks-filter" placeholder="Search notes…" autocomplete="off" aria-label="Filter notes" />
+									<input type="search" id="ks-filter" placeholder="Search notes…" autocomplete="off" aria-label="Search notes" />
 								</div>
-								<ul class="ks-filters" aria-label="Filter by topic">
-									<li><button type="button" class="is-active" data-ks-topic="all">All</button></li>
-									<li><button type="button" data-ks-topic="machine-learning">ML</button></li>
-									<li><button type="button" data-ks-topic="math">Math</button></li>
-									<li><button type="button" data-ks-topic="computer-vision">Vision</button></li>
-									<li><button type="button" data-ks-topic="optimization">Optimization</button></li>
-									<li><button type="button" data-ks-topic="computer-graphics">Graphics</button></li>
-									<li><button type="button" data-ks-topic="computational-imaging">Imaging</button></li>
-								</ul>
 							</div>
 
 							<p class="ks-result-count" id="ks-result-count" aria-live="polite"></p>
 
 							<ol class="ks-story-list" id="ks-story-list">
+					<li class="ks-story" data-ks-topic="optics" data-ks-updated="2026-06-28T16:42:11.505000+00:00" data-ks-keywords="orthographic images to hologram optics orthographic images to hologram">
+						<a class="ks-story-link" href="knowledge/articles/orthographic-images-to-hologram.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">Optics</span>
+								<span class="ks-story-title">Orthographic Images to Hologram</span>
+								<span class="ks-story-dek">While the layer-based method we just discussed slices a 3D scene by depth (the z-axis), the common orthographic method slices the 3D scene by angle…</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story" data-ks-topic="optimization" data-ks-updated="2026-06-28T16:30:34.905000+00:00" data-ks-keywords="neural proximal operators optimization neural proximal operators">
+						<a class="ks-story-link" href="knowledge/articles/neural-proximal-operators.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">Optimization</span>
+								<span class="ks-story-title">Neural Proximal Operators</span>
+								<span class="ks-story-dek">This is the exact conceptual leap that birthed the Plug-and-Play (PnP) and Regularization by Denoising (RED) frameworks, revolutionizing how we solve…</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story" data-ks-topic="neuromorphic-computing" data-ks-updated="2026-06-28T16:23:39.352000+00:00" data-ks-keywords="surrogate gradient learning (sgl) neuromorphic computing surrogate gradient learning">
+						<a class="ks-story-link" href="knowledge/articles/surrogate-gradient-learning.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">Neuromorphic Computing</span>
+								<span class="ks-story-title">Surrogate Gradient Learning (SGL)</span>
+								<span class="ks-story-dek">Surrogate Gradient Learning (SGL) is a technique primarily used to train neural networks that contain non-differentiable activation functions. It is…</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story" data-ks-topic="neuromorphic-computing" data-ks-updated="2026-06-28T16:16:31.446000+00:00" data-ks-keywords="spike-timing-dependent plasticity (stdp) neuromorphic computing spike timing dependent plasticity stdp">
+						<a class="ks-story-link" href="knowledge/articles/spike-timing-dependent-plasticity-stdp.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">Neuromorphic Computing</span>
+								<span class="ks-story-title">Spike-Timing-Dependent Plasticity (STDP)</span>
+								<span class="ks-story-dek">Spike-Timing-Dependent Plasticity (STDP) is a biologically plausible learning rule that adjusts the strength of synaptic connections based on the…</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story" data-ks-topic="neuromorphic-computing" data-ks-updated="2026-06-27T17:35:46.912000+00:00" data-ks-keywords="hebbian learning neuromorphic computing hebbian learning">
+						<a class="ks-story-link" href="knowledge/articles/hebbian-learning.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">Neuromorphic Computing</span>
+								<span class="ks-story-title">Hebbian Learning</span>
+								<span class="ks-story-dek">At its core, Hebbian Learning is a neuroscientific theory introduced by Donald Hebb in 1949, famously summarized as: &quot;Neurons that fire together, wire…</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story" data-ks-topic="neuromorphic-computing" data-ks-updated="2026-06-27T17:17:20.905000+00:00" data-ks-keywords="leaky integrate-and-fire (lif) dynamics neuromorphic computing leaky integrate and fire lif">
+						<a class="ks-story-link" href="knowledge/articles/leaky-integrate-and-fire-lif.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">Neuromorphic Computing</span>
+								<span class="ks-story-title">Leaky Integrate-and-Fire (LIF) Dynamics</span>
+								<span class="ks-story-dek">The Leaky Integrate-and-Fire (LIF) model is a foundational mathematical model in computational neuroscience. It is an elegant abstraction that captures…</span>
+							</div>
+						</a>
+					</li>
 					<li class="ks-story" data-ks-topic="math" data-ks-updated="2026-06-25T16:13:06.807000+00:00" data-ks-keywords="hilbert transform math hilbert transform">
 						<a class="ks-story-link" href="knowledge/articles/hilbert-transform.html">
 							<div class="ks-story-body">
@@ -351,15 +381,6 @@
 							</div>
 						</a>
 					</li>
-					<li class="ks-story" data-ks-topic="optimization" data-ks-updated="2026-03-30T16:52:41.283000+00:00" data-ks-keywords="neural proximal operators optimization neural proximal operators">
-						<a class="ks-story-link" href="knowledge/articles/neural-proximal-operators.html">
-							<div class="ks-story-body">
-								<span class="ks-story-kicker">Optimization</span>
-								<span class="ks-story-title">Neural Proximal Operators</span>
-								<span class="ks-story-dek">This is the exact conceptual leap that birthed the Plug-and-Play (PnP) and Regularization by Denoising (RED) frameworks, revolutionizing how we solve…</span>
-							</div>
-						</a>
-					</li>
 					<li class="ks-story" data-ks-topic="optimization" data-ks-updated="2026-03-30T15:36:26.088000+00:00" data-ks-keywords="admm (alternating direction method of multipliers) optimization admm">
 						<a class="ks-story-link" href="knowledge/articles/admm.html">
 							<div class="ks-story-body">
@@ -375,16 +396,6 @@
 								<span class="ks-story-kicker">Optimization</span>
 								<span class="ks-story-title">Lagrangian Method</span>
 								<span class="ks-story-dek">The standard Lagrangian is a mathematical trick to turn a *constrained* problem into an *unconstrained* one. It does this by taking the hard rules…</span>
-							</div>
-						</a>
-					</li>
-					<li class="ks-story" data-ks-topic="geometry-generation" data-ks-updated="2026-03-27T15:30:28.250000+00:00" data-ks-keywords="geometry generation geometry generation geometry generation">
-						<a class="ks-story-link" href="knowledge/articles/geometry-generation.html">
-							<div class="ks-story-body">
-								<span class="ks-story-kicker">Geometry Generation</span>
-								<span class="ks-story-title">Geometry Generation</span>
-								<span class="ks-story-dek">3D shape synthesis, neural implicit surfaces, and mesh generation methods.</span>
-								<div class="ks-story-meta"><span class="ks-tag">todo</span></div>
 							</div>
 						</a>
 					</li>
@@ -460,6 +471,15 @@
 							</div>
 						</a>
 					</li>
+					<li class="ks-story" data-ks-topic="optics" data-ks-updated="2026-03-04T17:57:06.559000+00:00" data-ks-keywords="stokes vectors optics stokes vectors">
+						<a class="ks-story-link" href="knowledge/articles/stokes-vectors.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">Optics</span>
+								<span class="ks-story-title">Stokes Vectors</span>
+								<span class="ks-story-dek">While tools like the Jones calculus are great for describing perfectly polarized light using the electric field&#x27;s complex amplitude, they fail when…</span>
+							</div>
+						</a>
+					</li>
 					<li class="ks-story" data-ks-topic="computational-imaging" data-ks-updated="2026-03-03T19:16:58.346000+00:00" data-ks-keywords="generative methods for deconv computational imaging generative methods for deconv">
 						<a class="ks-story-link" href="knowledge/articles/generative-methods-for-deconv.html">
 							<div class="ks-story-body">
@@ -475,6 +495,24 @@
 								<span class="ks-story-kicker">Machine Learning</span>
 								<span class="ks-story-title">Flow Matching</span>
 								<span class="ks-story-dek">Flow matching is a highly effective mathematical framework for generative modeling. It serves as an alternative to Diffusion Models and provides a more…</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story" data-ks-topic="optics" data-ks-updated="2026-03-02T18:12:35.806000+00:00" data-ks-keywords="angular spectrum method optics angular spectrum method">
+						<a class="ks-story-link" href="knowledge/articles/angular-spectrum-method.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">Optics</span>
+								<span class="ks-story-title">Angular Spectrum Method</span>
+								<span class="ks-story-dek">The ASM is the standard algorithm for simulating how light travels through space because it turns a massively complex 3D physics problem into a simple…</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story" data-ks-topic="optics" data-ks-updated="2026-03-02T16:34:01.866000+00:00" data-ks-keywords="diffraction grating formula optics diffraction grating formula">
+						<a class="ks-story-link" href="knowledge/articles/diffraction-grating-formula.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">Optics</span>
+								<span class="ks-story-title">Diffraction Grating Formula</span>
+								<span class="ks-story-dek">You have identified a famous paradox: the Fourier transform is a global integral (requiring information from \(-\infty\) to \(\infty\)), so how can a…</span>
 							</div>
 						</a>
 					</li>
@@ -502,7 +540,9 @@
 				var stories = document.querySelectorAll('.ks-story');
 				var empty = document.getElementById('ks-no-results');
 				var countEl = document.getElementById('ks-result-count');
-				var filterBtns = document.querySelectorAll('.ks-filters [data-ks-topic]');
+				var feedTitle = document.getElementById('ks-feed-title');
+				var feed = document.getElementById('ks-feed');
+				var topicChips = document.querySelectorAll('.ks-topic-chip[data-ks-topic]');
 				var activeTopic = 'all';
 
 				if (!input) return;
@@ -516,12 +556,22 @@
 					});
 				}
 
+				function topicLabel(topic) {
+					if (topic === 'all') return 'All notes';
+					var chip = document.querySelector('.ks-topic-chip[data-ks-topic="' + topic + '"]');
+					return chip ? chip.textContent.trim() + ' notes' : 'Notes';
+				}
+
 				function setTopic(topic) {
 					activeTopic = topic;
-					filterBtns.forEach(function (btn) {
-						btn.classList.toggle('is-active', btn.getAttribute('data-ks-topic') === topic);
+					topicChips.forEach(function (chip) {
+						chip.classList.toggle('is-active', chip.getAttribute('data-ks-topic') === topic);
 					});
+					if (feedTitle) feedTitle.textContent = topicLabel(topic);
 					filter();
+					if (feed && topic !== 'all') {
+						feed.scrollIntoView({ behavior: 'smooth', block: 'start' });
+					}
 				}
 
 				function filter() {
@@ -546,13 +596,19 @@
 				}
 
 				input.addEventListener('input', filter);
-				filterBtns.forEach(function (btn) {
-					btn.addEventListener('click', function () {
-						setTopic(btn.getAttribute('data-ks-topic'));
+				topicChips.forEach(function (chip) {
+					chip.addEventListener('click', function () {
+						setTopic(chip.getAttribute('data-ks-topic'));
 					});
 				});
 
-				filter();
+				// Deep-link: knowledge-share.html#optics
+				var hashTopic = (location.hash || '').replace(/^#/, '');
+				if (hashTopic && document.querySelector('.ks-topic-chip[data-ks-topic="' + hashTopic + '"]')) {
+					setTopic(hashTopic);
+				} else {
+					filter();
+				}
 			})();
 		</script>
 

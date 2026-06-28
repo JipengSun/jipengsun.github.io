@@ -1,0 +1,84 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<title>Leaky Integrate-and-Fire (LIF) Dynamics — Knowledge Share — Jipeng Sun</title>
+	<link rel="stylesheet" href="../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="(function(){var b=document.querySelector('.kn-body');if(!b)return;b.querySelectorAll('span').forEach(function(s){if(s.children.length)return;var t=s.textContent.trim();if(/^\\\([\s\S]*\\\)$/.test(t)||/^\\\[[\s\S]*\\\]$/.test(t))s.replaceWith(document.createTextNode(t));});renderMathInElement(b,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false,ignoredTags:['script','noscript','style','textarea','pre','code']});})();"></script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-LCC4R0HD24"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'G-LCC4R0HD24');
+	</script>
+	<script src="../../assets/js/ga-events.js"></script>
+</head>
+<body class="is-preload kn-page">
+	<div id="wrapper">
+		<header id="header">
+			<h1><a href="../../index.html">Jipeng Sun</a></h1>
+			<nav class="links">
+				<ul>
+					<li><a href="../../index.html">Home</a></li>
+					<li><a href="../../research.html">Research</a></li>
+					<li class="active"><a href="../../knowledge-share.html">Knowledge Share</a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course">VR/AR Course</a></li>
+				</ul>
+			</nav>
+			<nav class="main">
+				<ul>
+					<li class="search"><a class="fa-search" href="#search">Search</a><form id="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></li>
+					<li class="menu"><a class="fa-bars" href="#menu">Menu</a></li>
+				</ul>
+			</nav>
+		</header>
+		<section id="menu">
+			<section><form class="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></section>
+			<section>
+				<ul class="links">
+					<li><a href="../../index.html"><h3>Home</h3><p>Jipeng Sun's Homepage</p></a></li>
+					<li><a href="../../research.html"><h3>Research</h3><p>Publications &amp; Papers</p></a></li>
+					<li><a href="../../knowledge-share.html"><h3>Knowledge Share</h3><p>Study notes</p></a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course"><h3>Teaching</h3><p>VR Summer Course</p></a></li>
+				</ul>
+			</section>
+		</section>
+		<div id="main">
+			<article class="post">
+				<header><div class="title"><h2>Leaky Integrate-and-Fire (LIF) Dynamics</h2></div></header>
+				<p class="kn-back"><a href="../../knowledge-share.html">&larr; Back to Knowledge Share</a></p>
+				<div class="kn-body">
+				<p>The Leaky Integrate-and-Fire (LIF) model is a foundational mathematical model in computational neuroscience. It is an elegant abstraction that captures the core dynamics of how a biological neuron accumulates information and communicates, without getting bogged down in microscopic chemical details.</p>
+				<h3>1. The Motivation: Simplicity vs. Realism</h3>
+				<p>Biological neurons are incredibly complex. Groundbreaking models, like the Hodgkin-Huxley model, describe neuron firing by tracking the intricate opening and closing of individual sodium and potassium ion channels using complex, non-linear differential equations.</p>
+				<p>While accurate, that level of detail is computationally exhausting. If you want to simulate networks of thousands or millions of neurons—such as in Spiking Neural Networks (SNNs) or neuromorphic hardware—you need a model that is computationally cheap but still functionally accurate. The LIF model achieves this by stripping away the biochemical mechanics and focusing purely on the electrical cause-and-effect of neuron firing.</p>
+				<h3>2. The Intuition: The Leaky Bucket</h3>
+				<p>The easiest way to understand LIF dynamics is the <strong>leaky bucket analogy</strong>.</p>
+				<ul><li><strong>Integrate:</strong> Imagine a bucket receiving water from a hose. The water represents the input electrical current (\(I\)) coming from other neurons, and the water level inside the bucket represents the neuron's membrane voltage (\(V\)). As water flows in, the bucket accumulates it.</li><li><strong>Leaky:</strong> The bucket has a small hole in the bottom. Water is constantly draining out. If you pour water very slowly, it will leak out just as fast, and the bucket will never fill up. If you stop pouring altogether, the water level will slowly drop back to its baseline empty state (the resting potential).</li><li><strong>Fire:</strong> If you pour water in fast enough to overcome the leak, the water level will eventually hit the brim of the bucket. This brim is the threshold (\(V_{\text{th}}\)). Once the water hits the threshold, a switch is flipped: the neuron fires an electrical spike (an action potential), and the bucket is instantly emptied out (the reset potential, \(V_{\text{reset}}\)), ready to start filling again.</li></ul>
+				<h3>3. The Mathematics: The RC Circuit</h3>
+				<p>Biologically, the cell membrane acts like a simple electrical circuit. The lipid bilayer separates electrical charges (acting as a capacitor, \(C\)), and the ion channels allow some charge to leak through (acting as a resistor, \(R\)).</p>
+				<p>By applying Kirchhoff's current law, the total current across the cell membrane is the sum of the capacitive current and the leak current. This gives us the standard LIF differential equation:</p>
+				<p class="kn-math-display">\[\tau_m \frac{dV(t)}{dt} = -(V(t) - V_{\text{rest}}) + R I(t)\]</p>
+				<p>Here is what the variables mean:</p>
+				<ul><li>\(V(t)\): The membrane potential (voltage) of the neuron at time \(t\).</li><li>\(V_{\text{rest}}\): The resting membrane potential (where the voltage settles when there is no input, usually around -70 mV).</li><li>\(R\): The membrane resistance.</li><li>\(I(t)\): The external input current being injected into the neuron.</li><li>\(\tau_m\): The membrane time constant (\(\tau_m = RC\)). This determines how fast the "leak" happens. A small time constant means the voltage decays back to rest very quickly.</li></ul>
+				<p><strong>The Spiking Mechanism</strong></p>
+				<p>Notice that the differential equation above only describes the *subthreshold* dynamics—the leaking and integrating. It does not naturally produce a spike. We have to manually enforce a mathematical rule for the "Fire" part of the model:</p>
+				<p>If at any point \(V(t) \ge V_{\text{th}}\), the neuron emits a spike, and the voltage is immediately reset:</p>
+				<p class="kn-math-display">\[V(t) \leftarrow V_{\text{reset}}\]</p>
+				<p>After resetting, the neuron often undergoes a brief *refractory period* where it cannot integrate new current for a few milliseconds, mimicking the time a biological cell needs to recover.</p>
+				</div>
+			</article>
+		</div>
+	</div>
+	<script src="../../assets/js/jquery.min.js"></script>
+	<script src="../../assets/js/browser.min.js"></script>
+	<script src="../../assets/js/breakpoints.min.js"></script>
+	<script src="../../assets/js/util.js"></script>
+	<script src="../../assets/js/main.js"></script>
+</body>
+</html>

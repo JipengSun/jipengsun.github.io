@@ -8,15 +8,20 @@ import re
 from pathlib import Path
 
 NOTION_TO_SLUG: dict[str, str] = {
+    "26b01d9f528780a9914cc854c5c6ff53": "diffraction-grating-formula",
     "31701d9f5287800389c5d2da8aa83874": "robotics",
     "31701d9f52878046a137f3a1df660d09": "world-models",
     "31701d9f5287804d82e1fa6fb1a684f7": "flow-matching",
     "31701d9f5287807c9ee3cc590ab568e1": "math",
+    "31701d9f528780bfad6bc104c07c1e1a": "optics",
+    "31701d9f5287801988e1eadf0f2946d1": "angular-spectrum-method",
+    "31701d9f52878051979ed76c387d319b": "orthographic-images-to-hologram",
     "31701d9f528780deb467c76c3b117c63": "machine-learning",
     "31801d9f52878017a966fe9c0b3fb4dd": "generative-methods-for-deconv",
     "31a01d9f528780459aa0dd0527ab6873": "computational-imaging",
     "31a01d9f52878048ae50fab695d977cb": "pnp-with-diffusion",
     "31a01d9f5287804cb1baea8ce98a4d71": "diffusion-from-sdes",
+    "31901d9f5287805babfff04648a24e34": "stokes-vectors",
     "32b01d9f5287801499f9f5a715df87b1": "diffusion-model",
     "32c01d9f52878006a8e4dee9db27dd3d": "ddpms-ddims-amp-score-based",
     "32c01d9f528780238102c422cb28845c": "kl-divergence",
@@ -54,6 +59,12 @@ NOTION_TO_SLUG: dict[str, str] = {
     "38a01d9f5287805b82fdcae26cf31b5d": "hilbert-transform",
     "38801d9f5287800b9a19c373657d5f0f": "graph-fourier-transform",
     "38801d9f528780bba92ae8ec6eb6bbe6": "eigenvalue-decomposition",
+    "38b01d9f528780e7aed4f17ee52b1ea8": "neuromorphic-computing",
+    "38c01d9f52878005b825ffcbba1dc59e": "leaky-integrate-and-fire-lif",
+    "38c01d9f528780cc840bc7b7d7aa47a6": "hebbian-learning",
+    "38c01d9f52878028b056fe2c5b7c8b2a": "spike-timing-dependent-plasticity-stdp",
+    "38d01d9f52878028b056fe2c5b7c8b2a": "spike-timing-dependent-plasticity-stdp",
+    "38d01d9f52878072be3bccd6ec6e4fdd": "surrogate-gradient-learning",
 }
 
 

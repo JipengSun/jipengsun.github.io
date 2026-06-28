@@ -1,0 +1,33 @@
+Here is the result of "view" for the Page with URL https://app.notion.com/p/38c01d9f52878005b825ffcbba1dc59e as of 2026-06-27T17:17:20.905Z:
+<page url="https://app.notion.com/p/38c01d9f52878005b825ffcbba1dc59e">
+<ancestor-path></ancestor-path>
+<properties>
+{"title":"Leaky Integrate-and-Fire (LIF) Dynamics"}
+</properties>
+<content>
+The Leaky Integrate-and-Fire (LIF) model is a foundational mathematical model in computational neuroscience. It is an elegant abstraction that captures the core dynamics of how a biological neuron accumulates information and communicates, without getting bogged down in microscopic chemical details.
+### 1. The Motivation: Simplicity vs. Realism
+Biological neurons are incredibly complex. Groundbreaking models, like the Hodgkin-Huxley model, describe neuron firing by tracking the intricate opening and closing of individual sodium and potassium ion channels using complex, non-linear differential equations.
+While accurate, that level of detail is computationally exhausting. If you want to simulate networks of thousands or millions of neurons—such as in Spiking Neural Networks (SNNs) or neuromorphic hardware—you need a model that is computationally cheap but still functionally accurate. The LIF model achieves this by stripping away the biochemical mechanics and focusing purely on the electrical cause-and-effect of neuron firing.
+### 2. The Intuition: The Leaky Bucket
+The easiest way to understand LIF dynamics is the **leaky bucket analogy**.
+- **Integrate:** Imagine a bucket receiving water from a hose. The water represents the input electrical current ($`I`$) coming from other neurons, and the water level inside the bucket represents the neuron's membrane voltage ($`V`$). As water flows in, the bucket accumulates it.
+- **Leaky:** The bucket has a small hole in the bottom. Water is constantly draining out. If you pour water very slowly, it will leak out just as fast, and the bucket will never fill up. If you stop pouring altogether, the water level will slowly drop back to its baseline empty state (the resting potential).
+- **Fire:** If you pour water in fast enough to overcome the leak, the water level will eventually hit the brim of the bucket. This brim is the threshold ($`V_{\text{th}}`$). Once the water hits the threshold, a switch is flipped: the neuron fires an electrical spike (an action potential), and the bucket is instantly emptied out (the reset potential, $`V_{\text{reset}}`$), ready to start filling again.
+### 3. The Mathematics: The RC Circuit
+Biologically, the cell membrane acts like a simple electrical circuit. The lipid bilayer separates electrical charges (acting as a capacitor, $`C`$), and the ion channels allow some charge to leak through (acting as a resistor, $`R`$).
+By applying Kirchhoff's current law, the total current across the cell membrane is the sum of the capacitive current and the leak current. This gives us the standard LIF differential equation:
+$`\tau_m \frac{dV(t)}{dt} = -(V(t) - V_{\text{rest}}) + R I(t)`$
+Here is what the variables mean:
+- $`V(t)`$: The membrane potential (voltage) of the neuron at time $`t`$.
+- $`V_{\text{rest}}`$: The resting membrane potential (where the voltage settles when there is no input, usually around -70 mV).
+- $`R`$: The membrane resistance.
+- $`I(t)`$: The external input current being injected into the neuron.
+- $`\tau_m`$: The membrane time constant ($`\tau_m = RC`$). This determines how fast the "leak" happens. A small time constant means the voltage decays back to rest very quickly.
+**The Spiking Mechanism**
+Notice that the differential equation above only describes the *subthreshold* dynamics—the leaking and integrating. It does not naturally produce a spike. We have to manually enforce a mathematical rule for the "Fire" part of the model:
+If at any point $`V(t) \ge V_{\text{th}}`$, the neuron emits a spike, and the voltage is immediately reset:
+$`V(t) \leftarrow V_{\text{reset}}`$
+After resetting, the neuron often undergoes a brief *refractory period* where it cannot integrate new current for a few milliseconds, mimicking the time a biological cell needs to recover.
+</content>
+</page>

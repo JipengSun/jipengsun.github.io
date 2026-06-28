@@ -1,0 +1,95 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<title>Surrogate Gradient Learning (SGL) — Knowledge Share — Jipeng Sun</title>
+	<link rel="stylesheet" href="../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="(function(){var b=document.querySelector('.kn-body');if(!b)return;b.querySelectorAll('span').forEach(function(s){if(s.children.length)return;var t=s.textContent.trim();if(/^\\\([\s\S]*\\\)$/.test(t)||/^\\\[[\s\S]*\\\]$/.test(t))s.replaceWith(document.createTextNode(t));});renderMathInElement(b,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false,ignoredTags:['script','noscript','style','textarea','pre','code']});})();"></script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-LCC4R0HD24"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'G-LCC4R0HD24');
+	</script>
+	<script src="../../assets/js/ga-events.js"></script>
+</head>
+<body class="is-preload kn-page">
+	<div id="wrapper">
+		<header id="header">
+			<h1><a href="../../index.html">Jipeng Sun</a></h1>
+			<nav class="links">
+				<ul>
+					<li><a href="../../index.html">Home</a></li>
+					<li><a href="../../research.html">Research</a></li>
+					<li class="active"><a href="../../knowledge-share.html">Knowledge Share</a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course">VR/AR Course</a></li>
+				</ul>
+			</nav>
+			<nav class="main">
+				<ul>
+					<li class="search"><a class="fa-search" href="#search">Search</a><form id="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></li>
+					<li class="menu"><a class="fa-bars" href="#menu">Menu</a></li>
+				</ul>
+			</nav>
+		</header>
+		<section id="menu">
+			<section><form class="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></section>
+			<section>
+				<ul class="links">
+					<li><a href="../../index.html"><h3>Home</h3><p>Jipeng Sun's Homepage</p></a></li>
+					<li><a href="../../research.html"><h3>Research</h3><p>Publications &amp; Papers</p></a></li>
+					<li><a href="../../knowledge-share.html"><h3>Knowledge Share</h3><p>Study notes</p></a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course"><h3>Teaching</h3><p>VR Summer Course</p></a></li>
+				</ul>
+			</section>
+		</section>
+		<div id="main">
+			<article class="post">
+				<header><div class="title"><h2>Surrogate Gradient Learning (SGL)</h2></div></header>
+				<p class="kn-back"><a href="../../knowledge-share.html">&larr; Back to Knowledge Share</a></p>
+				<div class="kn-body">
+				<p><strong>Surrogate Gradient Learning (SGL)</strong> is a technique primarily used to train neural networks that contain non-differentiable activation functions. It is the mathematical backbone for training <strong>Spiking Neural Networks (SNNs)</strong> and <strong>Binarized Neural Networks (BNNs)</strong> using standard backpropagation.</p>
+				<h3>1. The Problem: The "Dead" Gradient</h3>
+				<p>In a standard artificial neural network, activation functions like ReLU or Sigmoid are differentiable, allowing us to use the chain rule to update weights.</p>
+				<p>However, in SNNs or binarized networks, the neuron fires based on a thresholding function—specifically, the <strong>Heaviside step function</strong>, denoted as \(S(x)\). Let \(x\) be the membrane potential minus the firing threshold (\(x = u - v_{th}\)). The forward pass is defined as:</p>
+				<p class="kn-math-display">\[S(x) = \Theta(x) = \begin{cases} 1 & \text{if } x \ge 0 \ 0 & \text{if } x < 0 \end{cases}\]</p>
+				<p>To update the network weights \(W\) using gradient descent, we need to calculate the gradient of the loss \(L\) with respect to the weights. Using the chain rule:</p>
+				<p class="kn-math-display">\[\frac{\partial L}{\partial W} = \frac{\partial L}{\partial S} \frac{\partial S}{\partial x} \frac{\partial x}{\partial W}\]</p>
+				<p>The critical failure point is \(\frac{\partial S}{\partial x}\). The mathematical derivative of the Heaviside step function is the <strong>Dirac delta function</strong>, \(\delta(x)\):</p>
+				<p class="kn-math-display">\[\frac{\partial S}{\partial x} = \delta(x) = \begin{cases} \infty & \text{if } x = 0 \ 0 & \text{if } x \neq 0 \end{cases}\]</p>
+				<p>Because the gradient is zero almost everywhere, the error cannot propagate backward through the network. The network simply stops learning. This is known as the "dead gradient" problem.</p>
+				<h3>2. The Solution: The Surrogate Gradient</h3>
+				<p>Surrogate Gradient Learning solves this by decoupling the forward pass from the backward pass.</p>
+				<ul><li><strong>Forward Pass:</strong> We continue to use the exact Heaviside step function \(S(x)\) to emit discrete, binary spikes.</li><li><strong>Backward Pass:</strong> We replace the problematic Dirac delta \(\delta(x)\) with a smooth, continuous, and differentiable <strong>surrogate function</strong>, denoted as \(\tilde{S}'(x)\).</li></ul>
+				<p>The modified chain rule becomes:</p>
+				<p class="kn-math-display">\[\frac{\partial L}{\partial W} \approx \frac{\partial L}{\partial S} \tilde{S}'(x) \frac{\partial x}{\partial W}\]</p>
+				<p>This allows gradients to flow smoothly through the network, enabling standard optimizers (like Adam or SGD) to update the weights.</p>
+				<h3>3. Common Mathematical Surrogate Functions</h3>
+				<p>A good surrogate gradient resembles a smoothed version of the Dirac delta. It is typically the derivative of a continuous sigmoid-like function. They all share a <strong>steepness parameter</strong> (\(\alpha\)) that controls how closely the surrogate approximates the true Dirac delta.</p>
+				<p>As \(\alpha \to \infty\), the surrogate gradient \(\tilde{S}'(x) \to \delta(x)\).</p>
+				<p><strong>A. The Sigmoid Derivative</strong></p>
+				<p>We assume the forward pass was approximated by a scaled sigmoid function \(\sigma(\alpha x) = \frac{1}{1 + e^{-\alpha x}}\). The surrogate gradient used in the backward pass is its derivative:</p>
+				<p class="kn-math-display">\[\tilde{S}'(x) = \alpha \sigma(\alpha x)(1 - \sigma(\alpha x))\]</p>
+				<p><strong>B. The Arctangent Derivative (ATan)</strong></p>
+				<p>Often preferred for its heavy tails, which allow gradients to flow even when the membrane potential is far from the threshold.</p>
+				<p class="kn-math-display">\[\tilde{S}'(x) = \frac{1}{\pi} \frac{\alpha}{1 + (\alpha x)^2}\]</p>
+				<p><strong>C. The Fast Sigmoid Derivative (SuperSpike)</strong></p>
+				<p>Computationally cheaper than the standard sigmoid because it avoids the exponential operation \(e^x\).</p>
+				<p class="kn-math-display">\[\tilde{S}'(x) = \frac{1}{(1 + |\alpha x|)^2}\]</p>
+				<p>To understand how the steepness parameter (\(\alpha\)) bridges the gap between a smooth, learnable gradient and the true Dirac delta function, you can explore the mathematical visualization below.</p>
+				</div>
+			</article>
+		</div>
+	</div>
+	<script src="../../assets/js/jquery.min.js"></script>
+	<script src="../../assets/js/browser.min.js"></script>
+	<script src="../../assets/js/breakpoints.min.js"></script>
+	<script src="../../assets/js/util.js"></script>
+	<script src="../../assets/js/main.js"></script>
+</body>
+</html>

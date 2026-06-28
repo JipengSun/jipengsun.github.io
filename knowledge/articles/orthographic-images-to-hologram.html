@@ -1,0 +1,86 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<title>Orthographic Images to Hologram — Knowledge Share — Jipeng Sun</title>
+	<link rel="stylesheet" href="../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="(function(){var b=document.querySelector('.kn-body');if(!b)return;b.querySelectorAll('span').forEach(function(s){if(s.children.length)return;var t=s.textContent.trim();if(/^\\\([\s\S]*\\\)$/.test(t)||/^\\\[[\s\S]*\\\]$/.test(t))s.replaceWith(document.createTextNode(t));});renderMathInElement(b,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false,ignoredTags:['script','noscript','style','textarea','pre','code']});})();"></script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-LCC4R0HD24"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'G-LCC4R0HD24');
+	</script>
+	<script src="../../assets/js/ga-events.js"></script>
+</head>
+<body class="is-preload kn-page">
+	<div id="wrapper">
+		<header id="header">
+			<h1><a href="../../index.html">Jipeng Sun</a></h1>
+			<nav class="links">
+				<ul>
+					<li><a href="../../index.html">Home</a></li>
+					<li><a href="../../research.html">Research</a></li>
+					<li class="active"><a href="../../knowledge-share.html">Knowledge Share</a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course">VR/AR Course</a></li>
+				</ul>
+			</nav>
+			<nav class="main">
+				<ul>
+					<li class="search"><a class="fa-search" href="#search">Search</a><form id="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></li>
+					<li class="menu"><a class="fa-bars" href="#menu">Menu</a></li>
+				</ul>
+			</nav>
+		</header>
+		<section id="menu">
+			<section><form class="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></section>
+			<section>
+				<ul class="links">
+					<li><a href="../../index.html"><h3>Home</h3><p>Jipeng Sun's Homepage</p></a></li>
+					<li><a href="../../research.html"><h3>Research</h3><p>Publications &amp; Papers</p></a></li>
+					<li><a href="../../knowledge-share.html"><h3>Knowledge Share</h3><p>Study notes</p></a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course"><h3>Teaching</h3><p>VR Summer Course</p></a></li>
+				</ul>
+			</section>
+		</section>
+		<div id="main">
+			<article class="post">
+				<header><div class="title"><h2>Orthographic Images to Hologram</h2></div></header>
+				<p class="kn-back"><a href="../../knowledge-share.html">&larr; Back to Knowledge Share</a></p>
+				<div class="kn-body">
+				<figure class="kn-figure"><img src="../assets/ac0d625e-17f3-441e-a52b-416d760581ca.png" alt="" loading="lazy" /></figure>
+				<p>While the layer-based method we just discussed slices a 3D scene by <strong>depth</strong> (the z-axis), the common orthographic method slices the 3D scene by <strong>angle</strong> (viewing direction). This approach is widely known in the field as the holographic stereogram or the ray-sampling method.</p>
+				<p>Here is the standard, step-by-step algorithmic pipeline for a common orthographic CGH approach.</p>
+				<h3>1. Ray Sampling (Orthographic Rendering)</h3>
+				<p>Instead of cutting the 3D object into flat depth slices, the algorithm sets up a virtual orthographic camera in a 3D rendering engine (like Blender or OpenGL).</p>
+				<p>An orthographic camera has no perspective; it only captures light rays that are traveling perfectly parallel to one another. The algorithm moves this camera along a grid, capturing hundreds or thousands of 2D images of the 3D scene from slightly different angles (e.g., \(-10^\circ\) to \(+10^\circ\) horizontally and vertically) . Because each image consists only of parallel rays, a single image mathematically represents light traveling in one specific direction.</p>
+				<h3>2. The Fourier Transform (Images to Spectra)</h3>
+				<p>The algorithm takes the first orthographic image and applies a 2D Fast Fourier Transform (FFT).</p>
+				<p>Because the image represents a single viewing angle, its Fourier transform represents the spatial-frequency spectrum required to recreate that specific angle. The algorithm repeats this FFT process individually for every single orthographic image captured in Step 1.</p>
+				<h3>3. Assembling the Master Grid (Frequency Tiling)</h3>
+				<p>Next, the algorithm creates a massive, empty 2D matrix representing the total spatial-frequency domain (\(k\)-space) of the final hologram.</p>
+				<p>It takes the Fourier-transformed data from each image and pastes it into this master grid as a small "tile" or "patch" .</p>
+				<ul><li>The FFT of the straight-on (\(0^\circ\)) image is pasted dead center.</li><li>The FFT of the \(5^\circ\) left-view image is pasted into a tile on the left side of the grid.</li><li>The FFT of the \(5^\circ\) right-view image is pasted into a tile on the right side.</li></ul>
+				<p>By systematically tiling all these spectra together without overlapping them, the algorithm builds a complete, unified map of the entire 3D light field in the frequency domain.</p>
+				<h3>4. The Inverse Transform (Back to the Hologram Plane)</h3>
+				<p>Once the master frequency grid is fully populated with all the angular tiles, the algorithm applies one giant Inverse Fast Fourier Transform (IFFT) to the entire matrix.</p>
+				<p>This mathematical operation converts the data from the frequency domain (angles) back into the spatial domain (the physical coordinates on the glass or spatial light modulator). The result is a highly complex 2D matrix containing both amplitude and phase values. This matrix represents the complete interference pattern required to project all those different angles simultaneously.</p>
+				<h3>5. Phase Extraction and Optimization</h3>
+				<p>Just like in the layer-based method, this resulting complex wave contains both amplitude and phase, but physical manufacturing usually only allows for phase control.</p>
+				<p>At this point, a standard orthographic pipeline will either simply discard the amplitude and keep the phase (which causes some image degradation) or feed this complex wave into an iterative optimization loop, like the Gerchberg-Saxton algorithm or Error Diffusion, to refine it into a phase-only hologram that can be physically etched or displayed.</p>
+				</div>
+			</article>
+		</div>
+	</div>
+	<script src="../../assets/js/jquery.min.js"></script>
+	<script src="../../assets/js/browser.min.js"></script>
+	<script src="../../assets/js/breakpoints.min.js"></script>
+	<script src="../../assets/js/util.js"></script>
+	<script src="../../assets/js/main.js"></script>
+</body>
+</html>

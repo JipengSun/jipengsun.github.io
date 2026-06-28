@@ -115,10 +115,6 @@
 				<p>When you are trying to find the minimum of a function with respect to \(z\), adding or subtracting a constant shifts the whole curve up or down, but it *does not change the horizontal coordinate where the bottom of the bowl is located*. Therefore, the optimization algorithm can completely ignore it.</p>
 				<p>When we drop the constant term, we are left with the exact proportionality:</p>
 				<p class="kn-math-display">\[-\log p(v|z) \propto \frac{1}{2\sigma^2} \|z - v\|_2^2\]</p>
-				<h3>The Takeaway</h3>
-				<p>This is why the \(\frac{\rho}{2}\|Ax + Bz - c\|_2^2\) penalty in the Augmented Lagrangian is so elegant. When you set up ADMM, you are mathematically enforcing the assumption that the "disagreement" (the residual) between your variables acts like Gaussian noise.</p>
-				<hr />
-				<p>Would you like to see how this equation completely changes if we assume our sensor data is corrupted by Poisson noise (shot noise) instead of Gaussian noise, and how that alters the optimization step?</p>
 				</div>
 			</article>
 		</div>

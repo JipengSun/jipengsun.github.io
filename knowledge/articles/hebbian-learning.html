@@ -1,0 +1,92 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<title>Hebbian Learning — Knowledge Share — Jipeng Sun</title>
+	<link rel="stylesheet" href="../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="(function(){var b=document.querySelector('.kn-body');if(!b)return;b.querySelectorAll('span').forEach(function(s){if(s.children.length)return;var t=s.textContent.trim();if(/^\\\([\s\S]*\\\)$/.test(t)||/^\\\[[\s\S]*\\\]$/.test(t))s.replaceWith(document.createTextNode(t));});renderMathInElement(b,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false,ignoredTags:['script','noscript','style','textarea','pre','code']});})();"></script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-LCC4R0HD24"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'G-LCC4R0HD24');
+	</script>
+	<script src="../../assets/js/ga-events.js"></script>
+</head>
+<body class="is-preload kn-page">
+	<div id="wrapper">
+		<header id="header">
+			<h1><a href="../../index.html">Jipeng Sun</a></h1>
+			<nav class="links">
+				<ul>
+					<li><a href="../../index.html">Home</a></li>
+					<li><a href="../../research.html">Research</a></li>
+					<li class="active"><a href="../../knowledge-share.html">Knowledge Share</a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course">VR/AR Course</a></li>
+				</ul>
+			</nav>
+			<nav class="main">
+				<ul>
+					<li class="search"><a class="fa-search" href="#search">Search</a><form id="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></li>
+					<li class="menu"><a class="fa-bars" href="#menu">Menu</a></li>
+				</ul>
+			</nav>
+		</header>
+		<section id="menu">
+			<section><form class="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></section>
+			<section>
+				<ul class="links">
+					<li><a href="../../index.html"><h3>Home</h3><p>Jipeng Sun's Homepage</p></a></li>
+					<li><a href="../../research.html"><h3>Research</h3><p>Publications &amp; Papers</p></a></li>
+					<li><a href="../../knowledge-share.html"><h3>Knowledge Share</h3><p>Study notes</p></a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course"><h3>Teaching</h3><p>VR Summer Course</p></a></li>
+				</ul>
+			</section>
+		</section>
+		<div id="main">
+			<article class="post">
+				<header><div class="title"><h2>Hebbian Learning</h2></div></header>
+				<p class="kn-back"><a href="../../knowledge-share.html">&larr; Back to Knowledge Share</a></p>
+				<div class="kn-body">
+				<p>At its core, Hebbian Learning is a neuroscientific theory introduced by Donald Hebb in 1949, famously summarized as: <strong>"Neurons that fire together, wire together."</strong> In the context of artificial neural networks and machine learning, it translates to an unsupervised learning rule where the synaptic weight between two neurons increases if both neurons are activated simultaneously.</p>
+				<h3>1. The Basic Hebbian Rule</h3>
+				<p>Consider a pre-synaptic neuron \(i\) with activation \(x_i\) and a post-synaptic neuron \(j\) with activation \(y_j\). The synaptic weight connecting them is \(w_{ij}\).</p>
+				<p>The simplest mathematical formulation of the Hebbian update rule is:</p>
+				<p class="kn-math-display">\[\Delta w_{ij} = \eta x_i y_j\]</p>
+				<p>Where:</p>
+				<ul><li>\(\Delta w_{ij}\) is the change in the synaptic weight.</li><li>\(\eta\) is the learning rate (a small positive scalar).</li><li>\(x_i\) is the input from the pre-synaptic neuron.</li><li>\(y_j\) is the output of the post-synaptic neuron.</li></ul>
+				<p>The weight is updated iteratively over time:</p>
+				<p class="kn-math-display">\[w_{ij}(t+1) = w_{ij}(t) + \Delta w_{ij}\]</p>
+				<p><strong>The Problem:</strong> If \(x_i\) and \(y_j\) are consistently positive, the weight \(w_{ij}\) will grow indefinitely towards infinity. This unbounded growth makes the basic rule numerically unstable for practical machine learning implementations.</p>
+				<h3>2. The Covariance Rule</h3>
+				<p>To prevent weights from only increasing, the Covariance Rule centers the activations around their mean (expectation). This allows weights to decrease (anti-Hebbian learning) when the neurons fire out of sync.</p>
+				<p class="kn-math-display">\[\Delta w_{ij} = \eta (x_i - \bar{x}_i)(y_j - \bar{y}_j)\]</p>
+				<p>Where:</p>
+				<ul><li>\(\bar{x}_i\) is the time-averaged expected value of the input.</li><li>\(\bar{y}_j\) is the time-averaged expected value of the output.</li></ul>
+				<p>If the activation of neuron \(i\) is above its average while neuron \(j\) is also above its average, the weight increases. If one is above average and the other is below, the product is negative, and the weight decreases.</p>
+				<h3>3. Oja's Rule (Normalization)</h3>
+				<p>To solve the unbounded weight growth problem of the basic rule while keeping the formulation local (only depending on the connected neurons), Erkki Oja introduced a multiplicative normalization term. It approximates continuous weight normalization (\(\sum w_i^2 = 1\)).</p>
+				<p>Oja's Rule is defined as:</p>
+				<p class="kn-math-display">\[\Delta w_{ij} = \eta y_j (x_i - y_j w_{ij})\]</p>
+				<p><strong>Why this works:</strong> \* The term \(\eta y_j x_i\) is the standard Hebbian expansion.</p>
+				<ul><li>The term \(- \eta y_j^2 w_{ij}\) is a weight decay factor that strengthens as the output \(y_j\) and the weight \(w_{ij}\) grow.</li><li>This decay acts as a stabilizing constraint, naturally forcing the weight vector to converge to the principal eigenvector of the input data's covariance matrix. In other words, a linear neuron equipped with Oja's rule acts as a principal component analyzer (PCA).</li></ul>
+				<h3>4. BCM Theory (Bienenstock, Cooper, and Munro)</h3>
+				<p>Another advanced formulation introduces a sliding threshold (\(\theta_M\)) to determine whether synapses should strengthen (LTP) or weaken (LTD).</p>
+				<p class="kn-math-display">\[\Delta w_{ij} = \eta x_i y_j (y_j - \theta_M)\]</p>
+				<ul><li>If \(y_j > \theta_M\), the weight increases (Long-Term Potentiation).</li><li>If \(0 < y_j < \theta_M\), the weight decreases (Long-Term Depression).</li><li>The threshold \(\theta_M\) is not static; it scales with the historical average of the output activation (e.g., \(\theta_M = E[y^2]\)), creating a homeostatic feedback loop that keeps the neuron's firing rate in a healthy range.</li></ul>
+				</div>
+			</article>
+		</div>
+	</div>
+	<script src="../../assets/js/jquery.min.js"></script>
+	<script src="../../assets/js/browser.min.js"></script>
+	<script src="../../assets/js/breakpoints.min.js"></script>
+	<script src="../../assets/js/util.js"></script>
+	<script src="../../assets/js/main.js"></script>
+</body>
+</html>

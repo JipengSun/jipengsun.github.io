@@ -1,0 +1,84 @@
+Here is the result of "view" for the Page with URL https://app.notion.com/p/31901d9f5287805babfff04648a24e34 as of 2026-03-04T17:57:06.559Z:
+<page url="https://app.notion.com/p/31901d9f5287805babfff04648a24e34">
+<ancestor-path></ancestor-path>
+<properties>
+{"title":"Stokes Vectors"}
+</properties>
+<content>
+<empty-block/>
+While tools like the Jones calculus are great for describing perfectly polarized light using the electric field's complex amplitude, they fail when dealing with unpolarized or partially polarized light. Furthermore, we cannot directly measure an electric field oscillating at optical frequencies—we can only measure **intensity** (optical power).
+This is where the **Stokes vector** comes in. Introduced by George Gabriel Stokes in 1852, it describes the polarization state of any light beam entirely through measurable intensities.
+---
+### 1. The Four Stokes Parameters
+The Stokes vector is not a traditional geometric vector in space; it is a mathematical array of four values, usually denoted as $`S_0, S_1, S_2,`$ and $`S_3`$ (or \$I, Q, U, V\$ in astronomy).
+Each parameter represents a difference in intensity ($`I`$) between two orthogonal polarization states:
+$`\vec{S} = \begin{pmatrix} S_0 \\ S_1 \\ S_2 \\ S_3 \end{pmatrix} = \begin{pmatrix} I_H + I_V \\ I_H - I_V \\ I_{45^\circ} - I_{-45^\circ} \\ I_{RCP} - I_{LCP} \end{pmatrix}`$
+- $`S_0`$** (Total Intensity):** The sum of the intensities of any two orthogonal components (e.g., Horizontal + Vertical). This is the total brightness of the beam.
+- $`S_1`$** (Linear H vs. V):** The difference in intensity between horizontal (\$H\$) and vertical (\$V\$) linear polarization.
+	- If $`S_1 > 0`$, the light has a horizontal preference.
+	- If $`S_1 < 0`$, it has a vertical preference.
+- $`S_2`$** (Linear **$`+45^\circ`$** vs. **$`-45^\circ`$**):** The difference in intensity between linear polarization tilted at $`+45^\circ`$ and $`-45^\circ`$.
+- $`S_3`$** (Circular R vs. L):** The difference in intensity between Right Circular Polarization (RCP) and Left Circular Polarization (LCP).
+### 2. How to Interpret Stokes Vectors
+Because all components are normalized against the total intensity, you can quickly read the state of the light just by looking at the matrix. Here are a few standard examples (assuming a total intensity of $`S_0 = 1`$): (Why)
+- **Unpolarized light:** $`\begin{pmatrix} 1 & 0 & 0 & 0 \end{pmatrix}^T`$
+	- *Interpretation:* There is no preference for horizontal, vertical, diagonal, or circular states. All differences cancel out to zero.
+- **Perfectly Horizontally Polarized light:** $`\begin{pmatrix} 1 & 1 & 0 & 0 \end{pmatrix}^T`$
+	- *Interpretation:* All the intensity is horizontal ($`S_1 = 1`$), with no diagonal or circular components.
+- **Perfectly Right-Circularly Polarized light:** $`\begin{pmatrix} 1 & 0 & 0 & 1 \end{pmatrix}^T`$
+	- *Interpretation:* All the intensity is in the RCP state ($`S_3 = 1`$), with no linear bias.
+### 3. Degree of Polarization (DoP)
+The Stokes vector easily calculates how much of the light is actually polarized versus unpolarized. This is called the Degree of Polarization (DoP):
+$`\text{DoP} = \frac{\sqrt{S_1^2 + S_2^2 + S_3^2}}{S_0}`$
+- If $`\text{DoP} = 1`$, the light is fully polarized.
+- If $`\text{DoP} = 0`$, the light is completely unpolarized.
+- If $`0 < \text{DoP} < 1`$, the light is partially polarized (a mixture of polarized and unpolarized light).
+### 4. Visualizing with the Poincaré Sphere
+The most powerful way to interpret the Stokes parameters is to map them geometrically using the **Poincaré sphere**.
+If you take a sphere with a radius of $`S_0`$, you can use $`S_1, S_2,`$ and $`S_3`$ as Cartesian coordinates $`(x, y, z)`$ to plot any polarization state:
+- **The Equator (**$`S_3 = 0`$**):** Represents all linear polarization states. Horizontal and vertical are on opposite sides of the sphere.
+- **The Poles (**$`S_1 = 0, S_2 = 0`$**):** The North pole represents perfectly right-circular polarization, and the South pole represents perfectly left-circular polarization.
+- **Anywhere else on the surface:** Represents elliptical polarization (a mix of linear and circular).
+- **Inside the sphere:** Any point inside the volume of the sphere represents partially polarized light, with the exact center (origin) being completely unpolarized light.
+---
+<empty-block/>
+<empty-block/>
+# **Why  **$`S_0^2`$** =  **$`S_1^2 + S_2^2 + S_3^2`$
+---
+### 1. The Electric Field Components
+As a transverse wave, light traveling along the z-axis has an electric field that oscillates in the x-y plane. We can break this electric field down into two orthogonal components, $`E_x`$ and $`E_y`$:
+- $`E_x(t) = E_{0x} \cos(\omega t + \delta_x)`$
+- $`E_y(t) = E_{0y} \cos(\omega t + \delta_y)`$
+Here, $`E_{0x}`$ and $`E_{0y}`$ are the maximum amplitudes, $`\omega`$ is the angular frequency, and $`\delta_x`$ and $`\delta_y`$ are the phases of each wave.
+The critical factor that determines polarization is the **phase difference** between these two waves, which we define as $`\delta = \delta_y - \delta_x`$.
+### 2. Defining Stokes Parameters via Electric Fields
+Stokes parameters are measured as intensities, and intensity is proportional to the square of the electric field amplitude. Using the electric field components above, we can rigorously define the four Stokes parameters:
+- $`S_0`$** (Total Intensity):** $`E_{0x}^2 + E_{0y}^2`$
+- $`S_1`$** (Horizontal/Vertical):** $`E_{0x}^2 - E_{0y}^2`$
+- $`S_2`$** (Diagonal **$`\pm 45^\circ`$**):** $`2E_{0x}E_{0y} \cos(\delta)`$
+- $`S_3`$** (Circular R/L):** $`2E_{0x}E_{0y} \sin(\delta)`$
+### 3. The Mathematical Proof
+Now, let's plug these definitions into our sum-of-squares equation to see why it perfectly equals $`S_0^2`$.
+**Step 1: Square **$`S_1`$
+$`S_1^2 = (E_{0x}^2 - E_{0y}^2)^2 = E_{0x}^4 - 2E_{0x}^2 E_{0y}^2 + E_{0y}^4`$
+**Step 2: Square **$`S_2`$** and **$`S_3`$**, then add them together**
+$`S_2^2 + S_3^2 = (2E_{0x}E_{0y} \cos(\delta))^2 + (2E_{0x}E_{0y} \sin(\delta))^2`$
+$`S_2^2 + S_3^2 = 4E_{0x}^2 E_{0y}^2 \cos^2(\delta) + 4E_{0x}^2 E_{0y}^2 \sin^2(\delta)`$
+Because of the Pythagorean identity ($`\cos^2(\delta) + \sin^2(\delta) = 1`$), this simplifies beautifully to:
+$`S_2^2 + S_3^2 = 4E_{0x}^2 E_{0y}^2`$
+**Step 3: Add everything together (**$`S_1^2 + S_2^2 + S_3^2`$**)** 
+$`(E_{0x}^4 - 2E_{0x}^2 E_{0y}^2 + E_{0y}^4) + 4E_{0x}^2 E_{0y}^2`$
+Combine the middle terms:
+$`E_{0x}^4 + 2E_{0x}^2 E_{0y}^2 + E_{0y}^4`$
+**Step 4: The Result**
+If you look closely at that final polynomial, it is a perfect square. It factors exactly into:
+$`(E_{0x}^2 + E_{0y}^2)^2`$
+And since we defined $`S_0 = E_{0x}^2 + E_{0y}^2`$, the result is exactly $`S_0^2`$.
+### 4. Why this fails for Unpolarized Light
+This perfect mathematical proof relies on one crucial assumption: that the phase difference ($`\delta`$) between the x and y components is perfectly stable and constant.
+- **Fully Polarized Light:** The phase difference $`\delta`$ is locked. The math holds, and the sum of the squares equals $`S_0^2`$.
+- **Unpolarized Light:** The phase difference $`\delta`$ fluctuates randomly and incredibly fast. Because our sensors (and eyes) measure intensity over a span of time, we are actually measuring the *time average* of these values. When $`\cos(\delta)`$ and $`\sin(\delta)`$ fluctuate randomly between 1 and -1, their time averages drop to zero.
+When those terms drop to zero, \$S_2\$ and \$S_3\$ vanish, the perfect square breaks down, and the sum of $`S_1^2 + S_2^2 + S_3^2`$ becomes less than $`S_0^2`$.
+---
+</content>
+</page>

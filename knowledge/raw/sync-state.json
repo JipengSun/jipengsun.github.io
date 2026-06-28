@@ -135,8 +135,8 @@
     "33301d9f5287807dbac3cc0b43950e45": {
       "slug": "neural-proximal-operators",
       "title": "Neural Proximal Operators",
-      "notion_fetched_at": "2026-03-30T16:52:41.283000+00:00",
-      "synced_at": "2026-06-14T22:50:31.123953+00:00"
+      "notion_fetched_at": "2026-06-28T16:30:34.905000+00:00",
+      "synced_at": "2026-06-28T16:33:27.393943+00:00"
     },
     "33301d9f5287808b81ace1893b7a4282": {
       "slug": "lagrangian-method",
@@ -275,7 +275,67 @@
       "title": "Eigenvalue Decomposition",
       "notion_fetched_at": "2026-06-23T16:10:28.948000+00:00",
       "synced_at": "2026-06-25T16:34:00.873687+00:00"
+    },
+    "38b01d9f528780e7aed4f17ee52b1ea8": {
+      "slug": "neuromorphic-computing",
+      "title": "Neuromorphic Computing",
+      "notion_fetched_at": "2026-06-28T16:17:40.601000+00:00",
+      "synced_at": "2026-06-28T16:34:28.441751+00:00"
+    },
+    "38c01d9f52878005b825ffcbba1dc59e": {
+      "slug": "leaky-integrate-and-fire-lif",
+      "title": "Leaky Integrate-and-Fire (LIF) Dynamics",
+      "notion_fetched_at": "2026-06-27T17:17:20.905000+00:00",
+      "synced_at": "2026-06-28T16:33:27.577076+00:00"
+    },
+    "38c01d9f528780cc840bc7b7d7aa47a6": {
+      "slug": "hebbian-learning",
+      "title": "Hebbian Learning",
+      "notion_fetched_at": "2026-06-27T17:35:46.912000+00:00",
+      "synced_at": "2026-06-28T16:33:27.667859+00:00"
+    },
+    "38d01d9f52878072be3bccd6ec6e4fdd": {
+      "slug": "surrogate-gradient-learning",
+      "title": "Surrogate Gradient Learning (SGL)",
+      "notion_fetched_at": "2026-06-28T16:23:39.352000+00:00",
+      "synced_at": "2026-06-28T16:33:27.756812+00:00"
+    },
+    "38d01d9f52878028b056fe2c5b7c8b2a": {
+      "slug": "spike-timing-dependent-plasticity-stdp",
+      "title": "Spike-Timing-Dependent Plasticity (STDP)",
+      "notion_fetched_at": "2026-06-28T16:16:31.446000+00:00",
+      "synced_at": "2026-06-28T16:34:22.561585+00:00"
+    },
+    "31701d9f528780bfad6bc104c07c1e1a": {
+      "slug": "optics",
+      "title": "Optics",
+      "notion_fetched_at": "2026-03-04T15:09:08.727000+00:00",
+      "synced_at": "2026-06-28T16:39:29.318200+00:00"
+    },
+    "31701d9f5287801988e1eadf0f2946d1": {
+      "slug": "angular-spectrum-method",
+      "title": "Angular Spectrum Method",
+      "notion_fetched_at": "2026-03-02T18:12:35.806000+00:00",
+      "synced_at": "2026-06-28T16:36:05.771293+00:00"
+    },
+    "31901d9f5287805babfff04648a24e34": {
+      "slug": "stokes-vectors",
+      "title": "Stokes Vectors",
+      "notion_fetched_at": "2026-03-04T17:57:06.559000+00:00",
+      "synced_at": "2026-06-28T16:38:38.048394+00:00"
+    },
+    "26b01d9f528780a9914cc854c5c6ff53": {
+      "slug": "diffraction-grating-formula",
+      "title": "Diffraction Grating Formula",
+      "notion_fetched_at": "2026-03-02T16:34:01.866000+00:00",
+      "synced_at": "2026-06-28T16:39:17.927809+00:00"
+    },
+    "31701d9f52878051979ed76c387d319b": {
+      "slug": "orthographic-images-to-hologram",
+      "title": "Orthographic Images to Hologram",
+      "notion_fetched_at": "2026-06-28T16:42:11.505000+00:00",
+      "synced_at": "2026-06-28T16:46:47.302179+00:00"
     }
   },
-  "updated_at": "2026-06-25T16:34:00.875263+00:00"
+  "updated_at": "2026-06-28T16:46:47.302186+00:00"
 }

@@ -1,0 +1,118 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<title>Stokes Vectors — Knowledge Share — Jipeng Sun</title>
+	<link rel="stylesheet" href="../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="(function(){var b=document.querySelector('.kn-body');if(!b)return;b.querySelectorAll('span').forEach(function(s){if(s.children.length)return;var t=s.textContent.trim();if(/^\\\([\s\S]*\\\)$/.test(t)||/^\\\[[\s\S]*\\\]$/.test(t))s.replaceWith(document.createTextNode(t));});renderMathInElement(b,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false,ignoredTags:['script','noscript','style','textarea','pre','code']});})();"></script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-LCC4R0HD24"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'G-LCC4R0HD24');
+	</script>
+	<script src="../../assets/js/ga-events.js"></script>
+</head>
+<body class="is-preload kn-page">
+	<div id="wrapper">
+		<header id="header">
+			<h1><a href="../../index.html">Jipeng Sun</a></h1>
+			<nav class="links">
+				<ul>
+					<li><a href="../../index.html">Home</a></li>
+					<li><a href="../../research.html">Research</a></li>
+					<li class="active"><a href="../../knowledge-share.html">Knowledge Share</a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course">VR/AR Course</a></li>
+				</ul>
+			</nav>
+			<nav class="main">
+				<ul>
+					<li class="search"><a class="fa-search" href="#search">Search</a><form id="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></li>
+					<li class="menu"><a class="fa-bars" href="#menu">Menu</a></li>
+				</ul>
+			</nav>
+		</header>
+		<section id="menu">
+			<section><form class="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></section>
+			<section>
+				<ul class="links">
+					<li><a href="../../index.html"><h3>Home</h3><p>Jipeng Sun's Homepage</p></a></li>
+					<li><a href="../../research.html"><h3>Research</h3><p>Publications &amp; Papers</p></a></li>
+					<li><a href="../../knowledge-share.html"><h3>Knowledge Share</h3><p>Study notes</p></a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course"><h3>Teaching</h3><p>VR Summer Course</p></a></li>
+				</ul>
+			</section>
+		</section>
+		<div id="main">
+			<article class="post">
+				<header><div class="title"><h2>Stokes Vectors</h2></div></header>
+				<p class="kn-back"><a href="../../knowledge-share.html">&larr; Back to Knowledge Share</a></p>
+				<div class="kn-body">
+				<p>While tools like the Jones calculus are great for describing perfectly polarized light using the electric field's complex amplitude, they fail when dealing with unpolarized or partially polarized light. Furthermore, we cannot directly measure an electric field oscillating at optical frequencies—we can only measure <strong>intensity</strong> (optical power).</p>
+				<p>This is where the <strong>Stokes vector</strong> comes in. Introduced by George Gabriel Stokes in 1852, it describes the polarization state of any light beam entirely through measurable intensities.</p>
+				<hr />
+				<h3>1. The Four Stokes Parameters</h3>
+				<p>The Stokes vector is not a traditional geometric vector in space; it is a mathematical array of four values, usually denoted as \(S_0, S_1, S_2,\) and \(S_3\) (or \(I, Q, U, V\) in astronomy).</p>
+				<p>Each parameter represents a difference in intensity (\(I\)) between two orthogonal polarization states:</p>
+				<p class="kn-math-display">\[\vec{S} = \begin{pmatrix} S_0 \ S_1 \ S_2 \ S_3 \end{pmatrix} = \begin{pmatrix} I_H + I_V \ I_H - I_V \ I_{45^\circ} - I_{-45^\circ} \ I_{RCP} - I_{LCP} \end{pmatrix}\]</p>
+				<ul><li>\(S_0\)<strong> (Total Intensity):</strong> The sum of the intensities of any two orthogonal components (e.g., Horizontal + Vertical). This is the total brightness of the beam.</li><li>\(S_1\)<strong> (Linear H vs. V):</strong> The difference in intensity between horizontal (\(H\)) and vertical (\(V\)) linear polarization.</li><li>If \(S_1 > 0\), the light has a horizontal preference.</li><li>If \(S_1 < 0\), it has a vertical preference.</li><li>\(S_2\)<strong> (Linear </strong>\(+45^\circ\)<strong> vs. </strong>\(-45^\circ\)<strong>):</strong> The difference in intensity between linear polarization tilted at \(+45^\circ\) and \(-45^\circ\).</li><li>\(S_3\)<strong> (Circular R vs. L):</strong> The difference in intensity between Right Circular Polarization (RCP) and Left Circular Polarization (LCP).</li></ul>
+				<h3>2. How to Interpret Stokes Vectors</h3>
+				<p>Because all components are normalized against the total intensity, you can quickly read the state of the light just by looking at the matrix. Here are a few standard examples (assuming a total intensity of \(S_0 = 1\)): (Why)</p>
+				<ul><li><strong>Unpolarized light:</strong> \(\begin{pmatrix} 1 & 0 & 0 & 0 \end{pmatrix}^T\)</li><li>*Interpretation:* There is no preference for horizontal, vertical, diagonal, or circular states. All differences cancel out to zero.</li><li><strong>Perfectly Horizontally Polarized light:</strong> \(\begin{pmatrix} 1 & 1 & 0 & 0 \end{pmatrix}^T\)</li><li>*Interpretation:* All the intensity is horizontal (\(S_1 = 1\)), with no diagonal or circular components.</li><li><strong>Perfectly Right-Circularly Polarized light:</strong> \(\begin{pmatrix} 1 & 0 & 0 & 1 \end{pmatrix}^T\)</li><li>*Interpretation:* All the intensity is in the RCP state (\(S_3 = 1\)), with no linear bias.</li></ul>
+				<h3>3. Degree of Polarization (DoP)</h3>
+				<p>The Stokes vector easily calculates how much of the light is actually polarized versus unpolarized. This is called the Degree of Polarization (DoP):</p>
+				<p class="kn-math-display">\[\text{DoP} = \frac{\sqrt{S_1^2 + S_2^2 + S_3^2}}{S_0}\]</p>
+				<ul><li>If \(\text{DoP} = 1\), the light is fully polarized.</li><li>If \(\text{DoP} = 0\), the light is completely unpolarized.</li><li>If \(0 < \text{DoP} < 1\), the light is partially polarized (a mixture of polarized and unpolarized light).</li></ul>
+				<h3>4. Visualizing with the Poincaré Sphere</h3>
+				<p>The most powerful way to interpret the Stokes parameters is to map them geometrically using the <strong>Poincaré sphere</strong>.</p>
+				<p>If you take a sphere with a radius of \(S_0\), you can use \(S_1, S_2,\) and \(S_3\) as Cartesian coordinates \((x, y, z)\) to plot any polarization state:</p>
+				<ul><li><strong>The Equator (</strong>\(S_3 = 0\)<strong>):</strong> Represents all linear polarization states. Horizontal and vertical are on opposite sides of the sphere.</li><li><strong>The Poles (</strong>\(S_1 = 0, S_2 = 0\)<strong>):</strong> The North pole represents perfectly right-circular polarization, and the South pole represents perfectly left-circular polarization.</li><li><strong>Anywhere else on the surface:</strong> Represents elliptical polarization (a mix of linear and circular).</li><li><strong>Inside the sphere:</strong> Any point inside the volume of the sphere represents partially polarized light, with the exact center (origin) being completely unpolarized light.</li></ul>
+				<hr />
+				<h1><strong>Why  </strong>\(S_0^2\)<strong> =  </strong>\(S_1^2 + S_2^2 + S_3^2\)</h1>
+				<hr />
+				<h3>1. The Electric Field Components</h3>
+				<p>As a transverse wave, light traveling along the z-axis has an electric field that oscillates in the x-y plane. We can break this electric field down into two orthogonal components, \(E_x\) and \(E_y\):</p>
+				<ul><li>\(E_x(t) = E_{0x} \cos(\omega t + \delta_x)\)</li><li>\(E_y(t) = E_{0y} \cos(\omega t + \delta_y)\)</li></ul>
+				<p>Here, \(E_{0x}\) and \(E_{0y}\) are the maximum amplitudes, \(\omega\) is the angular frequency, and \(\delta_x\) and \(\delta_y\) are the phases of each wave.</p>
+				<p>The critical factor that determines polarization is the <strong>phase difference</strong> between these two waves, which we define as \(\delta = \delta_y - \delta_x\).</p>
+				<h3>2. Defining Stokes Parameters via Electric Fields</h3>
+				<p>Stokes parameters are measured as intensities, and intensity is proportional to the square of the electric field amplitude. Using the electric field components above, we can rigorously define the four Stokes parameters:</p>
+				<ul><li>\(S_0\)<strong> (Total Intensity):</strong> \(E_{0x}^2 + E_{0y}^2\)</li><li>\(S_1\)<strong> (Horizontal/Vertical):</strong> \(E_{0x}^2 - E_{0y}^2\)</li><li>\(S_2\)<strong> (Diagonal </strong>\(\pm 45^\circ\)<strong>):</strong> \(2E_{0x}E_{0y} \cos(\delta)\)</li><li>\(S_3\)<strong> (Circular R/L):</strong> \(2E_{0x}E_{0y} \sin(\delta)\)</li></ul>
+				<h3>3. The Mathematical Proof</h3>
+				<p>Now, let's plug these definitions into our sum-of-squares equation to see why it perfectly equals \(S_0^2\).</p>
+				<p><strong>Step 1: Square </strong>\(S_1\)</p>
+				<p class="kn-math-display">\[S_1^2 = (E_{0x}^2 - E_{0y}^2)^2 = E_{0x}^4 - 2E_{0x}^2 E_{0y}^2 + E_{0y}^4\]</p>
+				<p><strong>Step 2: Square </strong>\(S_2\)<strong> and </strong>\(S_3\)<strong>, then add them together</strong></p>
+				<p class="kn-math-display">\[S_2^2 + S_3^2 = (2E_{0x}E_{0y} \cos(\delta))^2 + (2E_{0x}E_{0y} \sin(\delta))^2\]</p>
+				<p class="kn-math-display">\[S_2^2 + S_3^2 = 4E_{0x}^2 E_{0y}^2 \cos^2(\delta) + 4E_{0x}^2 E_{0y}^2 \sin^2(\delta)\]</p>
+				<p>Because of the Pythagorean identity (\(\cos^2(\delta) + \sin^2(\delta) = 1\)), this simplifies beautifully to:</p>
+				<p class="kn-math-display">\[S_2^2 + S_3^2 = 4E_{0x}^2 E_{0y}^2\]</p>
+				<p><strong>Step 3: Add everything together (</strong>\(S_1^2 + S_2^2 + S_3^2\)<strong>)</strong></p>
+				<p class="kn-math-display">\[(E_{0x}^4 - 2E_{0x}^2 E_{0y}^2 + E_{0y}^4) + 4E_{0x}^2 E_{0y}^2\]</p>
+				<p>Combine the middle terms:</p>
+				<p class="kn-math-display">\[E_{0x}^4 + 2E_{0x}^2 E_{0y}^2 + E_{0y}^4\]</p>
+				<p><strong>Step 4: The Result</strong></p>
+				<p>If you look closely at that final polynomial, it is a perfect square. It factors exactly into:</p>
+				<p class="kn-math-display">\[(E_{0x}^2 + E_{0y}^2)^2\]</p>
+				<p>And since we defined \(S_0 = E_{0x}^2 + E_{0y}^2\), the result is exactly \(S_0^2\).</p>
+				<h3>4. Why this fails for Unpolarized Light</h3>
+				<p>This perfect mathematical proof relies on one crucial assumption: that the phase difference (\(\delta\)) between the x and y components is perfectly stable and constant.</p>
+				<ul><li><strong>Fully Polarized Light:</strong> The phase difference \(\delta\) is locked. The math holds, and the sum of the squares equals \(S_0^2\).</li><li><strong>Unpolarized Light:</strong> The phase difference \(\delta\) fluctuates randomly and incredibly fast. Because our sensors (and eyes) measure intensity over a span of time, we are actually measuring the *time average* of these values. When \(\cos(\delta)\) and \(\sin(\delta)\) fluctuate randomly between 1 and -1, their time averages drop to zero.</li></ul>
+				<p>When those terms drop to zero, \(S_2\) and \(S_3\) vanish, the perfect square breaks down, and the sum of \(S_1^2 + S_2^2 + S_3^2\) becomes less than \(S_0^2\).</p>
+				<hr />
+				</div>
+			</article>
+		</div>
+	</div>
+	<script src="../../assets/js/jquery.min.js"></script>
+	<script src="../../assets/js/browser.min.js"></script>
+	<script src="../../assets/js/breakpoints.min.js"></script>
+	<script src="../../assets/js/util.js"></script>
+	<script src="../../assets/js/main.js"></script>
+</body>
+</html>

@@ -51,9 +51,16 @@ TOPIC: dict[str, tuple[str, str, str | None]] = {
     "lagrangian-method": ("Optimization", "optimization", None),
     "3d-gaussian-splatting": ("Computer Graphics", "computer-graphics", None),
     "nerf": ("Computer Graphics", "computer-graphics", None),
-    "geometry-generation": ("Geometry Generation", "geometry-generation", "todo"),
     "pnp-with-diffusion": ("Computational Imaging", "computational-imaging", None),
     "generative-methods-for-deconv": ("Computational Imaging", "computational-imaging", None),
+    "leaky-integrate-and-fire-lif": ("Neuromorphic Computing", "neuromorphic-computing", None),
+    "hebbian-learning": ("Neuromorphic Computing", "neuromorphic-computing", None),
+    "spike-timing-dependent-plasticity-stdp": ("Neuromorphic Computing", "neuromorphic-computing", None),
+    "surrogate-gradient-learning": ("Neuromorphic Computing", "neuromorphic-computing", None),
+    "angular-spectrum-method": ("Optics", "optics", None),
+    "stokes-vectors": ("Optics", "optics", None),
+    "diffraction-grating-formula": ("Optics", "optics", None),
+    "orthographic-images-to-hologram": ("Optics", "optics", None),
 }
 
 DEK_OVERRIDE = {
@@ -61,7 +68,6 @@ DEK_OVERRIDE = {
     "pnp-with-diffusion": "Plug-and-play priors with diffusion models for computational imaging inverse problems.",
     "mean-flow": "Notes on mean-flow generative modeling and its connection to flow matching.",
     "improved-mean-flow-imf": "Improved mean flow (iMF) — faster sampling and training for flow-based generative models.",
-    "geometry-generation": "3D shape synthesis, neural implicit surfaces, and mesh generation methods.",
 }
 
 
@@ -133,6 +139,42 @@ def ordered_slugs(updated_at: dict[str, datetime]) -> list[str]:
     return [slug for slug, _, _ in items]
 
 
+def topic_counts() -> dict[str, tuple[str, int]]:
+    """Map topic id → (display label, article count) for published articles."""
+    counts: dict[str, tuple[str, int]] = {}
+    for slug, (label, topic_id, _) in TOPIC.items():
+        if not (ARTICLES / f"{slug}.html").is_file():
+            continue
+        if topic_id in counts:
+            counts[topic_id] = (counts[topic_id][0], counts[topic_id][1] + 1)
+        else:
+            counts[topic_id] = (label, 1)
+    return counts
+
+
+def ordered_topics() -> list[tuple[str, str, int]]:
+    """Topics sorted by article count (desc), then label (asc)."""
+    items = [(tid, label, n) for tid, (label, n) in topic_counts().items()]
+    items.sort(key=lambda x: (-x[2], x[1].lower()))
+    return items
+
+
+def render_topic_chips() -> str:
+    chip = '\t\t\t\t\t\t\t\t<button type="button" class="ks-topic-chip{active}" data-ks-topic="{id}">{label}</button>'
+    lines = [
+        chip.format(id="all", label="All", active=" is-active"),
+    ]
+    for topic_id, label, _n in ordered_topics():
+        lines.append(
+            chip.format(
+                id=html.escape(topic_id, quote=True),
+                label=html.escape(label),
+                active="",
+            )
+        )
+    return "\n".join(lines) + "\n"
+
+
 def render_stories() -> str:
     updated_at = load_slug_updated_at()
     lines: list[str] = []
@@ -166,11 +208,23 @@ def render_stories() -> str:
 
 def main() -> None:
     text = INDEX.read_text(encoding="utf-8")
+
+    grid_m = re.search(
+        r'(<div class="ks-topic-grid">)\s*.*?\s*(</div>)',
+        text,
+        re.S,
+    )
+    if not grid_m:
+        sys.exit("ks-topic-grid not found in knowledge-share.html")
+    topic_block = render_topic_chips()
+    text = text[: grid_m.start(1)] + grid_m.group(1) + "\n" + topic_block + "\t\t\t\t\t\t\t" + grid_m.group(2) + text[grid_m.end(2) :]
+
     start = text.index('<ol class="ks-story-list"')
     start = text.index(">", start) + 1
     end = text.index("</ol>", start)
     new_block = render_stories()
-    INDEX.write_text(text[:start] + "\n" + new_block + text[end:], encoding="utf-8")
+    text = text[:start] + "\n" + new_block + text[end:]
+    INDEX.write_text(text, encoding="utf-8")
     print(f"updated {INDEX.name}")
 
 

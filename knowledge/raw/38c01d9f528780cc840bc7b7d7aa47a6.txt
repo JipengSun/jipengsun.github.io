@@ -1,0 +1,42 @@
+Here is the result of "view" for the Page with URL https://app.notion.com/p/38c01d9f528780cc840bc7b7d7aa47a6 as of 2026-06-27T17:35:46.912Z:
+<page url="https://app.notion.com/p/38c01d9f528780cc840bc7b7d7aa47a6">
+<ancestor-path></ancestor-path>
+<properties>
+{"title":"Hebbian Learning"}
+</properties>
+<content>
+At its core, Hebbian Learning is a neuroscientific theory introduced by Donald Hebb in 1949, famously summarized as: **"Neurons that fire together, wire together."** In the context of artificial neural networks and machine learning, it translates to an unsupervised learning rule where the synaptic weight between two neurons increases if both neurons are activated simultaneously.
+### 1. The Basic Hebbian Rule
+Consider a pre-synaptic neuron $`i`$ with activation $`x_i`$ and a post-synaptic neuron $`j`$ with activation $`y_j`$. The synaptic weight connecting them is $`w_{ij}`$.
+The simplest mathematical formulation of the Hebbian update rule is:
+$`\Delta w_{ij} = \eta x_i y_j`$
+Where:
+- $`\Delta w_{ij}`$ is the change in the synaptic weight.
+- $`\eta`$ is the learning rate (a small positive scalar).
+- $`x_i`$ is the input from the pre-synaptic neuron.
+- $`y_j`$ is the output of the post-synaptic neuron.
+The weight is updated iteratively over time:
+$`w_{ij}(t+1) = w_{ij}(t) + \Delta w_{ij}`$
+**The Problem:** If $`x_i`$ and $`y_j`$ are consistently positive, the weight $`w_{ij}`$ will grow indefinitely towards infinity. This unbounded growth makes the basic rule numerically unstable for practical machine learning implementations.
+### 2. The Covariance Rule
+To prevent weights from only increasing, the Covariance Rule centers the activations around their mean (expectation). This allows weights to decrease (anti-Hebbian learning) when the neurons fire out of sync.
+$`\Delta w_{ij} = \eta (x_i - \bar{x}_i)(y_j - \bar{y}_j)`$
+Where:
+- $`\bar{x}_i`$ is the time-averaged expected value of the input.
+- $`\bar{y}_j`$ is the time-averaged expected value of the output.
+If the activation of neuron $`i`$ is above its average while neuron $`j`$ is also above its average, the weight increases. If one is above average and the other is below, the product is negative, and the weight decreases.
+### 3. Oja's Rule (Normalization)
+To solve the unbounded weight growth problem of the basic rule while keeping the formulation local (only depending on the connected neurons), Erkki Oja introduced a multiplicative normalization term. It approximates continuous weight normalization ($`\sum w_i^2 = 1`$).
+Oja's Rule is defined as:
+$`\Delta w_{ij} = \eta y_j (x_i - y_j w_{ij})`$
+**Why this works:** \* The term $`\eta y_j x_i`$ is the standard Hebbian expansion.
+- The term $`- \eta y_j^2 w_{ij}`$ is a weight decay factor that strengthens as the output $`y_j`$ and the weight $`w_{ij}`$ grow.
+- This decay acts as a stabilizing constraint, naturally forcing the weight vector to converge to the principal eigenvector of the input data's covariance matrix. In other words, a linear neuron equipped with Oja's rule acts as a principal component analyzer (PCA).
+### 4. BCM Theory (Bienenstock, Cooper, and Munro)
+Another advanced formulation introduces a sliding threshold ($`\theta_M`$) to determine whether synapses should strengthen (LTP) or weaken (LTD).
+$`\Delta w_{ij} = \eta x_i y_j (y_j - \theta_M)`$
+- If $`y_j > \theta_M`$, the weight increases (Long-Term Potentiation).
+- If $`0 < y_j < \theta_M`$, the weight decreases (Long-Term Depression).
+- The threshold $`\theta_M`$ is not static; it scales with the historical average of the output activation (e.g., $`\theta_M = E[y^2]`$), creating a homeostatic feedback loop that keeps the neuron's firing rate in a healthy range.
+</content>
+</page>

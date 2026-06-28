@@ -1,0 +1,24 @@
+Here is the result of "view" for the Page with URL https://app.notion.com/p/31701d9f5287801988e1eadf0f2946d1 as of 2026-03-02T18:12:35.806Z:
+<page url="https://app.notion.com/p/31701d9f5287801988e1eadf0f2946d1">
+<ancestor-path></ancestor-path>
+<properties>
+{"title":"Angular Spectrum Method"}
+</properties>
+<content>
+The ASM is the standard algorithm for simulating how light travels through space because it turns a massively complex 3D physics problem into a simple multiplication problem.
+It works in three highly logical steps:
+**1. Decompose the Wave (The Fourier Transform)**
+Imagine trying to calculate how a chaotic, splashing wave moves across a pool. It is too complex to calculate all at once.
+- Instead, the ASM takes the starting wave $`U(x,y,0)`$ and applies a Fourier Transform ($`\mathcal{F}`$).
+- This breaks the chaotic wave down into a set of perfectly flat, uniform plane waves traveling in different directions (the angular spectrum).
+**2. Fly the Planes (The Transfer Function)**
+Because a plane wave is perfectly flat and travels in a perfectly straight line, calculating its propagation is trivial. It doesn't change shape; it only changes its **phase** (the timing of its peaks and valleys) as it travels a distance $`z`$.
+- The algorithm multiplies the spectrum by a free-space transfer function $`H(f_x, f_y; z)`$.
+- Mathematically, this transfer function is just a complex exponential that applies a specific phase delay to each plane wave based on the angle it is traveling and the distance $`z`$.
+**3. Reassemble the Wave (The Inverse Fourier Transform)**
+Once all the individual plane waves have been mathematically "flown" forward to distance $`z`$ by shifting their phases, the algorithm uses an Inverse Fourier Transform ($`\mathcal{F}^{-1}`$) to add them all back together.
+- The result is the exact, complex interference pattern $`U(x,y,z)`$ at the new location.
+The entire propagation is summarized in one elegant equation:
+$`U(x,y,z) = \mathcal{F}^{-1}\{ \mathcal{F}[U(x,y,0)] \cdot H(f_x, f_y; z) \}`$
+</content>
+</page>

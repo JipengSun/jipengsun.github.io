@@ -1,4 +1,4 @@
-Here is the result of "view" for the Page with URL https://www.notion.so/33301d9f5287807dbac3cc0b43950e45 as of 2026-03-30T16:52:41.283Z:
+Here is the result of "view" for the Page with URL https://www.notion.so/33301d9f5287807dbac3cc0b43950e45 as of 2026-06-28T16:30:34.905Z:52:41.283Z:
 <page url="https://www.notion.so/33301d9f5287807dbac3cc0b43950e45">
 <ancestor-path></ancestor-path>
 <properties>
@@ -73,9 +73,6 @@ Look at the first term of our result: $`\frac{N}{2}\log(2\pi \sigma^2)`$. **Ther
 When you are trying to find the minimum of a function with respect to $`z`$, adding or subtracting a constant shifts the whole curve up or down, but it *does not change the horizontal coordinate where the bottom of the bowl is located*. Therefore, the optimization algorithm can completely ignore it.
 When we drop the constant term, we are left with the exact proportionality:
 $`-\log p(v|z) \propto \frac{1}{2\sigma^2} \|z - v\|_2^2`$
-### The Takeaway
-This is why the $`\frac{\rho}{2}\|Ax + Bz - c\|_2^2`$ penalty in the Augmented Lagrangian is so elegant. When you set up ADMM, you are mathematically enforcing the assumption that the "disagreement" (the residual) between your variables acts like Gaussian noise.
----
-Would you like to see how this equation completely changes if we assume our sensor data is corrupted by Poisson noise (shot noise) instead of Gaussian noise, and how that alters the optimization step?
+<empty-block/>
 </content>
 </page>
