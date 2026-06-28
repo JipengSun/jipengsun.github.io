@@ -57,11 +57,11 @@
 				<h3>1. The Problem: The "Dead" Gradient</h3>
 				<p>In a standard artificial neural network, activation functions like ReLU or Sigmoid are differentiable, allowing us to use the chain rule to update weights.</p>
 				<p>However, in SNNs or binarized networks, the neuron fires based on a thresholding function—specifically, the <strong>Heaviside step function</strong>, denoted as \(S(x)\). Let \(x\) be the membrane potential minus the firing threshold (\(x = u - v_{th}\)). The forward pass is defined as:</p>
-				<p class="kn-math-display">\[S(x) = \Theta(x) = \begin{cases} 1 & \text{if } x \ge 0 \ 0 & \text{if } x < 0 \end{cases}\]</p>
+				<p class="kn-math-display">\[S(x) = \Theta(x) = \begin{cases} 1 & \text{if } x \ge 0 \\ 0 & \text{if } x < 0 \end{cases}\]</p>
 				<p>To update the network weights \(W\) using gradient descent, we need to calculate the gradient of the loss \(L\) with respect to the weights. Using the chain rule:</p>
 				<p class="kn-math-display">\[\frac{\partial L}{\partial W} = \frac{\partial L}{\partial S} \frac{\partial S}{\partial x} \frac{\partial x}{\partial W}\]</p>
 				<p>The critical failure point is \(\frac{\partial S}{\partial x}\). The mathematical derivative of the Heaviside step function is the <strong>Dirac delta function</strong>, \(\delta(x)\):</p>
-				<p class="kn-math-display">\[\frac{\partial S}{\partial x} = \delta(x) = \begin{cases} \infty & \text{if } x = 0 \ 0 & \text{if } x \neq 0 \end{cases}\]</p>
+				<p class="kn-math-display">\[\frac{\partial S}{\partial x} = \delta(x) = \begin{cases} \infty & \text{if } x = 0 \\ 0 & \text{if } x \neq 0 \end{cases}\]</p>
 				<p>Because the gradient is zero almost everywhere, the error cannot propagate backward through the network. The network simply stops learning. This is known as the "dead gradient" problem.</p>
 				<h3>2. The Solution: The Surrogate Gradient</h3>
 				<p>Surrogate Gradient Learning solves this by decoupling the forward pass from the backward pass.</p>
@@ -81,7 +81,7 @@
 				<p><strong>C. The Fast Sigmoid Derivative (SuperSpike)</strong></p>
 				<p>Computationally cheaper than the standard sigmoid because it avoids the exponential operation \(e^x\).</p>
 				<p class="kn-math-display">\[\tilde{S}'(x) = \frac{1}{(1 + |\alpha x|)^2}\]</p>
-				<p>To understand how the steepness parameter (\(\alpha\)) bridges the gap between a smooth, learnable gradient and the true Dirac delta function, you can explore the mathematical visualization below.</p>
+				<figure class="kn-figure"><img src="../assets/ec392c1c-c456-4528-b3db-9375326696d9.png" alt="" loading="lazy" /></figure>
 				</div>
 			</article>
 		</div>

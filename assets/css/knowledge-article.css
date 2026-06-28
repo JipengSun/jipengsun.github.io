@@ -89,10 +89,16 @@ body.kn-page #main .post {
 	overflow-x: auto;
 }
 
+.kn-figure {
+	text-align: center;
+	margin: 1.25em 0;
+}
+
 .kn-figure img {
 	max-width: 100%;
 	height: auto;
-	display: block;
+	display: inline-block;
+	margin: 0 auto;
 }
 
 .kn-body a {

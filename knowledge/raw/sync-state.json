@@ -297,8 +297,8 @@
     "38d01d9f52878072be3bccd6ec6e4fdd": {
       "slug": "surrogate-gradient-learning",
       "title": "Surrogate Gradient Learning (SGL)",
-      "notion_fetched_at": "2026-06-28T16:23:39.352000+00:00",
-      "synced_at": "2026-06-28T16:33:27.756812+00:00"
+      "notion_fetched_at": "2026-06-28T17:20:53.901000+00:00",
+      "synced_at": "2026-06-28T17:24:11.653486+00:00"
     },
     "38d01d9f52878028b056fe2c5b7c8b2a": {
       "slug": "spike-timing-dependent-plasticity-stdp",
@@ -337,5 +337,5 @@
       "synced_at": "2026-06-28T16:46:47.302179+00:00"
     }
   },
-  "updated_at": "2026-06-28T16:46:47.302186+00:00"
+  "updated_at": "2026-06-28T17:24:11.653640+00:00"
 }

@@ -1,4 +1,4 @@
-Here is the result of "view" for the Page with URL https://app.notion.com/p/38d01d9f52878072be3bccd6ec6e4fdd as of 2026-06-28T16:23:39.352Z:
+Here is the result of "view" for the Page with URL https://app.notion.com/p/38d01d9f52878072be3bccd6ec6e4fdd as of 2026-06-28T17:20:53.901Z:
 <page url="https://app.notion.com/p/38d01d9f52878072be3bccd6ec6e4fdd">
 <ancestor-path></ancestor-path>
 <properties>
@@ -10,7 +10,7 @@ Here is the result of "view" for the Page with URL https://app.notion.com/p/38d0
 In a standard artificial neural network, activation functions like ReLU or Sigmoid are differentiable, allowing us to use the chain rule to update weights.
 However, in SNNs or binarized networks, the neuron fires based on a thresholding function—specifically, the **Heaviside step function**, denoted as $`S(x)`$. Let $`x`$ be the membrane potential minus the firing threshold ($`x = u - v_{th}`$). The forward pass is defined as:
 $`S(x) = \Theta(x) = \begin{cases} 1 & \text{if } x \ge 0 \\ 0 & \text{if } x < 0 \end{cases}`$
-To update the network weights $`W`$ using gradient descent, we need to calculate the gradient of the loss $`L`$ with respect to the weights. Using the chain rule:
+To update the network weights $`W`$ using gradient descent, we need to calculate the gradient of the loss \$L\$ with respect to the weights. Using the chain rule:
 $`\frac{\partial L}{\partial W} = \frac{\partial L}{\partial S} \frac{\partial S}{\partial x} \frac{\partial x}{\partial W}`$
 The critical failure point is $`\frac{\partial S}{\partial x}`$. The mathematical derivative of the Heaviside step function is the **Dirac delta function**, $`\delta(x)`$:
 $`\frac{\partial S}{\partial x} = \delta(x) = \begin{cases} \infty & \text{if } x = 0 \\ 0 & \text{if } x \neq 0 \end{cases}`$
@@ -34,6 +34,6 @@ $`\tilde{S}'(x) = \frac{1}{\pi} \frac{\alpha}{1 + (\alpha x)^2}`$
 **C. The Fast Sigmoid Derivative (SuperSpike)**
 Computationally cheaper than the standard sigmoid because it avoids the exponential operation $`e^x`$.
 $`\tilde{S}'(x) = \frac{1}{(1 + |\alpha x|)^2}`$
-To understand how the steepness parameter ($`\alpha`$) bridges the gap between a smooth, learnable gradient and the true Dirac delta function, you can explore the mathematical visualization below.
+![](file://%7B%22source%22%3A%22attachment%3Aec392c1c-c456-4528-b3db-9375326696d9%3ACode_Generated_Image_(1).png%22%2C%22permissionRecord%22%3A%7B%22table%22%3A%22block%22%2C%22id%22%3A%2238d01d9f-5287-8000-89b9-f9b7ebdcc3c9%22%2C%22spaceId%22%3A%2240d01d9f-5287-81ac-ac6b-00037c8b4f5f%22%7D%7D)
 </content>
 </page>
