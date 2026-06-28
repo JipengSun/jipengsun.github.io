@@ -58,16 +58,12 @@
 				<p>Let \(\Delta t\) be the difference in spike times between the post-synaptic and pre-synaptic neurons:</p>
 				<p class="kn-math-display">\[\Delta t = t_{\text{post}} - t_{\text{pre}}\]</p>
 				<p>The change in synaptic weight, \(\Delta w\), is defined by a piecewise exponential decay function:</p>
-				<p>$`\Delta w(\Delta t) = \begin{cases}</p>
-				<p>A_+ e^{-\frac{\Delta t}{\tau_+}} &amp; \text{if} \quad \Delta t &gt; 0 \\</p>
-				<p>-A_- e^{\frac{\Delta t}{\tau_-}} &amp; \text{if} \quad \Delta t &lt; 0 \\</p>
-				<p>0 &amp; \text{if} \quad \Delta t = 0</p>
-				<p>\end{cases}`$</p>
+				<p class="kn-math-display">\[\Delta w(\Delta t) = \begin{cases} A_+ e^{-\frac{\Delta t}{\tau_+}} & \text{if} \quad \Delta t > 0 \\ -A_- e^{\frac{\Delta t}{\tau_-}} & \text{if} \quad \Delta t < 0 \\ 0 & \text{if} \quad \Delta t = 0 \end{cases}\]</p>
 				<h3>Variable Definitions</h3>
 				<ul><li>\(A_+\) and \(A_-\): The maximum amplitude of synaptic change. These represent the learning rates for potentiation (strengthening) and depression (weakening).</li><li>\(\tau_+\) and \(\tau_-\): The time constants that define the width of the learning window. They dictate how quickly the effect of a spike decays over time, typically acting on the order of 10 to 20 milliseconds.</li><li>\(t_{\text{pre}}\) and \(t_{\text{post}}\): The exact timestamps of the pre-synaptic and post-synaptic spikes.</li></ul>
 				<figure class="kn-figure"><img src="../assets/5bd9c771-7192-4ae3-ac1c-3671d938afe6.png" alt="" loading="lazy" /></figure>
 				<h3>The Biological Mechanisms</h3>
-				<ol><li><strong>Long-Term Potentiation (LTP) \[</strong>\(\Delta t > 0\)<strong>\]:</strong> If the pre-synaptic neuron fires *just before* the post-synaptic neuron, it strongly implies a causal relationship (the pre-synaptic spike contributed to the post-synaptic spike). The synapse is strengthened (\(\Delta w > 0\)). The tighter the temporal correlation, the stronger the potentiation.</li><li><strong>Long-Term Depression (LTD) \[</strong>\(\Delta t < 0\)<strong>\]:</strong> If the post-synaptic neuron fires *before* the pre-synaptic neuron, the pre-synaptic spike could not have caused the post-synaptic spike. This anti-causal relationship weakens the synapse (\(\Delta w < 0\)).</li></ol>
+				<ol><li><strong>Long-Term Potentiation (LTP) [</strong>\(\Delta t &gt; 0\)<strong>]:</strong> If the pre-synaptic neuron fires *just before* the post-synaptic neuron, it strongly implies a causal relationship (the pre-synaptic spike contributed to the post-synaptic spike). The synapse is strengthened (\(\Delta w &gt; 0\)). The tighter the temporal correlation, the stronger the potentiation.</li><li><strong>Long-Term Depression (LTD) [</strong>\(\Delta t &lt; 0\)<strong>]:</strong> If the post-synaptic neuron fires *before* the pre-synaptic neuron, the pre-synaptic spike could not have caused the post-synaptic spike. This anti-causal relationship weakens the synapse (\(\Delta w &lt; 0\)).</li></ol>
 				</div>
 			</article>
 		</div>

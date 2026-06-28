@@ -125,27 +125,36 @@ KATEX_INLINE_LINE = re.compile(r"^\\\(([\s\S]+?)\\\)$")
 KATEX_DISPLAY_LINE = re.compile(r"^\\\[([\s\S]+?)\\\]$")
 
 
-def unescape_notion_latex(tex: str) -> str:
-    """Convert Notion-escaped LaTeX (\\mathbb\\{R\\}) to KaTeX-ready form."""
+def unescape_notion_braces(tex: str) -> str:
+    """Unescape Notion brace/underscore markers without touching LaTeX backslashes."""
     tex = tex.replace(r"\{", "{").replace(r"\}", "}")
     tex = tex.replace(r"\^", "^").replace(r"\_", "_")
-    while "\\\\" in tex:
-        tex = tex.replace("\\\\", "\\")
     return tex.strip()
 
 
-def normalize_tex(tex: str) -> str:
-    return unescape_notion_latex(tex)
+def unescape_notion_latex(tex: str, *, from_escaped_dollar: bool = False) -> str:
+    """Convert Notion-escaped LaTeX to KaTeX-ready form."""
+    tex = unescape_notion_braces(tex)
+    if from_escaped_dollar:
+        while "\\\\" in tex:
+            tex = tex.replace("\\\\", "\\")
+    return tex
 
 
-def inline_math(tex: str) -> str:
+def normalize_tex(tex: str, *, from_escaped_dollar: bool = False) -> str:
+    return unescape_notion_latex(tex, from_escaped_dollar=from_escaped_dollar)
+
+
+def inline_math(tex: str, *, from_escaped_dollar: bool = False) -> str:
     """KaTeX inline delimiter without HTML wrapper (auto-render friendly)."""
-    return r"\(" + normalize_tex(tex) + r"\)"
+    return r"\(" + normalize_tex(tex, from_escaped_dollar=from_escaped_dollar) + r"\)"
 
 
-def display_math(tex: str) -> str:
-    """KaTeX display delimiter."""
-    return r"\[" + normalize_tex(tex) + r"\]"
+def display_math(tex: str, *, from_escaped_dollar: bool = False) -> str:
+    """KaTeX display delimiter (single line for auto-render)."""
+    tex = normalize_tex(tex, from_escaped_dollar=from_escaped_dollar)
+    tex = re.sub(r"\s*\n\s*", " ", tex.strip())
+    return r"\[" + tex + r"\]"
 
 
 def is_standalone_math_line(line: str) -> str | None:
@@ -160,7 +169,8 @@ def is_standalone_math_line(line: str) -> str | None:
     ):
         m = pat.match(st)
         if m:
-            return normalize_tex(m.group(1))
+            escaped = pat in (ESCAPED_DISPLAY_MATH, ESCAPED_INLINE_MATH)
+            return normalize_tex(m.group(1), from_escaped_dollar=escaped)
     return None
 
 
@@ -170,13 +180,16 @@ def inline_format_text(text: str) -> str:
     pos = 0
     for m in INLINE_TOK.finditer(text):
         if m.start() > pos:
-            result.append(html.escape(text[pos : m.start()], quote=False))
+            plain = text[pos : m.start()]
+            plain = plain.replace(r"\[", "[").replace(r"\]", "]")
+            result.append(html.escape(plain, quote=False))
         tok = m.group(1)
         if tok.startswith("$`") and tok.endswith("`$"):
             tex = tok[2:-2].strip()
             result.append(inline_math(tex))
         elif tok.startswith("**") and tok.endswith("**"):
-            result.append("<strong>" + html.escape(tok[2:-2], quote=False) + "</strong>")
+            inner = tok[2:-2].replace(r"\[", "[").replace(r"\]", "]")
+            result.append("<strong>" + html.escape(inner, quote=False) + "</strong>")
         elif tok.startswith("`") and tok.endswith("`"):
             result.append("<code>" + html.escape(tok[1:-1], quote=False) + "</code>")
         elif tok.startswith("["):
@@ -197,7 +210,8 @@ def inline_format_text(text: str) -> str:
             result.append(html.escape(tok, quote=False))
         pos = m.end()
     if pos < len(text):
-        result.append(html.escape(text[pos:], quote=False))
+        tail = text[pos:].replace(r"\[", "[").replace(r"\]", "]")
+        result.append(html.escape(tail, quote=False))
     return "".join(result)
 
 
@@ -224,16 +238,26 @@ def render_link_list(items: list[tuple[str, str]]) -> str:
     return '<ul class="kn-link-list">' + "".join(lis) + "</ul>"
 
 
+NOTION_BACKTICK_MATH = re.compile(r"\$`([\s\S]*?)`\$")
+
+
 def replace_notion_math(md: str) -> str:
-    """Notion exports math as $`...`$, \\$...\\$, or \\$\\$...\\$\\$ with escaped braces."""
+    """Notion exports math as $`...`$ (possibly multiline), \\$...\\$, or \\$\\$...\\$\\$."""
+
+    def notion_bt(m: re.Match[str]) -> str:
+        tex = m.group(1)
+        if "\n" in tex or "\\begin" in tex:
+            return display_math(tex)
+        return inline_math(tex)
 
     def disp(m: re.Match[str]) -> str:
-        return display_math(m.group(1))
+        return display_math(m.group(1), from_escaped_dollar=True)
 
     def inl(m: re.Match[str]) -> str:
-        return inline_math(m.group(1))
+        return inline_math(m.group(1), from_escaped_dollar=True)
 
-    md = re.sub(r"\\\$\\\$((?:[^\\]|\\.)+?)\\\$\\\$", disp, md)
+    md = NOTION_BACKTICK_MATH.sub(notion_bt, md)
+    md = re.sub(r"\\\$\\\$((?:[^\\]|\\.)+?)\\\$\\\$", disp, md, flags=re.S)
     md = re.sub(r"\\\$((?:[^\\]|\\.)+?)\\\$", inl, md)
     return md
 
