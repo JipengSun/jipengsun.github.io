@@ -227,6 +227,10 @@ def main() -> None:
     INDEX.write_text(text, encoding="utf-8")
     print(f"updated {INDEX.name}")
 
+    import seo
+
+    seo.run()
+
 
 if __name__ == "__main__":
     main()
