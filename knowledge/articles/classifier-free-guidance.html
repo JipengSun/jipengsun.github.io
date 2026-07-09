@@ -19,7 +19,7 @@
 	<meta name="twitter:description" content="To push a diffusion model to generate something specific—like generating an image from a text prompt or conditioning a robotic control policy on egocentric…" />
 	<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Classifier-Free Guidance","description":"To push a diffusion model to generate something specific—like generating an image from a text prompt or conditioning a robotic control policy on egocentric…","url":"https://jipengsun.github.io/knowledge/articles/classifier-free-guidance.html","mainEntityOfPage":"https://jipengsun.github.io/knowledge/articles/classifier-free-guidance.html","inLanguage":"en","author":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"publisher":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"isPartOf":{"@type":"Blog","name":"Jipeng Sun — Knowledge Share","url":"https://jipengsun.github.io/knowledge-share.html"},"dateModified":"2026-03-26"}</script>
 	<!-- seo:auto:end -->
-				<link rel="stylesheet" href="../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../assets/css/main.css" />
 	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
 	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
@@ -99,7 +99,7 @@
 				<p>We then construct a newly modified noise prediction, \(\tilde{\boldsymbol{\epsilon}}_\theta\), by taking the unconditional prediction and adding the implicit classifier gradient, scaled by our guidance weight \(w\):</p>
 				<p class="kn-math-display">\[\tilde{\boldsymbol{\epsilon}}_\theta = \boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t, \emptyset) + w \cdot \left( \boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t, \mathbf{c}) - \boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t, \emptyset) \right)\]</p>
 				<p>This is a <strong>vector extrapolation</strong>.</p>
-				<ul><li>The term \((\boldsymbol{\epsilon}_{cond} - \boldsymbol{\epsilon}_{uncond})\) is a vector pointing exactly from generic data toward our specific semantic condition.</li><li>If \(w = 1\), the formula collapses to standard conditional generation.</li><li>If \(w > 1\) (e.g., \(w = 7.5\) in Stable Diffusion), we actively push the noise prediction *past* the conditional score, forcing the resulting image to heavily align with the prompt at the cost of some natural diversity.</li></ul>
+				<ul><li>The term \((\boldsymbol{\epsilon}_{cond} - \boldsymbol{\epsilon}_{uncond})\) is a vector pointing exactly from generic data toward our specific semantic condition.</li><li>If \(w = 1\), the formula collapses to standard conditional generation.</li><li>If \(w &gt; 1\) (e.g., \(w = 7.5\) in Stable Diffusion), we actively push the noise prediction *past* the conditional score, forcing the resulting image to heavily align with the prompt at the cost of some natural diversity.</li></ul>
 				<p>We then plug this modified \(\tilde{\boldsymbol{\epsilon}}_\theta\) into our standard DDPM or DDIM sampling equations to compute \(\mathbf{x}_{t-1}\).</p>
 				<hr />
 				</div>

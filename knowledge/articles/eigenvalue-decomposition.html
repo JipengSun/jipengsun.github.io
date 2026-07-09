@@ -19,7 +19,7 @@
 	<meta name="twitter:description" content="For a square n \times n matrix A, an eigenvector \mathbf{v} and its corresponding eigenvalue \lambda must satisfy the following equation:" />
 	<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Eigenvalue Decomposition","description":"For a square n \\times n matrix A, an eigenvector \\mathbf{v} and its corresponding eigenvalue \\lambda must satisfy the following equation:","url":"https://jipengsun.github.io/knowledge/articles/eigenvalue-decomposition.html","mainEntityOfPage":"https://jipengsun.github.io/knowledge/articles/eigenvalue-decomposition.html","inLanguage":"en","author":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"publisher":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"isPartOf":{"@type":"Blog","name":"Jipeng Sun — Knowledge Share","url":"https://jipengsun.github.io/knowledge-share.html"},"dateModified":"2026-06-23"}</script>
 	<!-- seo:auto:end -->
-				<link rel="stylesheet" href="../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../assets/css/main.css" />
 	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
 	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
@@ -87,7 +87,7 @@
 				<p>If an \(n \times n\) matrix \(A\) has \(n\) linearly independent eigenvectors, we can combine them into a single matrix equation.</p>
 				<p>Let \(P\) be a matrix whose columns are the eigenvectors of \(A\), and let \(\Lambda\) be a diagonal matrix whose non-zero entries are the corresponding eigenvalues:</p>
 				<p class="kn-math-display">\[P=[\mathbf{v}_1, \mathbf{v}_2, \dots, \mathbf{v}_n]\]</p>
-				<p class="kn-math-display">\[\Lambda=\begin{bmatrix} \lambda_1 & 0 & \dots & 0 \ 0 & \lambda_2 & \dots & 0 \ \vdots & \vdots & \ddots & \vdots \ 0 & 0 & \dots & \lambda_n \end{bmatrix}\]</p>
+				<p class="kn-math-display">\[\Lambda=\begin{bmatrix} \lambda_1 & 0 & \dots & 0 \\ 0 & \lambda_2 & \dots & 0 \\ \vdots & \vdots & \ddots & \vdots \\ 0 & 0 & \dots & \lambda_n \end{bmatrix}\]</p>
 				<p>Because \(A\mathbf{v}_i=\lambda_i\mathbf{v}_i\) for every vector, we can express this for the entire matrix as:</p>
 				<p class="kn-math-display">\[AP=P\Lambda\]</p>
 				<p>To isolate \(A\), we multiply both sides on the right by the inverse of \(P\) (which is \(P^{-1}\)):</p>
@@ -95,10 +95,10 @@
 				<p>This is the <strong>Eigenvalue Decomposition</strong>. You have successfully factored the original matrix \(A\) into a change of basis matrix (\(P\)), a simple scaling matrix (\(\Lambda\)), and the undoing of that change of basis (\(P^{-1}\)).</p>
 				<h3>A Concrete Mathematical Example</h3>
 				<p>Let's decompose the \(2 \times 2\) matrix \(A\):</p>
-				<p class="kn-math-display">\[A=\begin{bmatrix} 2 & 1 \ 1 & 2 \end{bmatrix}\]</p>
+				<p class="kn-math-display">\[A=\begin{bmatrix} 2 & 1 \\ 1 & 2 \end{bmatrix}\]</p>
 				<p><strong>Step 1: Find the eigenvalues using the characteristic equation.</strong></p>
-				<p class="kn-math-display">\[\det\left(\begin{bmatrix} 2 & 1 \ 1 & 2 \end{bmatrix} - \lambda\begin{bmatrix} 1 & 0 \ 0 & 1 \end{bmatrix}\right)=0\]</p>
-				<p class="kn-math-display">\[\det\left(\begin{bmatrix} 2-\lambda & 1 \ 1 & 2-\lambda \end{bmatrix}\right)=0\]</p>
+				<p class="kn-math-display">\[\det\left(\begin{bmatrix} 2 & 1 \\ 1 & 2 \end{bmatrix} - \lambda\begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}\right)=0\]</p>
+				<p class="kn-math-display">\[\det\left(\begin{bmatrix} 2-\lambda & 1 \\ 1 & 2-\lambda \end{bmatrix}\right)=0\]</p>
 				<p>Calculate the determinant:</p>
 				<p class="kn-math-display">\[(2-\lambda)(2-\lambda) - (1)(1)=0\]</p>
 				<p class="kn-math-display">\[\lambda^2 - 4\lambda + 3=0\]</p>
@@ -106,21 +106,21 @@
 				<p>Our eigenvalues are \(\lambda_1=3\) and \(\lambda_2=1\).</p>
 				<p><strong>Step 2: Find the corresponding eigenvectors.</strong></p>
 				<p>For \(\lambda_1=3\):</p>
-				<p class="kn-math-display">\[\begin{bmatrix} 2-3 & 1 \ 1 & 2-3 \end{bmatrix}\begin{bmatrix} x \ y \end{bmatrix}=\begin{bmatrix} 0 \ 0 \end{bmatrix} \implies \begin{bmatrix} -1 & 1 \ 1 & -1 \end{bmatrix}\begin{bmatrix} x \ y \end{bmatrix}=\begin{bmatrix} 0 \ 0 \end{bmatrix}\]</p>
-				<p>This tells us \(-x + y = 0\), so \(x = y\). A simple eigenvector is \(\mathbf{v}_1=\begin{bmatrix} 1 \ 1 \end{bmatrix}\).</p>
+				<p class="kn-math-display">\[\begin{bmatrix} 2-3 & 1 \\ 1 & 2-3 \end{bmatrix}\begin{bmatrix} x \\ y \end{bmatrix}=\begin{bmatrix} 0 \\ 0 \end{bmatrix} \implies \begin{bmatrix} -1 & 1 \\ 1 & -1 \end{bmatrix}\begin{bmatrix} x \\ y \end{bmatrix}=\begin{bmatrix} 0 \\ 0 \end{bmatrix}\]</p>
+				<p>This tells us \(-x + y = 0\), so \(x = y\). A simple eigenvector is [\mathbf{v}_1=\begin{bmatrix} 1 \\ 1 \end{bmatrix}].</p>
 				<p>For \(\lambda_2=1\):</p>
-				<p class="kn-math-display">\[\begin{bmatrix} 2-1 & 1 \ 1 & 2-1 \end{bmatrix}\begin{bmatrix} x \ y \end{bmatrix}=\begin{bmatrix} 0 \ 0 \end{bmatrix} \implies \begin{bmatrix} 1 & 1 \ 1 & 1 \end{bmatrix}\begin{bmatrix} x \ y \end{bmatrix}=\begin{bmatrix} 0 \ 0 \end{bmatrix}\]</p>
-				<p>This tells us \(x + y = 0\), so \(x = -y\). A simple eigenvector is \(\mathbf{v}_2=\begin{bmatrix} -1 \ 1 \end{bmatrix}\).</p>
+				<p class="kn-math-display">\[\begin{bmatrix} 2-1 & 1 \\ 1 & 2-1 \end{bmatrix}\begin{bmatrix} x \\ y \end{bmatrix}=\begin{bmatrix} 0 \\ 0 \end{bmatrix} \implies \begin{bmatrix} 1 & 1 \\ 1 & 1 \end{bmatrix}\begin{bmatrix} x \\ y \end{bmatrix}=\begin{bmatrix} 0 \\ 0 \end{bmatrix}\]</p>
+				<p>This tells us \(x + y = 0\), so \(x = -y\). A simple eigenvector is [\mathbf{v}_2=\begin{bmatrix} -1 \\ 1 \end{bmatrix}].</p>
 				<p><strong>Step 3: Construct </strong>\(P\)<strong>, </strong>\(\Lambda\)<strong>, and </strong>\(P^{-1}\)<strong>.</strong></p>
 				<p>Put the eigenvectors into the columns of \(P\):</p>
-				<p class="kn-math-display">\[P=\begin{bmatrix} 1 & -1 \ 1 & 1 \end{bmatrix}\]</p>
+				<p class="kn-math-display">\[P=\begin{bmatrix} 1 & -1 \\ 1 & 1 \end{bmatrix}\]</p>
 				<p>Put the eigenvalues on the diagonal of \(\Lambda\):</p>
-				<p class="kn-math-display">\[\Lambda=\begin{bmatrix} 3 & 0 \ 0 & 1 \end{bmatrix}\]</p>
+				<p class="kn-math-display">\[\Lambda=\begin{bmatrix} 3 & 0 \\ 0 & 1 \end{bmatrix}\]</p>
 				<p>Calculate the inverse of \(P\) (\(P^{-1}\)):</p>
-				<p class="kn-math-display">\[P^{-1}=\frac{1}{(1)(1) - (-1)(1)}\begin{bmatrix} 1 & 1 \ -1 & 1 \end{bmatrix}=\begin{bmatrix} 0.5 & 0.5 \ -0.5 & 0.5 \end{bmatrix}\]</p>
+				<p class="kn-math-display">\[P^{-1}=\frac{1}{(1)(1) - (-1)(1)}\begin{bmatrix} 1 & 1 \\ -1 & 1 \end{bmatrix}=\begin{bmatrix} 0.5 & 0.5 \\ -0.5 & 0.5 \end{bmatrix}\]</p>
 				<p><strong>Step 4: The Final Decomposition.</strong></p>
 				<p>We have now decomposed \(A=P\Lambda P^{-1}\), which looks like this:</p>
-				<p class="kn-math-display">\[\begin{bmatrix} 2 & 1 \ 1 & 2 \end{bmatrix} = \begin{bmatrix} 1 & -1 \ 1 & 1 \end{bmatrix} \begin{bmatrix} 3 & 0 \ 0 & 1 \end{bmatrix} \begin{bmatrix} 0.5 & 0.5 \ -0.5 & 0.5 \end{bmatrix}\]</p>
+				<p class="kn-math-display">\[\begin{bmatrix} 2 & 1 \\ 1 & 2 \end{bmatrix} = \begin{bmatrix} 1 & -1 \\ 1 & 1 \end{bmatrix} \begin{bmatrix} 3 & 0 \\ 0 & 1 \end{bmatrix} \begin{bmatrix} 0.5 & 0.5 \\ -0.5 & 0.5 \end{bmatrix}\]</p>
 				<h3>Why EVD?</h3>
 				<h3>1. Trivializing Matrix Powers and Exponentials</h3>
 				<p>If you are simulating a physical process over time (like light propagation through a medium) or running iterative optimization algorithms, you often need to multiply a matrix by itself many times (\(A^n\)) or calculate matrix exponentials (\(e^A\)).</p>

@@ -19,7 +19,7 @@
 	<meta name="twitter:description" content="As a quick refresher, the proximal operator of a scaled convex function \lambda f(x) evaluated at a point v is defined as:" />
 	<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Analytical Proximal Operators","description":"As a quick refresher, the proximal operator of a scaled convex function \\lambda f(x) evaluated at a point v is defined as:","url":"https://jipengsun.github.io/knowledge/articles/analytical-proximal-operators.html","mainEntityOfPage":"https://jipengsun.github.io/knowledge/articles/analytical-proximal-operators.html","inLanguage":"en","author":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"publisher":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"isPartOf":{"@type":"Blog","name":"Jipeng Sun — Knowledge Share","url":"https://jipengsun.github.io/knowledge-share.html"},"dateModified":"2026-03-30"}</script>
 	<!-- seo:auto:end -->
-				<link rel="stylesheet" href="../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../assets/css/main.css" />
 	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
 	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
@@ -96,14 +96,14 @@
 				<p>The absolute value function \(|x_i|\) is not differentiable at \(x_i = 0\). Instead of a gradient, we must use the <strong>subdifferential</strong> (\(\partial\)). The optimality condition dictates that \(0\) must be in the subdifferential of \(J(x_i)\):</p>
 				<p class="kn-math-display">\[0 \in \partial |x_i| + \frac{1}{\lambda}(x_i - v_i)\]</p>
 				<p>The subdifferential of the absolute value is:</p>
-				<ul><li>\(\partial |x_i| = {1}\) if \(x_i > 0\)</li><li>\(\partial |x_i| = {-1}\) if \(x_i < 0\)</li><li>\(\partial |x_i| = [-1, 1]\) if \(x_i = 0\)</li></ul>
+				<ul><li>\(\partial |x_i| = {1}\) if \(x_i &gt; 0\)</li><li>\(\partial |x_i| = {-1}\) if \(x_i &lt; 0\)</li><li>\(\partial |x_i| = [-1, 1]\) if \(x_i = 0\)</li></ul>
 				<p>We analyze this in three cases to solve for \(x_i\):</p>
-				<p><strong>Case 1: Assume </strong>\(x_i > 0\)</p>
+				<p><strong>Case 1: Assume </strong>\(x_i &gt; 0\)</p>
 				<p class="kn-math-display">\[1 + \frac{1}{\lambda}(x_i - v_i) = 0 \implies x_i = v_i - \lambda\]</p>
-				<p>For our assumption (\(x_i > 0\)) to be true, it must be that \(v_i - \lambda > 0\), meaning \(v_i > \lambda\).</p>
-				<p><strong>Case 2: Assume </strong>\(x_i < 0\)</p>
+				<p>For our assumption (\(x_i &gt; 0\)) to be true, it must be that \(v_i - \lambda &gt; 0\), meaning \(v_i &gt; \lambda\).</p>
+				<p><strong>Case 2: Assume </strong>\(x_i &lt; 0\)</p>
 				<p class="kn-math-display">\[-1 + \frac{1}{\lambda}(x_i - v_i) = 0 \implies x_i = v_i + \lambda\]</p>
-				<p>For this assumption to be true, \(v_i + \lambda < 0\), meaning \(v_i < -\lambda\).</p>
+				<p>For this assumption to be true, \(v_i + \lambda &lt; 0\), meaning \(v_i &lt; -\lambda\).</p>
 				<p><strong>Case 3: Assume </strong>\(x_i = 0\)</p>
 				<p class="kn-math-display">\[0 \in [-1, 1] + \frac{1}{\lambda}(0 - v_i) \implies \frac{v_i}{\lambda} \in [-1, 1] \implies v_i \in [-\lambda, \lambda]\]</p>
 				<p>This means if the incoming data \(v_i\) is trapped between \(-\lambda\) and \(\lambda\), the optimal choice is to snap it exactly to zero.</p>

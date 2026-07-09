@@ -19,7 +19,7 @@
 	<meta name="twitter:description" content="To see exactly how the Lucas-Kanade (LK) method solves for optical flow, we need to walk through the least-squares approximation ." />
 	<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Lucas-Kanade Method Example","description":"To see exactly how the Lucas-Kanade (LK) method solves for optical flow, we need to walk through the least-squares approximation .","url":"https://jipengsun.github.io/knowledge/articles/lucas-kanade-example.html","mainEntityOfPage":"https://jipengsun.github.io/knowledge/articles/lucas-kanade-example.html","inLanguage":"en","author":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"publisher":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"isPartOf":{"@type":"Blog","name":"Jipeng Sun — Knowledge Share","url":"https://jipengsun.github.io/knowledge-share.html"},"dateModified":"2026-03-31"}</script>
 	<!-- seo:auto:end -->
-				<link rel="stylesheet" href="../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../assets/css/main.css" />
 	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
 	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
@@ -76,7 +76,7 @@
 				<h3>1. Calculating \(I_x\), \(I_y\), and \(I_t\)</h3>
 				<p>Let's look at a tiny \(3 \times 3\) patch of pixels. Imagine this is a picture of a dark object on a light background. In grayscale, 0 is black and 255 is white.</p>
 				<p><strong>Frame 1:</strong></p>
-				<p class="kn-math-display">\[\begin{bmatrix} 50 & 50 & 150 \ 50 & \mathbf{50} & 150 \ 50 & 50 & 150  \end{bmatrix}\]</p>
+				<p class="kn-math-display">\[\begin{bmatrix} 50 & 50 & 150 \\ 50 & \mathbf{50} & 150 \\ 50 & 50 & 150  \end{bmatrix}\]</p>
 				<p>We want to calculate the gradients for our <strong>target pixel in the center</strong> (currently at value \(50\)).</p>
 				<ul><li><strong>Calculating </strong>\(I_x\)<strong> (Horizontal Gradient):</strong> We subtract the pixel to the left from the pixel to the right (central difference).</li></ul>
 				<p class="kn-math-display">\[I_x = \frac{I_{right} - I_{left}}{2} = \frac{150 - 50}{2} = 50\]</p>
@@ -84,7 +84,7 @@
 				<p class="kn-math-display">\[I_y = \frac{I_{bottom} - I_{top}}{2} = \frac{50 - 50}{2} = 0\]</p>
 				<p>Now, let's say the camera captures the next frame, and the lighter background has shifted one pixel to the left.</p>
 				<p><strong>Frame 2:</strong></p>
-				<p class="kn-math-display">\[\begin{bmatrix} 50 & 150 & 150 \ 50 & \textbf{150} & 150 \ 50 & 150 & 150 \end{bmatrix}\]</p>
+				<p class="kn-math-display">\[\begin{bmatrix} 50 & 150 & 150 \\ 50 & \textbf{150} & 150 \\ 50 & 150 & 150 \end{bmatrix}\]</p>
 				<ul><li><strong>Calculating </strong>\(I_t\)<strong> (Temporal Gradient):</strong> We subtract the center pixel's value in Frame 1 from its new value in Frame 2.</li></ul>
 				<p class="kn-math-display">\[I_t = I_{Frame 2} - I_{Frame 1} = 150 - 50 = 100\]</p>
 				<p>If we plug these into our standard optical flow equation (\(I_x u + I_y v = -I_t\)), we get:</p>
@@ -99,34 +99,34 @@
 				<h3>2. Setting Up the Matrices</h3>
 				<p>Recall the standard optical flow equation for a single pixel: \(I_x u + I_y v = -I_t\).</p>
 				<p>We stack the equations for all 4 pixels to create our system, \(A\mathbf{v} = \mathbf{b}\):</p>
-				<p class="kn-math-display">\[A = \begin{bmatrix} 1 & 0 \ 1 & 1 \ 0 & 1 \ 2 & 0 \end{bmatrix}, \quad \mathbf{v} = \begin{bmatrix} u \ v \end{bmatrix}, \quad \mathbf{b} = \begin{bmatrix} 2 \ 3 \ 1 \ 4 \end{bmatrix}\]</p>
+				<p class="kn-math-display">\[A = \begin{bmatrix} 1 & 0 \\ 1 & 1 \\ 0 & 1 \\ 2 & 0 \end{bmatrix}, \quad \mathbf{v} = \begin{bmatrix} u \\ v \end{bmatrix}, \quad \mathbf{b} = \begin{bmatrix} 2 \\ 3 \\ 1 \\ 4 \end{bmatrix}\]</p>
 				<p>Notice that Matrix \(A\) is \(4 \times 2\). Because it is not a square matrix, we cannot simply invert it to solve for \(\mathbf{v}\).</p>
 				<h3>3. The Least Squares Trick</h3>
 				<p>To make this solvable, we multiply both sides of the equation by the transpose of \(A\), denoted as \(A^T\). This is the standard way to find the least-squares solution.</p>
 				<p>Our new equation becomes:</p>
 				<p class="kn-math-display">\[A^T A \mathbf{v} = A^T \mathbf{b}\]</p>
 				<p>Let's calculate the transpose of \(A\):</p>
-				<p class="kn-math-display">\[A^T = \begin{bmatrix} 1 & 1 & 0 & 2 \ 0 & 1 & 1 & 0 \end{bmatrix}\]</p>
+				<p class="kn-math-display">\[A^T = \begin{bmatrix} 1 & 1 & 0 & 2 \\ 0 & 1 & 1 & 0 \end{bmatrix}\]</p>
 				<h3>4. Matrix Multiplication</h3>
 				<p>Now we multiply the matrices.</p>
 				<p><strong>First, calculate </strong>\(A^T A\) (often called the *structure tensor*):</p>
-				<p class="kn-math-display">\[A^T A = \begin{bmatrix} 1 & 1 & 0 & 2 \ 0 & 1 & 1 & 0 \end{bmatrix} \begin{bmatrix} 1 & 0 \ 1 & 1 \ 0 & 1 \ 2 & 0 \end{bmatrix} = \begin{bmatrix} (1+1+0+4) & (0+1+0+0) \ (0+1+0+0) & (0+1+1+0) \end{bmatrix}\]</p>
-				<p class="kn-math-display">\[A^T A = \begin{bmatrix} 6 & 1 \ 1 & 2 \end{bmatrix}\]</p>
+				<p class="kn-math-display">\[A^T A = \begin{bmatrix} 1 & 1 & 0 & 2 \\ 0 & 1 & 1 & 0 \end{bmatrix} \begin{bmatrix} 1 & 0 \\ 1 & 1 \\ 0 & 1 \\ 2 & 0 \end{bmatrix} = \begin{bmatrix} (1+1+0+4) & (0+1+0+0) \\ (0+1+0+0) & (0+1+1+0) \end{bmatrix}\]</p>
+				<p class="kn-math-display">\[A^T A = \begin{bmatrix} 6 & 1 \\ 1 & 2 \end{bmatrix}\]</p>
 				<p>Notice that \(A^T A\) is now a neat \(2 \times 2\) square matrix.</p>
 				<p><strong>Next, calculate </strong>\(A^T \mathbf{b}\)<strong>:</strong></p>
-				<p class="kn-math-display">\[A^T \mathbf{b} = \begin{bmatrix} 1 & 1 & 0 & 2 \ 0 & 1 & 1 & 0 \end{bmatrix} \begin{bmatrix} 2 \ 3 \ 1 \ 4 \end{bmatrix} = \begin{bmatrix} (2+3+0+8) \ (0+3+1+0) \end{bmatrix}\]</p>
-				<p class="kn-math-display">\[A^T \mathbf{b} = \begin{bmatrix} 13 \ 4 \end{bmatrix}\]</p>
+				<p class="kn-math-display">\[A^T \mathbf{b} = \begin{bmatrix} 1 & 1 & 0 & 2 \\ 0 & 1 & 1 & 0 \end{bmatrix} \begin{bmatrix} 2 \\ 3 \\ 1 \\ 4 \end{bmatrix} = \begin{bmatrix} (2+3+0+8) \\ (0+3+1+0) \end{bmatrix}\]</p>
+				<p class="kn-math-display">\[A^T \mathbf{b} = \begin{bmatrix} 13 \\ 4 \end{bmatrix}\]</p>
 				<h3>5. Solving for the Velocity Vector (\(u, v\))</h3>
 				<p>Our complex overdetermined system has been reduced to a simple \(2 \times 2\) system:</p>
-				<p class="kn-math-display">\[\begin{bmatrix} 6 & 1 \ 1 & 2 \end{bmatrix} \begin{bmatrix} u \ v \end{bmatrix} = \begin{bmatrix} 13 \ 4 \end{bmatrix}\]</p>
+				<p class="kn-math-display">\[\begin{bmatrix} 6 & 1 \\ 1 & 2 \end{bmatrix} \begin{bmatrix} u \\ v \end{bmatrix} = \begin{bmatrix} 13 \\ 4 \end{bmatrix}\]</p>
 				<p>To isolate \(\mathbf{v}\), we multiply both sides by the inverse of \(A^T A\).</p>
 				<p>First, find the determinant of \(A^T A\): \((6 \times 2) - (1 \times 1) = 11\).</p>
 				<p>Then, find the inverse matrix:</p>
-				<p class="kn-math-display">\[(A^T A)^{-1} = \frac{1}{11} \begin{bmatrix} 2 & -1 \ -1 & 6 \end{bmatrix}\]</p>
+				<p class="kn-math-display">\[(A^T A)^{-1} = \frac{1}{11} \begin{bmatrix} 2 & -1 \\ -1 & 6 \end{bmatrix}\]</p>
 				<p>Finally, we multiply the inverse by our \(A^T \mathbf{b}\) vector:</p>
-				<p class="kn-math-display">\[\begin{bmatrix} u \ v \end{bmatrix} = \frac{1}{11} \begin{bmatrix} 2 & -1 \ -1 & 6 \end{bmatrix} \begin{bmatrix} 13 \ 4 \end{bmatrix}\]</p>
-				<p class="kn-math-display">\[\begin{bmatrix} u \ v \end{bmatrix} = \frac{1}{11} \begin{bmatrix} (2 \times 13) + (-1 \times 4) \ (-1 \times 13) + (6 \times 4) \end{bmatrix} = \frac{1}{11} \begin{bmatrix} 26 - 4 \ -13 + 24 \end{bmatrix} = \frac{1}{11} \begin{bmatrix} 22 \ 11 \end{bmatrix}\]</p>
-				<p class="kn-math-display">\[\begin{bmatrix} u \ v \end{bmatrix} = \begin{bmatrix} 2 \ 1 \end{bmatrix}\]</p>
+				<p class="kn-math-display">\[\begin{bmatrix} u \\ v \end{bmatrix} = \frac{1}{11} \begin{bmatrix} 2 & -1 \\ -1 & 6 \end{bmatrix} \begin{bmatrix} 13 \\ 4 \end{bmatrix}\]</p>
+				<p class="kn-math-display">\[\begin{bmatrix} u \\ v \end{bmatrix} = \frac{1}{11} \begin{bmatrix} (2 \times 13) + (-1 \times 4) \\ (-1 \times 13) + (6 \times 4) \end{bmatrix} = \frac{1}{11} \begin{bmatrix} 26 - 4 \\ -13 + 24 \end{bmatrix} = \frac{1}{11} \begin{bmatrix} 22 \\ 11 \end{bmatrix}\]</p>
+				<p class="kn-math-display">\[\begin{bmatrix} u \\ v \end{bmatrix} = \begin{bmatrix} 2 \\ 1 \end{bmatrix}\]</p>
 				<h3>The Final Result</h3>
 				<p>Through the least-squares calculation, the Lucas-Kanade method determined that \(u = 2\) and \(v = 1\).</p>
 				<p>In the context of optical flow, this means that the entire \(2 \times 2\) pixel window we tracked has moved <strong>2 pixels to the right</strong> (positive x-direction) and <strong>1 pixel down</strong> (positive y-direction) between the first frame and the second frame.</p>

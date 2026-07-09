@@ -19,7 +19,7 @@
 	<meta name="twitter:description" content="Neural Radiance Fields (NeRF) represent a breakthrough approach to synthesizing novel views of complex 3D scenes from a sparse set of 2D images. Instead of…" />
 	<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"NeRF","description":"Neural Radiance Fields (NeRF) represent a breakthrough approach to synthesizing novel views of complex 3D scenes from a sparse set of 2D images. Instead of…","url":"https://jipengsun.github.io/knowledge/articles/nerf.html","mainEntityOfPage":"https://jipengsun.github.io/knowledge/articles/nerf.html","inLanguage":"en","author":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"publisher":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"isPartOf":{"@type":"Blog","name":"Jipeng Sun — Knowledge Share","url":"https://jipengsun.github.io/knowledge-share.html"},"dateModified":"2026-05-05"}</script>
 	<!-- seo:auto:end -->
-				<link rel="stylesheet" href="../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../assets/css/main.css" />
 	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
 	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
@@ -86,7 +86,7 @@
 				<p class="kn-math-display">\[C(\mathbf{r}) = \int_{t_n}^{t_f} T(t) \sigma(\mathbf{r}(t)) \mathbf{c}(\mathbf{r}(t), \mathbf{d}) dt\]</p>
 				<p>Where \(T(t)\) is the accumulated transmittance along the ray from \(t_n\) to \(t\):</p>
 				<p class="kn-math-display">\[T(t) = \exp\left(-\int_{t_n}^{t} \sigma(\mathbf{r}(s)) ds\right)\]</p>
-				<p class="kn-math-display">\[T(t)\]</p>
+				<p>\(T(t)\) represents the probability that the ray travels from \(t_n\) to \(t\) without hitting any particles. Therefore, the product \(T(t)\sigma(\mathbf{r}(t))\) can be thought of as the probability density function for the ray terminating at distance \(t\).</p>
 				<h3>3. Discrete Approximation (Numerical Integration)</h3>
 				<p>Because the continuous integral cannot be evaluated analytically, NeRF uses a discrete approximation via stratified sampling. The range \([t_n, t_f]\) is divided into \(N\) evenly spaced bins, and one sample is drawn uniformly at random from within each bin.</p>
 				<p>Let the sampled distances be \(t_1, t_2, \dots, t_N\). The continuous integral is approximated using the quadrature rule:</p>

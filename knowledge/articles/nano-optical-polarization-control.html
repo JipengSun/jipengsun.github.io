@@ -1,0 +1,132 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<title>Nano-Optical Polarization Control — Knowledge Share — Jipeng Sun</title>
+	<!-- seo:auto:start -->
+	<meta name="description" content="Imagine a single pixel on your metasurface. You have decided on an arbitrary orthogonal polarization basis—let&#x27;s say, two specific elliptical states…" />
+	<meta name="author" content="Jipeng Sun" />
+	<meta name="robots" content="index, follow" />
+	<link rel="canonical" href="https://jipengsun.github.io/knowledge/articles/nano-optical-polarization-control.html" />
+	<meta property="og:type" content="article" />
+	<meta property="og:site_name" content="Jipeng Sun — Knowledge Share" />
+	<meta property="og:title" content="Nano-Optical Polarization Control" />
+	<meta property="og:description" content="Imagine a single pixel on your metasurface. You have decided on an arbitrary orthogonal polarization basis—let&#x27;s say, two specific elliptical states…" />
+	<meta property="og:url" content="https://jipengsun.github.io/knowledge/articles/nano-optical-polarization-control.html" />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Nano-Optical Polarization Control" />
+	<meta name="twitter:description" content="Imagine a single pixel on your metasurface. You have decided on an arbitrary orthogonal polarization basis—let&#x27;s say, two specific elliptical states…" />
+	<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Nano-Optical Polarization Control","description":"Imagine a single pixel on your metasurface. You have decided on an arbitrary orthogonal polarization basis—let's say, two specific elliptical states…","url":"https://jipengsun.github.io/knowledge/articles/nano-optical-polarization-control.html","mainEntityOfPage":"https://jipengsun.github.io/knowledge/articles/nano-optical-polarization-control.html","inLanguage":"en","author":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"publisher":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"isPartOf":{"@type":"Blog","name":"Jipeng Sun — Knowledge Share","url":"https://jipengsun.github.io/knowledge-share.html"},"dateModified":"2026-07-08"}</script>
+	<!-- seo:auto:end -->
+	<link rel="stylesheet" href="../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="(function(){var b=document.querySelector('.kn-body');if(!b)return;b.querySelectorAll('span').forEach(function(s){if(s.children.length)return;var t=s.textContent.trim();if(/^\\\([\s\S]*\\\)$/.test(t)||/^\\\[[\s\S]*\\\]$/.test(t))s.replaceWith(document.createTextNode(t));});renderMathInElement(b,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false,ignoredTags:['script','noscript','style','textarea','pre','code']});})();"></script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-LCC4R0HD24"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'G-LCC4R0HD24');
+	</script>
+	<script src="../../assets/js/ga-events.js"></script>
+</head>
+<body class="is-preload kn-page">
+	<div id="wrapper">
+		<header id="header">
+			<h1><a href="../../index.html">Jipeng Sun</a></h1>
+			<nav class="links">
+				<ul>
+					<li><a href="../../index.html">Home</a></li>
+					<li><a href="../../research.html">Research</a></li>
+					<li class="active"><a href="../../knowledge-share.html">Knowledge Share</a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course">VR/AR Course</a></li>
+				</ul>
+			</nav>
+			<nav class="main">
+				<ul>
+					<li class="search"><a class="fa-search" href="#search">Search</a><form id="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></li>
+					<li class="menu"><a class="fa-bars" href="#menu">Menu</a></li>
+				</ul>
+			</nav>
+		</header>
+		<section id="menu">
+			<section><form class="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></section>
+			<section>
+				<ul class="links">
+					<li><a href="../../index.html"><h3>Home</h3><p>Jipeng Sun's Homepage</p></a></li>
+					<li><a href="../../research.html"><h3>Research</h3><p>Publications &amp; Papers</p></a></li>
+					<li><a href="../../knowledge-share.html"><h3>Knowledge Share</h3><p>Study notes</p></a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course"><h3>Teaching</h3><p>VR Summer Course</p></a></li>
+				</ul>
+			</section>
+		</section>
+		<div id="main">
+			<article class="post">
+				<header><div class="title"><h2>Nano-Optical Polarization Control</h2></div></header>
+				<p class="kn-back"><a href="../../knowledge-share.html">&larr; Back to Knowledge Share</a></p>
+				<div class="kn-body">
+				<h2>From Target Polarization Phase to Structure</h2>
+				<h3>Step 1: Defining the Goal</h3>
+				<p>Imagine a single pixel on your metasurface. You have decided on an arbitrary orthogonal polarization basis—let's say, two specific elliptical states, \(|\lambda^+\rangle\) and \(|\lambda^-\rangle\).</p>
+				<p>Your goal as the designer is to apply a specific phase delay \(\Phi^+\) to the first state, and a completely independent phase delay \(\Phi^-\) to the second state.</p>
+				<h3>Step 2: The Complex Conjugate Constraint (The Tricky Part)</h3>
+				<p>You want your metasurface pixel (which has a Jones matrix \(J\)) to do this:</p>
+				<p class="kn-math-display">\[J |\lambda^+\rangle \rightarrow \text{add phase } \Phi^+\]</p>
+				<p>However, a dielectric nanopillar is a standard, reciprocal waveplate. A fundamental property of a waveplate is that when it alters a polarization state, it flips its "handedness" (helicity). For example, if you send in Left-Circular light, a half-waveplate spits out Right-Circular light.</p>
+				<p>Mathematically, flipping the handedness is represented by the <strong>complex conjugate</strong> (\(*\)). Therefore, the true physical equation for what the pillar does to your target state is:</p>
+				<p class="kn-math-display">\[J |\lambda^+\rangle = e^{i\Phi^+} |\lambda^{+*}\rangle\]</p>
+				<p class="kn-math-display">\[J |\lambda^-\rangle = e^{i\Phi^-} |\lambda^{-*}\rangle\]</p>
+				<h3>Step 3: Solving for the "Target Matrix" (\(J_{req}\))</h3>
+				<p>Now we have a system of equations. We know the inputs (\(|\lambda\rangle\)), and we know the desired outputs. We can combine these two equations into a single matrix block:</p>
+				<p class="kn-math-display">\[J \begin{bmatrix} |\lambda^+\rangle & |\lambda^-\rangle \end{bmatrix} = \begin{bmatrix} e^{i\Phi^+}|\lambda^{+*}\rangle & e^{i\Phi^-}|\lambda^{-*}\rangle \end{bmatrix}\]</p>
+				<p>To isolate \(J\), we simply multiply both sides by the inverse of the input matrix:</p>
+				<p class="kn-math-display">\[J_{req} = \begin{bmatrix} e^{i\Phi^+}|\lambda^{+*}\rangle & e^{i\Phi^-}|\lambda^{-*}\rangle \end{bmatrix} \begin{bmatrix} |\lambda^+\rangle & |\lambda^-\rangle \end{bmatrix}^{-1}\]</p>
+				<p>If you compute this, you end up with a \(2 \times 2\) symmetric matrix of complex numbers. This is your \(J_{req}\). It represents the exact optical transformation that *must* happen at that specific pixel on your metasurface to achieve your independent phase goals.</p>
+				<h3>Step 4: Bridging Math to the Physical Pillar (Diagonalization)</h3>
+				<p>Here is the punchline. You have a mathematical matrix \(J_{req}\), but you need to send a GDSII layout to a nanofabrication facility. How do you turn a matrix into a pillar?</p>
+				<p>We know from basic optics that the Jones matrix of a simple rectangular pillar, rotated by an angle \(\theta\), is always written as:</p>
+				<p class="kn-math-display">\[J_{pillar} = R(-\theta) \begin{pmatrix} e^{i\phi_x} & 0 \\ 0 & e^{i\phi_y} \end{pmatrix} R(\theta)\]</p>
+				<p>*(Where *\(\phi_x\)* and *\(\phi_y\)* are the propagation phases determined by the pillar's width and length, and *\(R(\theta)\)* is the rotation matrix).*</p>
+				<p>Linear algebra states that any symmetric unitary matrix (like our \(J_{req}\)) can be <strong>diagonalized</strong> into this exact format.</p>
+				<p>So, you take the \(J_{req}\) you calculated in Step 3 and you run an eigendecomposition on it. The math directly spits out two things:</p>
+				<ol><li><strong>The Eigenvalues:</strong> These are \(e^{i\phi_x}\) and \(e^{i\phi_y}\). They tell you the exact propagation phases you need. You look at your simulation lookup table to find which physical widths (\(L_x\) and \(L_y\)) produce those phases.</li><li><strong>The Eigenvectors:</strong> These form your rotation matrix \(R(\theta)\). They tell you the exact angle \(\theta\) to physically rotate that pillar on the substrate.</li></ol>
+				<h2>An Example</h2>
+				<p>Suppose we want to design a metasurface pixel that completely decouples Left-Circular Polarization (LCP) and Right-Circular Polarization (RCP).</p>
+				<ul><li><strong>Goal 1:</strong> If RCP hits the pixel, it passes through with no phase delay (\(\Phi^+ = 0\)).</li><li><strong>Goal 2:</strong> If LCP hits the pixel, it passes through with a \(\pi\) phase delay (\(\Phi^- = \pi\)).</li></ul>
+				<h3>Step 1: Define the Input Vectors</h3>
+				<p>We start with the standard Jones vectors for our chosen orthogonal basis:</p>
+				<ul><li>RCP input: [|R\rangle = \frac{1}{\sqrt{2}}\begin{bmatrix} 1 \\ -i \end{bmatrix}]</li><li>LCP input: [|L\rangle = \frac{1}{\sqrt{2}}\begin{bmatrix} 1 \\ i \end{bmatrix}]</li></ul>
+				<h3>Step 2: Set Up the "Target" Equations</h3>
+				<p>Remember the physical constraint: the pillar will flip the handedness (complex conjugate) of the output. We multiply our inputs by the desired phase delays (\(e^{i0} = 1\) and \(e^{i\pi} = -1\)) and flip their helicity.</p>
+				<ul><li><strong>What must happen to RCP:</strong> [J_{req} |R\rangle = (1) \cdot |L\rangle = \frac{1}{\sqrt{2}}\begin{bmatrix} 1 \\ i \end{bmatrix}]</li><li><strong>What must happen to LCP:</strong> [J_{req} |L\rangle = (-1) \cdot |R\rangle = \frac{-1}{\sqrt{2}}\begin{bmatrix} 1 \\ -i \end{bmatrix} = \frac{1}{\sqrt{2}}\begin{bmatrix} -1 \\ i \end{bmatrix}]</li></ul>
+				<h3>Step 3: Calculate the Required Matrix (\(J_{req}\))</h3>
+				<p>We combine those two rules into a single matrix equation:</p>
+				<p class="kn-math-display">\[J_{req} \times \frac{1}{\sqrt{2}}\begin{bmatrix} 1 & 1 \\ -i & i \end{bmatrix} = \frac{1}{\sqrt{2}}\begin{bmatrix} 1 & -1 \\ i & i \end{bmatrix}\]</p>
+				<p>To solve for \(J_{req}\), we multiply both sides by the inverse of the input matrix. Skipping the intermediate fractional arithmetic, the result beautifully simplifies to:</p>
+				<p class="kn-math-display">\[J_{req} = \begin{bmatrix} 0 & i \\ i & 0 \end{bmatrix}\]</p>
+				<p>This is the exact optical transformation needed at this specific coordinate on the metasurface.</p>
+				<h3>Step 4: Extract the Physical Geometry (Diagonalization)</h3>
+				<p>Now we must translate [\begin{bmatrix} 0 &amp; i \\ i &amp; 0 \end{bmatrix}] into a physical nanopillar. We find the eigenvalues and eigenvectors of this matrix.</p>
+				<p><strong>1. The Eigenvalues = The Pillar Dimensions (</strong>\(L_x, L_y\)<strong>)</strong></p>
+				<p>Solving the characteristic equation gives two eigenvalues: \(\lambda_1 = i\) and \(\lambda_2 = -i\).</p>
+				<p>We convert these to pure phase:</p>
+				<ul><li>\(i = e^{i\pi/2} \rightarrow\) Required propagation phase \(\phi_x = \frac{\pi}{2}\)</li><li>\(-i = e^{-i\pi/2} \rightarrow\) Required propagation phase \(\phi_y = -\frac{\pi}{2}\)</li></ul>
+				<p>*(Note: The relative phase difference is exactly *\(\pi\)*, meaning the math has automatically deduced that a half-waveplate is required for this specific circular polarization task).*</p>
+				<p><strong>2. The Eigenvectors = The Pillar Rotation Angle (</strong>\(\theta\)<strong>)</strong></p>
+				<p>Calculating the eigenvectors for those specific eigenvalues yields:</p>
+				<ul><li>[\vec{v}_1 = \begin{bmatrix} 1 \\ 1 \end{bmatrix}] and [\vec{v}_2 = \begin{bmatrix} -1 \\ 1 \end{bmatrix}]</li></ul>
+				<p>When normalized, these vectors form a standard rotation matrix for \(\theta = 45^\circ\).</p>
+				</div>
+			</article>
+		</div>
+	</div>
+	<script src="../../assets/js/jquery.min.js"></script>
+	<script src="../../assets/js/browser.min.js"></script>
+	<script src="../../assets/js/breakpoints.min.js"></script>
+	<script src="../../assets/js/util.js"></script>
+	<script src="../../assets/js/main.js"></script>
+</body>
+</html>

@@ -19,7 +19,7 @@
 	<meta name="twitter:description" content="Flow matching is a highly effective mathematical framework for generative modeling. It serves as an alternative to Diffusion Models and provides a more…" />
 	<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Flow Matching","description":"Flow matching is a highly effective mathematical framework for generative modeling. It serves as an alternative to Diffusion Models and provides a more…","url":"https://jipengsun.github.io/knowledge/articles/flow-matching.html","mainEntityOfPage":"https://jipengsun.github.io/knowledge/articles/flow-matching.html","inLanguage":"en","author":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"publisher":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"isPartOf":{"@type":"Blog","name":"Jipeng Sun — Knowledge Share","url":"https://jipengsun.github.io/knowledge-share.html"},"dateModified":"2026-03-02"}</script>
 	<!-- seo:auto:end -->
-				<link rel="stylesheet" href="../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../assets/css/main.css" />
 	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
 	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
@@ -75,7 +75,7 @@
 				<hr />
 				<h3>1. The Core Objective: Probability Paths and Vector Fields</h3>
 				<p>In generative modeling, we want to transform a simple base distribution, \(p_0(x)\) (typically noise), into our target data distribution, \(p_1(x)\).</p>
-				<p>Flow matching constructs a continuous <strong>probability density path</strong>, \(p_t(x)\), where \(t \in \[0, 1\]\). At \(t=0\), we have noise; at \(t=1\), we have data.</p>
+				<p>Flow matching constructs a continuous <strong>probability density path</strong>, \(p_t(x)\), where \(t \in [0, 1]\). At \(t=0\), we have noise; at \(t=1\), we have data.</p>
 				<p>This probability path is governed by a time-dependent <strong>vector field</strong>, \(v_t(x)\). You can think of this vector field as the "wind" that blows the probability mass from the noise distribution into the shape of the data distribution. The relationship between the probability path and the vector field is defined by the <strong>continuity equation</strong>:</p>
 				<p class="kn-math-display">\[\frac{\partial}{\partial t} p_t(x) + \nabla \cdot (p_t(x) v_t(x)) = 0\]</p>
 				<p>If we know the vector field \(v_t(x)\), we can generate new data by drawing a sample \(x_0 \sim p_0(x)\) and solving an <strong>Ordinary Differential Equation (ODE)</strong> over time \(t\) from 0 to 1:</p>

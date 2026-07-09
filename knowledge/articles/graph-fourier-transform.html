@@ -19,7 +19,7 @@
 	<meta name="twitter:description" content="In a classical setting, if you have a signal sampled on a perfectly regular grid—like an audio wave over uniform time intervals or an image on a 2D pixel…" />
 	<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Graph Fourier Transform","description":"In a classical setting, if you have a signal sampled on a perfectly regular grid—like an audio wave over uniform time intervals or an image on a 2D pixel…","url":"https://jipengsun.github.io/knowledge/articles/graph-fourier-transform.html","mainEntityOfPage":"https://jipengsun.github.io/knowledge/articles/graph-fourier-transform.html","inLanguage":"en","author":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"publisher":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"isPartOf":{"@type":"Blog","name":"Jipeng Sun — Knowledge Share","url":"https://jipengsun.github.io/knowledge-share.html"},"dateModified":"2026-06-23"}</script>
 	<!-- seo:auto:end -->
-				<link rel="stylesheet" href="../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../assets/css/main.css" />
 	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
 	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
@@ -107,28 +107,28 @@
 				<h3>Step 1: Form the Graph Laplacian (\(L\))</h3>
 				<p>First, we need to map the geometry of our hallway into the Graph Laplacian matrix (\(L = D - A\)).</p>
 				<ul><li><strong>Adjacency Matrix (</strong>\(A\)<strong>):</strong> Represents the connections. Room 1 connects to 2. Room 2 connects to 1 and 3. Room 3 connects to 2.</li></ul>
-				<p class="kn-math-display">\[A = \begin{bmatrix} 0 & 1 & 0 \ 1 & 0 & 1 \ 0 & 1 & 0 \end{bmatrix}\]</p>
+				<p class="kn-math-display">\[A = \begin{bmatrix} 0 & 1 & 0 \\ 1 & 0 & 1 \\ 0 & 1 & 0 \end{bmatrix}\]</p>
 				<ul><li><strong>Degree Matrix (</strong>\(D\)<strong>):</strong> A diagonal matrix showing how many connections each room has. Room 1 has one connection, Room 2 has two, Room 3 has one.</li></ul>
-				<p class="kn-math-display">\[D = \begin{bmatrix} 1 & 0 & 0 \ 0 & 2 & 0 \ 0 & 0 & 1 \end{bmatrix}\]</p>
+				<p class="kn-math-display">\[D = \begin{bmatrix} 1 & 0 & 0 \\ 0 & 2 & 0 \\ 0 & 0 & 1 \end{bmatrix}\]</p>
 				<ul><li><strong>The Laplacian (</strong>\(L\)<strong>):</strong> Subtracting the two gives us our "second-derivative" operator for this specific graph.</li></ul>
-				<p class="kn-math-display">\[L = \begin{bmatrix} 1 & -1 & 0 \ -1 & 2 & -1 \ 0 & -1 & 1 \end{bmatrix}\]</p>
+				<p class="kn-math-display">\[L = \begin{bmatrix} 1 & -1 & 0 \\ -1 & 2 & -1 \\ 0 & -1 & 1 \end{bmatrix}\]</p>
 				<h3>Step 2: Find the Graph Frequencies (Eigen-decomposition)</h3>
 				<p>To find our "sine and cosine waves" for this specific hallway, we perform an eigen-decomposition on \(L\) (\(L = U \Lambda U^T\)).</p>
 				<p>Calculating this yields three eigenvalues (\(\lambda\)) and three corresponding eigenvectors (\(u\)):</p>
 				<ol><li><strong>Low Frequency (</strong>\(\lambda_0 = 0\)<strong>):</strong></li></ol>
-				<p class="kn-math-display">\[u_0 = \begin{bmatrix} 0.57 \ 0.57 \ 0.57 \end{bmatrix}\]</p>
+				<p class="kn-math-display">\[u_0 = \begin{bmatrix} 0.57 \\ 0.57 \\ 0.57 \end{bmatrix}\]</p>
 				<p>*Interpretation:* The "DC component" or global average. Notice how the values are identical across all three rooms. It represents a perfectly smooth signal with no variation.</p>
 				<ol><li><strong>Medium Frequency (</strong>\(\lambda_1 = 1\)<strong>):</strong></li></ol>
-				<p class="kn-math-display">\[u_1 = \begin{bmatrix} 0.71 \ 0 \ -0.71 \end{bmatrix}\]</p>
+				<p class="kn-math-display">\[u_1 = \begin{bmatrix} 0.71 \\ 0 \\ -0.71 \end{bmatrix}\]</p>
 				<p>*Interpretation:* A gradual gradient. Room 1 is positive, Room 2 is neutral, Room 3 is negative. It represents a signal sloping from one end of the graph to the other.</p>
 				<ol><li><strong>High Frequency (</strong>\(\lambda_2 = 3\)<strong>):</strong></li></ol>
-				<p class="kn-math-display">\[u_2 = \begin{bmatrix} 0.41 \ -0.82 \ 0.41 \end{bmatrix}\]</p>
+				<p class="kn-math-display">\[u_2 = \begin{bmatrix} 0.41 \\ -0.82 \\ 0.41 \end{bmatrix}\]</p>
 				<p>*Interpretation:* High oscillation. The signal spikes up in Room 1, drops sharply in Room 2, and spikes back up in Room 3.</p>
 				<h3>Step 3: Introduce a Signal (\(x\))</h3>
 				<p>Now, let's put some actual temperature data onto our graph.</p>
 				<ul><li>Room 1: <strong>5°C</strong> (Near a heater)</li><li>Room 2: <strong>4°C</strong> (Middle of the hall)</li><li>Room 3: <strong>2°C</strong> (Near a drafty window)</li></ul>
 				<p>Our signal vector is:</p>
-				<p class="kn-math-display">\[x = \begin{bmatrix} 5 \ 4 \ 2 \end{bmatrix}\]</p>
+				<p class="kn-math-display">\[x = \begin{bmatrix} 5 \\ 4 \\ 2 \end{bmatrix}\]</p>
 				<h3>Step 4: Perform the Graph Fourier Transform</h3>
 				<p>We want to decompose our temperature readings into the three graph frequencies we discovered in Step 2. We do this by calculating the dot product of our signal \(x\) against each eigenvector \(u\) (\(\hat{x} = U^T x\)).</p>
 				<ul><li><strong>Low Frequency Coefficient (</strong>\(\hat{x}_0\)<strong>):</strong></li></ul>

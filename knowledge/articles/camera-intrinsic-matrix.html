@@ -19,7 +19,7 @@
 	<meta name="twitter:description" content="The camera intrinsic matrix is the fundamental mathematical bridge between the 3D physical world (in the camera&#x27;s local coordinate system) and the 2D pixel…" />
 	<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Camera Intrinsic Matrix","description":"The camera intrinsic matrix is the fundamental mathematical bridge between the 3D physical world (in the camera's local coordinate system) and the 2D pixel…","url":"https://jipengsun.github.io/knowledge/articles/camera-intrinsic-matrix.html","mainEntityOfPage":"https://jipengsun.github.io/knowledge/articles/camera-intrinsic-matrix.html","inLanguage":"en","author":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"publisher":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"isPartOf":{"@type":"Blog","name":"Jipeng Sun — Knowledge Share","url":"https://jipengsun.github.io/knowledge-share.html"},"dateModified":"2026-04-21"}</script>
 	<!-- seo:auto:end -->
-				<link rel="stylesheet" href="../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../assets/css/main.css" />
 	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
 	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
@@ -79,12 +79,12 @@
 				<figure class="kn-figure"><img src="../assets/f394dd95-99fe-4e3e-9037-e192225d8d17.png" alt="" loading="lazy" /></figure>
 				<h3>2. The Intrinsic Matrix (\(K\))</h3>
 				<p>The intrinsic matrix \(K\) is a \(3 \times 3\) upper-triangular matrix that encodes the camera's internal parameters:</p>
-				<p class="kn-math-display">\[K = \begin{bmatrix} f_x & \gamma & c_x \ 0 & f_y & c_y \ 0 & 0 & 1 \end{bmatrix}\]</p>
+				<p class="kn-math-display">\[K = \begin{bmatrix} f_x & \gamma & c_x \\ 0 & f_y & c_y \\ 0 & 0 & 1 \end{bmatrix}\]</p>
 				<p>Here is what each parameter represents physically:</p>
 				<ul><li>\(f_x, f_y\)<strong> (Focal Lengths in Pixels):</strong> These are the products of the physical focal length \(f\) (e.g., in millimeters) and the scaling factors of the sensor \(m_x, m_y\) (pixels per millimeter). If the pixels are perfectly square, \(f_x = f_y\).</li><li>\(f_x = f \cdot m_x\)</li><li>\(f_y = f \cdot m_y\)</li><li>\(c_x, c_y\)<strong> (Principal Point):</strong> This is the optical center of the image sensor, given in pixel coordinates. Ideally, this is exactly the center of the sensor array (e.g., \([W/2, H/2]\)), but manufacturing misalignments often shift it slightly.</li><li>\(\gamma\)<strong> (Skew Coefficient):</strong> This accounts for non-rectangular pixels (where the \(x\) and \(y\) axes of the sensor are not perfectly orthogonal). In almost all modern digital cameras and imaging pipelines, \(\gamma = 0\).</li></ul>
 				<h3>3. The Projection Equation</h3>
 				<p>To find where the 3D point \(P_c\) lands on the sensor, we multiply it by the intrinsic matrix. We drop the appended \(1\) from the 3D point since we are already in the camera coordinate frame (ignoring the extrinsic rotation/translation matrix for now):</p>
-				<p class="kn-math-display">\[\lambda \begin{bmatrix} u \ v \ 1 \end{bmatrix} = \begin{bmatrix} f_x & \gamma & c_x \ 0 & f_y & c_y \ 0 & 0 & 1 \end{bmatrix} \begin{bmatrix} X \ Y \ Z \end{bmatrix}\]</p>
+				<p class="kn-math-display">\[\lambda \begin{bmatrix} u \\ v \\ 1 \end{bmatrix} = \begin{bmatrix} f_x & \gamma & c_x \\ 0 & f_y & c_y \\ 0 & 0 & 1 \end{bmatrix} \begin{bmatrix} X \\ Y \\ Z \end{bmatrix}\]</p>
 				<p>Here, \(\lambda\) is a scalar scaling factor that equals the depth \(Z\). If we perform the matrix multiplication, we get the following system of equations:</p>
 				<p class="kn-math-display">\[\lambda u = f_x X + \gamma Y + c_x Z\]</p>
 				<p class="kn-math-display">\[\lambda v = f_y Y + c_y Z\]</p>

@@ -65,6 +65,8 @@ NOTION_TO_SLUG: dict[str, str] = {
     "38c01d9f52878028b056fe2c5b7c8b2a": "spike-timing-dependent-plasticity-stdp",
     "38d01d9f52878028b056fe2c5b7c8b2a": "spike-timing-dependent-plasticity-stdp",
     "38d01d9f52878072be3bccd6ec6e4fdd": "surrogate-gradient-learning",
+    "39501d9f5287800b9f51c679ab4c2d9e": "neural-tangent-kernel-ntk",
+    "39601d9f528780b1a951e74bf5bb4ff6": "nano-optical-polarization-control",
 }
 
 

@@ -19,7 +19,7 @@
 	<meta name="twitter:description" content="Diffusion models, specifically Denoising Diffusion Probabilistic Models (DDPMs), are generative models that learn to create data by reversing a gradual…" />
 	<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Diffusion Model","description":"Diffusion models, specifically Denoising Diffusion Probabilistic Models (DDPMs), are generative models that learn to create data by reversing a gradual…","url":"https://jipengsun.github.io/knowledge/articles/diffusion-model.html","mainEntityOfPage":"https://jipengsun.github.io/knowledge/articles/diffusion-model.html","inLanguage":"en","author":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"publisher":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"isPartOf":{"@type":"Blog","name":"Jipeng Sun — Knowledge Share","url":"https://jipengsun.github.io/knowledge-share.html"},"dateModified":"2026-03-23"}</script>
 	<!-- seo:auto:end -->
-				<link rel="stylesheet" href="../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../assets/css/main.css" />
 	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
 	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
@@ -99,7 +99,7 @@
 				<p>Once the network \(\boldsymbol{\epsilon}_\theta\) is trained, we can generate new data.</p>
 				<ol><li>We sample pure noise: \(\mathbf{x}_T \sim \mathcal{N}(\mathbf{0}, \mathbf{I})\).</li><li>We iteratively denoise it using Langevin dynamics. At each step from \(T\) down to 1, we compute \(\mathbf{x}_{t-1}\) using the network's noise prediction:</li></ol>
 				<p class="kn-math-display">\[\mathbf{x}_{t-1} = \frac{1}{\sqrt{\alpha_t}} \left( \mathbf{x}_t - \frac{1 - \alpha_t}{\sqrt{1 - \bar{\alpha}_t}} \boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t) \right) + \sigma_t \mathbf{z}\]</p>
-				<p>where \(\mathbf{z} \sim \mathcal{N}(\mathbf{0}, \mathbf{I})\) for \(t > 1\) (adding back a small amount of noise to maintain the Markov chain stochasticity), and \(\mathbf{z} = \mathbf{0}\) for the final step where \(t = 1\).</p>
+				<p>where \(\mathbf{z} \sim \mathcal{N}(\mathbf{0}, \mathbf{I})\) for \(t &gt; 1\) (adding back a small amount of noise to maintain the Markov chain stochasticity), and \(\mathbf{z} = \mathbf{0}\) for the final step where \(t = 1\).</p>
 				<hr />
 				<h2>How the loss is derived from ELBO</h2>
 				<p class="kn-math-display">\[\log p(x) \ge \mathbb{E}_{z \sim q} \left[ \log \frac{p(x, z)}{q(z|x)} \right]\]</p>

@@ -19,7 +19,7 @@
 	<meta name="twitter:description" content="COLMAP is an end-to-end pipeline for Structure-from-Motion (SfM) and Multi-View Stereo (MVS). It takes a collection of 2D images and mathematically…" />
 	<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"COLMAP","description":"COLMAP is an end-to-end pipeline for Structure-from-Motion (SfM) and Multi-View Stereo (MVS). It takes a collection of 2D images and mathematically…","url":"https://jipengsun.github.io/knowledge/articles/colmap.html","mainEntityOfPage":"https://jipengsun.github.io/knowledge/articles/colmap.html","inLanguage":"en","author":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"publisher":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"isPartOf":{"@type":"Blog","name":"Jipeng Sun — Knowledge Share","url":"https://jipengsun.github.io/knowledge-share.html"},"dateModified":"2026-05-04"}</script>
 	<!-- seo:auto:end -->
-				<link rel="stylesheet" href="../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../assets/css/main.css" />
 	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
 	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
@@ -126,7 +126,7 @@
 				<h3>4. From 3D Points to 2D Pixels</h3>
 				<p>The final step is relating the 3D coordinates (\(X_1, X_2\)) to the 2D normalized image coordinates (\(x_1, x_2\)) captured by the camera sensor.</p>
 				<p>Under the pinhole camera model, the 3D point is just a scaled version of the 2D image point along the ray defined by depth \(Z\):</p>
-				<p class="kn-math-display">\[X_1 = Z_1 x_1\]</p>
+				<p>\(X_1 = Z_1 x_1\) and \(X_2 = Z_2 x_2\).</p>
 				<p>Substituting these into our equation:</p>
 				<p class="kn-math-display">\[(Z_2 x_2)^T E (Z_1 x_1) = 0\]</p>
 				<p class="kn-math-display">\[Z_1 Z_2 (x_2^T E x_1) = 0\]</p>

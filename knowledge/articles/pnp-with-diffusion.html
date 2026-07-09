@@ -19,7 +19,7 @@
 	<meta name="twitter:description" content="The core idea of plug-and-play Image Restoration (IR) methods is to take a complex inverse problem and separate it into a data term and a prior term 1. This…" />
 	<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"PnP with Diffusion","description":"The core idea of plug-and-play Image Restoration (IR) methods is to take a complex inverse problem and separate it into a data term and a prior term 1. This…","url":"https://jipengsun.github.io/knowledge/articles/pnp-with-diffusion.html","mainEntityOfPage":"https://jipengsun.github.io/knowledge/articles/pnp-with-diffusion.html","inLanguage":"en","author":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"publisher":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"isPartOf":{"@type":"Blog","name":"Jipeng Sun — Knowledge Share","url":"https://jipengsun.github.io/knowledge-share.html"},"dateModified":"2026-03-05"}</script>
 	<!-- seo:auto:end -->
-				<link rel="stylesheet" href="../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../assets/css/main.css" />
 	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
 	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
@@ -75,7 +75,7 @@
 				<p><strong>2. Decoupling the Problem with HQS</strong></p>
 				<p>To solve this efficiently, the authors use the Half-Quadratic-Splitting (HQS) algorithm to decouple the data and prior terms. By introducing an auxiliary variable \(z\) and a constraint coefficient \(\mu\), the single equation is split into two iteratively solved subproblems:</p>
 				<p><strong>Prior Subproblem:</strong></p>
-				<p class="kn-math-display">\[z_k = \text{argmin}_z \frac{1}{2(\sqrt{\lambda/\mu})^2} \|z - x_k\|^2 + P(z)\]</p>
+				<p>\(z_k = \text{argmin}_z \frac{1}{2(\sqrt{\lambda/\mu})^2} \|z - x_k\|^2 + P(z)\)* *</p>
 				<p><strong>*Data Subproblem:</strong> *</p>
 				<p class="kn-math-display">\[x_{k-1} = \text{argmin}_x \|y - H(x)\|^2 + \mu \sigma_n^2 \|x - z_k\|^2\]</p>
 				<p>The prior subproblem is effectively a Gaussian denoising problem, while the data subproblem represents a proximal operator that ensures data consistency.</p>
@@ -90,7 +90,7 @@
 				<p>Here, \(\rho_t = \lambda(\sigma_n / \bar{\sigma}_t)^2\) . For many tasks like image deblurring or super-resolution, this problem has a fast analytical closed-form solution. If an analytical solution is unavailable, it can be approximated using a first-order gradient descent step:</p>
 				<p class="kn-math-display">\[\hat{x}_0^{(t)} \approx \hat{x}_0^{(t)} - \frac{\bar{\sigma}t^2}{2\lambda \sigma_n^2} \nabla{\hat{x}_0^{(t)}} \|y - H(\hat{x}_0^{(t)})\|^2\]</p>
 				<p><strong>5. DiffPIR Final Sampling Step</strong></p>
-				<p>Once the image $<code>\hat{x}_0^{(t)}</code>* is updated to be data-consistent, the algorithm uses an estimation-correction strategy similar to DDIM to move to the next reverse diffusion step *\(x_{t-1}\).</p>
+				<p>Once the image \(\hat{x}_0^{(t)}<code>* is updated to be data-consistent, the algorithm uses an estimation-correction strategy similar to DDIM to move to the next reverse diffusion step *$</code>x_{t-1}\).</p>
 				<p>First, the effective predicted noise \(\hat{\epsilon}\) is calculated based on the updated image:</p>
 				<p class="kn-math-display">\[\hat{\epsilon}(x_t,y) = \frac{1}{\sqrt{1 - \bar{\alpha}_t}} (x_t - \sqrt{\bar{\alpha}_t}\hat{x}_0^{(t)})\]</p>
 				<p>Finally, a noise hyperparameter \(\zeta\) is introduced to balance the corrected predicted noise \(\hat{\epsilon}\) and standard Gaussian noise \(\epsilon_t \sim \mathcal{N}(0, I)\). The final reverse sampling step is calculated as:</p>

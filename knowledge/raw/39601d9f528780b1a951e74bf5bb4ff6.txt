@@ -1,0 +1,65 @@
+Here is the result of "view" for the Page with URL https://app.notion.com/p/39601d9f528780b1a951e74bf5bb4ff6 as of 2026-07-08T15:15:21.742Z:
+<page url="https://app.notion.com/p/39601d9f528780b1a951e74bf5bb4ff6">
+<ancestor-path></ancestor-path>
+<properties>
+{"title":"Nano-Optical Polarization Control"}
+</properties>
+<content>
+## From Target Polarization Phase to Structure
+### Step 1: Defining the Goal
+Imagine a single pixel on your metasurface. You have decided on an arbitrary orthogonal polarization basis—let's say, two specific elliptical states, $`|\lambda^+\rangle`$ and $`|\lambda^-\rangle`$.
+Your goal as the designer is to apply a specific phase delay $`\Phi^+`$ to the first state, and a completely independent phase delay $`\Phi^-`$ to the second state.
+### Step 2: The Complex Conjugate Constraint (The Tricky Part)
+You want your metasurface pixel (which has a Jones matrix $`J`$) to do this:
+$`J |\lambda^+\rangle \rightarrow \text{add phase } \Phi^+`$
+However, a dielectric nanopillar is a standard, reciprocal waveplate. A fundamental property of a waveplate is that when it alters a polarization state, it flips its "handedness" (helicity). For example, if you send in Left-Circular light, a half-waveplate spits out Right-Circular light.
+Mathematically, flipping the handedness is represented by the **complex conjugate** ($`*`$). Therefore, the true physical equation for what the pillar does to your target state is:
+$`J |\lambda^+\rangle = e^{i\Phi^+} |\lambda^{+*}\rangle`$
+$`J |\lambda^-\rangle = e^{i\Phi^-} |\lambda^{-*}\rangle`$
+### Step 3: Solving for the "Target Matrix" ($`J_{req}`$)
+Now we have a system of equations. We know the inputs ($`|\lambda\rangle`$), and we know the desired outputs. We can combine these two equations into a single matrix block:
+$`J \begin{bmatrix} |\lambda^+\rangle & |\lambda^-\rangle \end{bmatrix} = \begin{bmatrix} e^{i\Phi^+}|\lambda^{+*}\rangle & e^{i\Phi^-}|\lambda^{-*}\rangle \end{bmatrix}`$
+To isolate $`J`$, we simply multiply both sides by the inverse of the input matrix:
+$`J_{req} = \begin{bmatrix} e^{i\Phi^+}|\lambda^{+*}\rangle & e^{i\Phi^-}|\lambda^{-*}\rangle \end{bmatrix} \begin{bmatrix} |\lambda^+\rangle & |\lambda^-\rangle \end{bmatrix}^{-1}`$
+If you compute this, you end up with a $`2 \times 2`$ symmetric matrix of complex numbers. This is your $`J_{req}`$. It represents the exact optical transformation that *must* happen at that specific pixel on your metasurface to achieve your independent phase goals.
+### Step 4: Bridging Math to the Physical Pillar (Diagonalization)
+Here is the punchline. You have a mathematical matrix $`J_{req}`$, but you need to send a GDSII layout to a nanofabrication facility. How do you turn a matrix into a pillar?
+We know from basic optics that the Jones matrix of a simple rectangular pillar, rotated by an angle $`\theta`$, is always written as:
+$`J_{pillar} = R(-\theta) \begin{pmatrix} e^{i\phi_x} & 0 \\ 0 & e^{i\phi_y} \end{pmatrix} R(\theta)`$
+*(Where *$`\phi_x`$* and *$`\phi_y`$* are the propagation phases determined by the pillar's width and length, and *$`R(\theta)`$* is the rotation matrix).*
+Linear algebra states that any symmetric unitary matrix (like our $`J_{req}`$) can be **diagonalized** into this exact format.
+So, you take the $`J_{req}`$ you calculated in Step 3 and you run an eigendecomposition on it. The math directly spits out two things:
+1. **The Eigenvalues:** These are $`e^{i\phi_x}`$ and $`e^{i\phi_y}`$. They tell you the exact propagation phases you need. You look at your simulation lookup table to find which physical widths ($`L_x`$ and $`L_y`$) produce those phases.
+2. **The Eigenvectors:** These form your rotation matrix $`R(\theta)`$. They tell you the exact angle $`\theta`$ to physically rotate that pillar on the substrate.
+## An Example
+Suppose we want to design a metasurface pixel that completely decouples Left-Circular Polarization (LCP) and Right-Circular Polarization (RCP).
+- **Goal 1:** If RCP hits the pixel, it passes through with no phase delay ($`\Phi^+ = 0`$).
+- **Goal 2:** If LCP hits the pixel, it passes through with a $`\pi`$ phase delay ($`\Phi^- = \pi`$).
+### Step 1: Define the Input Vectors
+We start with the standard Jones vectors for our chosen orthogonal basis:
+- RCP input: $`|R\rangle = \frac{1}{\sqrt{2}}\begin{bmatrix} 1 \\ -i \end{bmatrix}`$
+- LCP input: $`|L\rangle = \frac{1}{\sqrt{2}}\begin{bmatrix} 1 \\ i \end{bmatrix}`$
+### Step 2: Set Up the "Target" Equations
+Remember the physical constraint: the pillar will flip the handedness (complex conjugate) of the output. We multiply our inputs by the desired phase delays ($`e^{i0} = 1`$ and $`e^{i\pi} = -1`$) and flip their helicity.
+- **What must happen to RCP:** $`J_{req} |R\rangle = (1) \cdot |L\rangle = \frac{1}{\sqrt{2}}\begin{bmatrix} 1 \\ i \end{bmatrix}`$
+- **What must happen to LCP:** $`J_{req} |L\rangle = (-1) \cdot |R\rangle = \frac{-1}{\sqrt{2}}\begin{bmatrix} 1 \\ -i \end{bmatrix} = \frac{1}{\sqrt{2}}\begin{bmatrix} -1 \\ i \end{bmatrix}`$
+### Step 3: Calculate the Required Matrix ($`J_{req}`$)
+We combine those two rules into a single matrix equation:
+$`J_{req} \times \frac{1}{\sqrt{2}}\begin{bmatrix} 1 & 1 \\ -i & i \end{bmatrix} = \frac{1}{\sqrt{2}}\begin{bmatrix} 1 & -1 \\ i & i \end{bmatrix}`$
+To solve for $`J_{req}`$, we multiply both sides by the inverse of the input matrix. Skipping the intermediate fractional arithmetic, the result beautifully simplifies to:
+$`J_{req} = \begin{bmatrix} 0 & i \\ i & 0 \end{bmatrix}`$
+This is the exact optical transformation needed at this specific coordinate on the metasurface.
+### Step 4: Extract the Physical Geometry (Diagonalization)
+Now we must translate $`\begin{bmatrix} 0 & i \\ i & 0 \end{bmatrix}`$ into a physical nanopillar. We find the eigenvalues and eigenvectors of this matrix.
+**1. The Eigenvalues = The Pillar Dimensions (**$`L_x, L_y`$**)**
+Solving the characteristic equation gives two eigenvalues: $`\lambda_1 = i`$ and $`\lambda_2 = -i`$.
+We convert these to pure phase:
+- $`i = e^{i\pi/2} \rightarrow`$ Required propagation phase $`\phi_x = \frac{\pi}{2}`$
+- $`-i = e^{-i\pi/2} \rightarrow`$ Required propagation phase $`\phi_y = -\frac{\pi}{2}`$
+*(Note: The relative phase difference is exactly *$`\pi`$*, meaning the math has automatically deduced that a half-waveplate is required for this specific circular polarization task).*
+**2. The Eigenvectors = The Pillar Rotation Angle (**$`\theta`$**)**
+Calculating the eigenvectors for those specific eigenvalues yields:
+- $`\vec{v}_1 = \begin{bmatrix} 1 \\ 1 \end{bmatrix}`$ and $`\vec{v}_2 = \begin{bmatrix} -1 \\ 1 \end{bmatrix}`$
+When normalized, these vectors form a standard rotation matrix for $`\theta = 45^\circ`$.
+</content>
+</page>

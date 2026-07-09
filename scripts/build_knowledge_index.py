@@ -61,6 +61,8 @@ TOPIC: dict[str, tuple[str, str, str | None]] = {
     "stokes-vectors": ("Optics", "optics", None),
     "diffraction-grating-formula": ("Optics", "optics", None),
     "orthographic-images-to-hologram": ("Optics", "optics", None),
+    "nano-optical-polarization-control": ("Optics", "optics", None),
+    "neural-tangent-kernel-ntk": ("Machine Learning", "machine-learning", None),
 }
 
 DEK_OVERRIDE = {

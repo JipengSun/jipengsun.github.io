@@ -1,5 +1,5 @@
-Here is the result of "view" for the Page with URL https://www.notion.so/33301d9f52878038a6f0d88e61ba2406 as of 2026-05-06T01:29:57.900Z:
-<page url="https://www.notion.so/33301d9f52878038a6f0d88e61ba2406">
+Here is the result of "view" for the Page with URL https://app.notion.com/p/33301d9f52878038a6f0d88e61ba2406 as of 2026-06-07T14:46:59.526Z:
+<page url="https://app.notion.com/p/33301d9f52878038a6f0d88e61ba2406">
 <ancestor-path></ancestor-path>
 <properties>
 {"title":"HQS (Half-Quadratic Splitting)"}
@@ -41,7 +41,7 @@ The full algorithm loops through these two updates iteratively:
 1. **Update **$`x`$ using the physical measurements and the forward model $`A`$.
 2. **Update **$`z`$ by applying the prior/denoiser.
 3. **Increase **$`\rho`$ gradually at each iteration.
-By pushing \$\\rho\$ higher over time, the algorithm forces the data-consistent output (\$x\$) and the prior-consistent output (\$z\$) to converge into a single, physically accurate, and noise-free solution.
+By pushing $`\rho`$ higher over time, the algorithm forces the data-consistent output ($`x`$) and the prior-consistent output ($`z`$) to converge into a single, physically accurate, and noise-free solution.
 <empty-block/>
 </content>
 </page>

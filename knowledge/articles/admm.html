@@ -19,7 +19,7 @@
 	<meta name="twitter:description" content="The Alternating Direction Method of Multipliers (ADMM) is a powerful algorithm that solves convex optimization problems by breaking them into smaller, more…" />
 	<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"ADMM (Alternating Direction Method of Multipliers)","description":"The Alternating Direction Method of Multipliers (ADMM) is a powerful algorithm that solves convex optimization problems by breaking them into smaller, more…","url":"https://jipengsun.github.io/knowledge/articles/admm.html","mainEntityOfPage":"https://jipengsun.github.io/knowledge/articles/admm.html","inLanguage":"en","author":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"publisher":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"isPartOf":{"@type":"Blog","name":"Jipeng Sun — Knowledge Share","url":"https://jipengsun.github.io/knowledge-share.html"},"dateModified":"2026-03-30"}</script>
 	<!-- seo:auto:end -->
-				<link rel="stylesheet" href="../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../assets/css/main.css" />
 	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
 	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
@@ -81,7 +81,7 @@
 				<p>To solve constrained optimization problems, we typically use a Lagrangian. ADMM uses an <strong>Augmented Lagrangian</strong>, which adds a quadratic penalty term to the standard Lagrangian to enforce strict convexity and ensure the algorithm converges even if \(f\) or \(g\) are not strictly convex.</p>
 				<p>The Augmented Lagrangian is defined as:</p>
 				<p class="kn-math-display">\[L_\rho(x, z, y) = f(x) + g(z) + y^T(Ax + Bz - c) + \frac{\rho}{2} \|Ax + Bz - c\|_2^2\]</p>
-				<ul><li>\(y\): The dual variable (or Lagrange multiplier).</li><li>\(\rho > 0\): The penalty parameter. A higher \(\rho\) enforces the constraint \(Ax + Bz = c\) more aggressively.</li></ul>
+				<ul><li>\(y\): The dual variable (or Lagrange multiplier).</li><li>\(\rho &gt; 0\): The penalty parameter. A higher \(\rho\) enforces the constraint \(Ax + Bz = c\) more aggressively.</li></ul>
 				<h2>3. The ADMM Updates</h2>
 				<p>Instead of minimizing \(x\) and \(z\) jointly (which is often computationally intractable or mathematically impossible due to non-smoothness), ADMM alternates the minimization. At iteration \(k\), the algorithm performs three distinct steps:</p>
 				<p><strong>Step 1: The </strong>\(x\)<strong>-update (Fidelity Step)</strong></p>

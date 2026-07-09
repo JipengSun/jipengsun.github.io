@@ -19,7 +19,7 @@
 	<meta name="twitter:description" content="Optical flow is the pattern of apparent motion of objects, surfaces, and edges in a visual scene, caused by the relative motion between an observer (an eye or…" />
 	<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Optical Flow","description":"Optical flow is the pattern of apparent motion of objects, surfaces, and edges in a visual scene, caused by the relative motion between an observer (an eye or…","url":"https://jipengsun.github.io/knowledge/articles/optical-flow.html","mainEntityOfPage":"https://jipengsun.github.io/knowledge/articles/optical-flow.html","inLanguage":"en","author":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"publisher":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"isPartOf":{"@type":"Blog","name":"Jipeng Sun — Knowledge Share","url":"https://jipengsun.github.io/knowledge-share.html"},"dateModified":"2026-03-31"}</script>
 	<!-- seo:auto:end -->
-				<link rel="stylesheet" href="../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../assets/css/main.css" />
 	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
 	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
@@ -95,7 +95,7 @@
 				<h3>5. Solving the Problem (Adding Constraints)</h3>
 				<p>To solve for \(u\) and \(v\), we need additional mathematical constraints. There are two classic ways to do this:</p>
 				<ul><li><strong>The Lucas-Kanade Method (Local):</strong> This assumes that a small window of pixels (e.g., \(3 \times 3\)) surrounding the target pixel all have the same motion \((u, v)\). This gives us 9 equations for 2 unknowns, which we can solve using a least-squares approximation:</li></ul>
-				<p class="kn-math-display">\[\begin{bmatrix} I_{x_1} & I_{y_1} \ \vdots & \vdots \ I_{x_9} & I_{y_9} \end{bmatrix} \begin{bmatrix} u \ v \end{bmatrix} = \begin{bmatrix} -I_{t_1} \ \vdots \ -I_{t_9} \end{bmatrix}\]</p>
+				<p class="kn-math-display">\[\begin{bmatrix} I_{x_1} & I_{y_1} \\ \vdots & \vdots \\ I_{x_9} & I_{y_9} \end{bmatrix} \begin{bmatrix} u \\ v \end{bmatrix} = \begin{bmatrix} -I_{t_1} \\ \vdots \\ -I_{t_9} \end{bmatrix}\]</p>
 				<ul><li><strong>The Horn-Schunck Method (Global):</strong> This formulates the problem as an optimization task, adding a "smoothness" penalty. It assumes that the overall flow field should be smooth across the entire image, minimizing the variations in \(u\) and \(v\) alongside the brightness constancy error.</li></ul>
 				<hr />
 				</div>

@@ -19,7 +19,7 @@
 	<meta name="twitter:description" content="3D Gaussian Splatting (3DGS) is a breakthrough technique in computer graphics and computer vision for novel view synthesis. It emerged as a faster, highly…" />
 	<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"3D Gaussian Splatting","description":"3D Gaussian Splatting (3DGS) is a breakthrough technique in computer graphics and computer vision for novel view synthesis. It emerged as a faster, highly…","url":"https://jipengsun.github.io/knowledge/articles/3d-gaussian-splatting.html","mainEntityOfPage":"https://jipengsun.github.io/knowledge/articles/3d-gaussian-splatting.html","inLanguage":"en","author":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"publisher":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"isPartOf":{"@type":"Blog","name":"Jipeng Sun — Knowledge Share","url":"https://jipengsun.github.io/knowledge-share.html"},"dateModified":"2026-05-03"}</script>
 	<!-- seo:auto:end -->
-				<link rel="stylesheet" href="../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../assets/css/main.css" />
 	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
 	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
@@ -114,7 +114,7 @@
 				<h3>3. Pruning (Taking out the Trash)</h3>
 				<p>While Cloning and Splitting add millions of Gaussians, the algorithm must also clean up useless ones to save memory and keep rendering fast (often \&gt;100 FPS). It performs <strong>Pruning</strong> aggressively.</p>
 				<p>A Gaussian is immediately deleted if:</p>
-				<ul><li><strong>It becomes too transparent:</strong> If its opacity (\(\alpha\)) drops below a tiny threshold (e.g., \(\alpha < 0.005\)), it has virtually no impact on the final image, so it is removed.</li><li><strong>It gets too big:</strong> If the optimizer stretches a Gaussian so much that it covers a massive chunk of the scene, it causes calculation lag and popping artifacts. Any excessively large splats are purged.</li></ul>
+				<ul><li><strong>It becomes too transparent:</strong> If its opacity (\(\alpha\)) drops below a tiny threshold (e.g., \(\alpha &lt; 0.005\)), it has virtually no impact on the final image, so it is removed.</li><li><strong>It gets too big:</strong> If the optimizer stretches a Gaussian so much that it covers a massive chunk of the scene, it causes calculation lag and popping artifacts. Any excessively large splats are purged.</li></ul>
 				<hr />
 				<h3>The Secret Sauce: Periodic Opacity Reset</h3>
 				<p>If you only run the steps above, the optimizer tends to be lazy. It will stack hundreds of semi-transparent Gaussians on top of each other to form solid objects. This creates ugly "floaters" and artifacts when you move the camera.</p>
@@ -129,13 +129,13 @@
 				<p>In traditional rendering (OpenGL/DirectX/Vulkan), you project a 3D point \((x, y, z)\) onto a 2D screen using a \(4 \times 4\) projection matrix.</p>
 				<p>To make the math work, graphics engines use a trick called <strong>Homogeneous Coordinates</strong>. They add a fake 4th dimension (\(w\)) to every 3D point, making it \((x, y, z, 1)\).</p>
 				<p>A simplified Pinhole Camera projection matrix looks like this:</p>
-				<p class="kn-math-display">\[P = \begin{bmatrix} f_x & 0 & 0 & 0 \ 0 & f_y & 0 & 0 \ 0 & 0 & 1 & 0 \ 0 & 0 & 1 & 0 \end{bmatrix}\]</p>
+				<p class="kn-math-display">\[P = \begin{bmatrix} f_x & 0 & 0 & 0 \\ 0 & f_y & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 1 & 0 \end{bmatrix}\]</p>
 				<p>*(Where *\(f_x\)* and *\(f_y\)* are the focal lengths).*</p>
 				<p>Watch what happens when we multiply a 3D point by this matrix:</p>
-				<p class="kn-math-display">\[\begin{bmatrix} f_x & 0 & 0 & 0 \ 0 & f_y & 0 & 0 \ 0 & 0 & 1 & 0 \ 0 & 0 & 1 & 0 \end{bmatrix} \begin{bmatrix} x \ y \ z \ 1 \end{bmatrix} = \begin{bmatrix} f_x \cdot x \ f_y \cdot y \ z \ z \end{bmatrix}\]</p>
+				<p class="kn-math-display">\[\begin{bmatrix} f_x & 0 & 0 & 0 \\ 0 & f_y & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 1 & 0 \end{bmatrix} \begin{bmatrix} x \\ y \\ z \\ 1 \end{bmatrix} = \begin{bmatrix} f_x \cdot x \\ f_y \cdot y \\ z \\ z \end{bmatrix}\]</p>
 				<p>Notice the last row. The \(w\) component of our vector has magically become equal to \(z\) (the depth).</p>
 				<h3>2. The Non-Linear "Cheat" (Perspective Divide)</h3>
-				<p>The matrix multiplication above was perfectly linear. But the resulting vector \(\begin{bmatrix} f_x \cdot x, & f_y \cdot y, & z, & z \end{bmatrix}\) is not a 2D pixel coordinate yet.</p>
+				<p>The matrix multiplication above was perfectly linear. But the resulting vector [\begin{bmatrix} f_x \cdot x, &amp; f_y \cdot y, &amp; z, &amp; z \end{bmatrix}] is not a 2D pixel coordinate yet.</p>
 				<p>To get the final 2D pixel on the screen, standard graphics hardware does a forced, non-matrix step called the <strong>Perspective Divide</strong>. It divides the \(x\) and \(y\) components by the \(w\) component (which, remember, is now \(z\)):</p>
 				<p class="kn-math-display">\[u_{pixel} = \frac{f_x \cdot x}{z}\]</p>
 				<p class="kn-math-display">\[v_{pixel} = \frac{f_y \cdot y}{z}\]</p>
@@ -150,7 +150,7 @@
 				<p class="kn-math-display">\[u = \frac{f_x \cdot x}{z}\]</p>
 				<p class="kn-math-display">\[v = \frac{f_y \cdot y}{z}\]</p>
 				<p>The Jacobian matrix \(J\) is simply a grid containing all these derivatives:</p>
-				<p class="kn-math-display">\[J = \begin{bmatrix} \frac{\partial u}{\partial x} & \frac{\partial u}{\partial y} & \frac{\partial u}{\partial z} \ \frac{\partial v}{\partial x} & \frac{\partial v}{\partial y} & \frac{\partial v}{\partial z} \end{bmatrix}\]</p>
+				<p class="kn-math-display">\[J = \begin{bmatrix} \frac{\partial u}{\partial x} & \frac{\partial u}{\partial y} & \frac{\partial u}{\partial z} \\ \frac{\partial v}{\partial x} & \frac{\partial v}{\partial y} & \frac{\partial v}{\partial z} \end{bmatrix}\]</p>
 				<p>Let's calculate them one by one using basic calculus rules.</p>
 				<p><strong>For the first row (changes to </strong>\(u\)<strong>):</strong></p>
 				<ol><li>\(\frac{\partial u}{\partial x}\): The derivative of \(\frac{f_x \cdot x}{z}\) with respect to \(x\). Since \(x\) is the variable, the result is just the constant attached to it: \(\frac{f_x}{z}\)</li><li>\(\frac{\partial u}{\partial y}\): There is no \(y\) in the equation for \(u\). So, changing \(y\) does nothing to \(u\). The derivative is \(0\).</li><li>\(\frac{\partial u}{\partial z}\): The derivative of \(f_x \cdot x \cdot z^{-1}\) with respect to \(z\). Using the power rule (bring down the \(-1\), subtract \(1\) from the exponent), we get: \(-\frac{f_x \cdot x}{z^2}\)</li></ol>
@@ -159,7 +159,7 @@
 				<ol><li>\(\frac{\partial v}{\partial x}\): No \(x\) in the equation. Derivative is \(0\).</li><li>\(\frac{\partial v}{\partial y}\): The derivative of \(\frac{f_y \cdot y}{z}\) with respect to \(y\) is \(\frac{f_y}{z}\).</li><li>\(\frac{\partial v}{\partial z}\): The derivative of \(f_y \cdot y \cdot z^{-1}\) is \(-\frac{f_y \cdot y}{z^2}\).</li></ol>
 				<p><strong>The Final Result:</strong></p>
 				<p>Plug those derivatives back into the grid, and you get the exact Jacobian matrix used in the 3D Gaussian Splatting source code:</p>
-				<p class="kn-math-display">\[J = \begin{bmatrix} \frac{f_x}{z} & 0 & -\frac{f_x \cdot x}{z^2} \ 0 & \frac{f_y}{z} & -\frac{f_y \cdot y}{z^2} \end{bmatrix}\]</p>
+				<p class="kn-math-display">\[J = \begin{bmatrix} \frac{f_x}{z} & 0 & -\frac{f_x \cdot x}{z^2} \\ 0 & \frac{f_y}{z} & -\frac{f_y \cdot y}{z^2} \end{bmatrix}\]</p>
 				<p>This \(J\) matrix is a perfectly linear, \(2 \times 3\) matrix. It perfectly mimics the non-linear "squash" of perspective projection, but because it is a matrix, it can be cleanly multiplied against the covariance matrix \(\Sigma_{cam}\) using \(\Sigma' = J \Sigma_{cam} J^T\).</p>
 				</div>
 			</article>
