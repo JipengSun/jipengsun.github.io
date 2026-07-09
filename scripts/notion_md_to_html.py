@@ -31,7 +31,6 @@ NOTION_TO_SLUG: dict[str, str] = {
     "32c01d9f528780c998eeffe7cf6a3ee9": "vae-vs-diffusion-elbo",
     "33001d9f5287801ba5ccd81fa27b4263": "optimization",
     "33001d9f5287806db4bef231ce5d0355": "admm",
-    "33001d9f528780c19fd8c8afabbc1edc": "geometry-generation",
     "33301d9f52878014b40ff77d90d4ae7b": "proximal-algorithms",
     "33301d9f52878038a6f0d88e61ba2406": "hqs",
     "33301d9f5287806d911bd48dbf8729cf": "analytical-proximal-operators",
