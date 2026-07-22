@@ -216,6 +216,9 @@ def sitemap_entries() -> list[tuple[str, str | None]]:
         (BASE_URL + "/research.html", today),
         (BASE_URL + "/projects.html", today),
         (BASE_URL + "/knowledge-share.html", today),
+        # Legacy blog URL that Google already indexes; page redirects to Knowledge Share.
+        (BASE_URL + "/blog/index.html", today),
+        (BASE_URL + "/blog/", today),
     ]
     for path in sorted(ARTICLES.glob("*.html")):
         canonical = f"{BASE_URL}/knowledge/articles/{path.name}"
