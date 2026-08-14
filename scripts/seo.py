@@ -25,7 +25,13 @@ ROOT = Path(__file__).resolve().parents[1]
 ARTICLES = ROOT / "knowledge" / "articles"
 INDEX = ROOT / "knowledge-share.html"
 HOME = ROOT / "index.html"
+BLOG = ROOT / "blog"
 SYNC_STATE = ROOT / "knowledge" / "raw" / "sync-state.json"
+
+# A page with less body text than this is an overview stub — still crawlable and still
+# linked from knowledge-share.html, but not worth asking Google to index, since thin
+# pages come back as "crawled, currently not indexed" and drag down the whole section.
+MIN_SITEMAP_BODY_CHARS = 250
 
 BASE_URL = "https://jipengsun.github.io"
 AUTHOR = "Jipeng Sun"
@@ -98,6 +104,7 @@ def render_seo_block(
     canonical: str,
     og_type: str,
     jsonld: dict,
+    site_name: str = f"{AUTHOR} — Knowledge Share",
 ) -> str:
     esc_title = html.escape(title, quote=True)
     lines = [
@@ -107,7 +114,7 @@ def render_seo_block(
         _meta("robots", "index, follow"),
         f'<link rel="canonical" href="{html.escape(canonical, quote=True)}" />',
         _meta("og:type", og_type, prop=True),
-        _meta("og:site_name", f"{AUTHOR} — Knowledge Share", prop=True),
+        _meta("og:site_name", site_name, prop=True),
         _meta("og:title", title, prop=True),
         _meta("og:description", description, prop=True),
         _meta("og:url", canonical, prop=True),
@@ -124,17 +131,28 @@ def render_seo_block(
 
 
 def inject_block(html_text: str, block: str) -> str:
+    # Consume the block's own indentation too. Without the leading [ \t]*, every run
+    # left the old indent behind and the next line drifted two tabs further right.
     existing = re.compile(
-        re.escape(SEO_START) + r".*?" + re.escape(SEO_END) + r"\n?",
+        r"[ \t]*" + re.escape(SEO_START) + r".*?" + re.escape(SEO_END) + r"[ \t]*\n?",
         re.S,
     )
     html_text = existing.sub("", html_text)
+    # Drop hand-written description tags so the generated block is the only one; two
+    # competing <meta name="description"> tags leave Google to pick arbitrarily.
+    html_text = re.sub(
+        r"[ \t]*<meta\s+name=[\"']description[\"'][^>]*>[ \t]*\n?", "", html_text, flags=re.I
+    )
     m = re.search(r"(?P<indent>[ \t]*)<title>.*?</title>", html_text, re.S)
     if not m:
         raise ValueError("no <title> found")
     indent = m.group("indent")
     insert_at = m.end()
-    return html_text[:insert_at] + "\n" + indent + block + html_text[insert_at:]
+    rest = html_text[insert_at:]
+    # Re-indent the line the block is inserted above, so runs from before the fix above
+    # (which left their indentation behind) get normalized instead of staying drifted.
+    rest = re.sub(r"^\n[ \t]*", "\n" + indent, rest, count=1)
+    return html_text[:insert_at] + "\n" + indent + block + rest
 
 
 def article_jsonld(title: str, description: str, canonical: str, lastmod: str | None) -> dict:
@@ -176,7 +194,15 @@ def process_article(path: Path, lastmod: str | None) -> None:
     path.write_text(inject_block(text, block), encoding="utf-8")
 
 
-def process_page(path: Path, *, canonical: str, description: str, jsonld: dict, indent: str) -> None:
+def process_page(
+    path: Path,
+    *,
+    canonical: str,
+    description: str,
+    jsonld: dict,
+    indent: str,
+    site_name: str = f"{AUTHOR} — Knowledge Share",
+) -> None:
     text = path.read_text(encoding="utf-8")
     title_m = re.search(r"<title>(.*?)</title>", text, re.S)
     title = html.unescape((title_m.group(1) if title_m else AUTHOR)).strip()
@@ -187,6 +213,7 @@ def process_page(path: Path, *, canonical: str, description: str, jsonld: dict, 
         canonical=canonical,
         og_type="website",
         jsonld=jsonld,
+        site_name=site_name,
     )
     path.write_text(inject_block(text, block), encoding="utf-8")
 
@@ -208,6 +235,18 @@ def person_jsonld() -> dict:
     }
 
 
+def body_text_length(html_text: str) -> int:
+    m = re.search(r'<div class="kn-body".*?>(.*)', html_text, re.S)
+    body = m.group(1) if m else html_text
+    body = re.sub(r"<script.*?</script>|<style.*?</style>", "", body, flags=re.S)
+    return len(re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", body)).strip())
+
+
+def blog_post_paths() -> list[Path]:
+    """Restored Jekyll-era posts, at blog/YYYY/MM/DD/slug.html."""
+    return sorted(BLOG.glob("[0-9][0-9][0-9][0-9]/[0-9][0-9]/[0-9][0-9]/*.html"))
+
+
 def sitemap_entries() -> list[tuple[str, str | None]]:
     today = datetime.now(timezone.utc).date().isoformat()
     lastmod = load_slug_lastmod()
@@ -215,17 +254,23 @@ def sitemap_entries() -> list[tuple[str, str | None]]:
         (BASE_URL + "/", today),
         (BASE_URL + "/research.html", today),
         (BASE_URL + "/projects.html", today),
+        (BASE_URL + "/single.html", today),
         (BASE_URL + "/knowledge-share.html", today),
-        # Legacy blog URL that Google already indexes; page redirects to Knowledge Share.
         (BASE_URL + "/blog/index.html", today),
-        (BASE_URL + "/blog/", today),
     ]
     for path in sorted(ARTICLES.glob("*.html")):
+        if body_text_length(path.read_text(encoding="utf-8")) < MIN_SITEMAP_BODY_CHARS:
+            continue
         canonical = f"{BASE_URL}/knowledge/articles/{path.name}"
         mod = lastmod.get(path.stem)
         if not mod:
             mod = datetime.fromtimestamp(path.stat().st_mtime, timezone.utc).date().isoformat()
         entries.append((canonical, mod))
+
+    for path in blog_post_paths():
+        # Canonicals use the extensionless URL Google already has indexed.
+        rel = path.relative_to(ROOT).with_suffix("").as_posix()
+        entries.append((f"{BASE_URL}/{rel}", "-".join(path.parts[-4:-1])))
     return entries
 
 
@@ -282,6 +327,45 @@ def run() -> None:
             indent="\t\t",
         )
 
+    # Hand-maintained pages that previously carried no canonical and no description.
+    standalone = [
+        (
+            "research.html",
+            "Peer-reviewed publications and ongoing research by Jipeng Sun in computational "
+            "imaging, optics, and machine learning.",
+        ),
+        (
+            "projects.html",
+            f"Selected projects by {AUTHOR} across computational imaging, optics, and "
+            "machine learning.",
+        ),
+        (
+            "single.html",
+            f"Why {AUTHOR} works on computational imaging: grounding flat optics and the case "
+            "for a PhD in the field.",
+        ),
+    ]
+    for name, description in standalone:
+        path = ROOT / name
+        if not path.is_file():
+            continue
+        canonical = f"{BASE_URL}/{name}"
+        process_page(
+            path,
+            canonical=canonical,
+            description=description,
+            jsonld={
+                "@context": "https://schema.org",
+                "@type": "WebPage",
+                "url": canonical,
+                "inLanguage": "en",
+                "author": {"@type": "Person", "name": AUTHOR, "url": BASE_URL + "/"},
+                "isPartOf": {"@type": "WebSite", "name": AUTHOR, "url": BASE_URL + "/"},
+            },
+            indent="\t\t",
+            site_name=AUTHOR,
+        )
+
     if HOME.is_file():
         process_page(
             HOME,
@@ -292,6 +376,7 @@ def run() -> None:
             ),
             jsonld=person_jsonld(),
             indent="\t\t",
+            site_name=AUTHOR,
         )
 
     sitemap = build_sitemap()

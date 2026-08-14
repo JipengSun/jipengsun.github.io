@@ -36,7 +36,7 @@
 <body class="is-preload kn-page">
 	<div id="wrapper">
 		<header id="header">
-			<h1><a href="../../index.html">Jipeng Sun</a></h1>
+			<p class="site-title"><a href="../../index.html">Jipeng Sun</a></p>
 			<nav class="links">
 				<ul>
 					<li><a href="../../index.html">Home</a></li>
@@ -65,7 +65,7 @@
 		</section>
 		<div id="main">
 			<article class="post">
-				<header><div class="title"><h2>ADMM (Alternating Direction Method of Multipliers)</h2></div></header>
+				<header><div class="title"><h1>ADMM (Alternating Direction Method of Multipliers)</h1></div></header>
 				<p class="kn-back"><a href="../../knowledge-share.html">&larr; Back to Knowledge Share</a></p>
 				<div class="kn-body">
 				<p>The Alternating Direction Method of Multipliers (ADMM) is a powerful algorithm that solves convex optimization problems by breaking them into smaller, more manageable pieces. It combines the decomposability of <strong>dual ascent</strong> with the robust convergence properties of the <strong>method of multipliers</strong>.</p>
@@ -107,7 +107,7 @@
 				<p class="kn-math-display">\[z^{k+1} = \text{prox}_{g/\rho}(v) = \underset{z}{\text{argmin}} \left( g(z) + \frac{\rho}{2}\|z - v\|_2^2 \right)\]</p>
 				<p>If \(g(z)\) is an L1 norm (for sparsity), this step reduces to simple, computationally cheap soft-thresholding. In modern frameworks like Plug-and-Play (PnP) ADMM, the proximal operator for the prior \(g(z)\) doesn't even need to be explicitly defined analytically; it can be entirely replaced by an off-the-shelf denoiser, such as a diffusion model or a flow matching network.</p>
 				<hr />
-				<h1>Where does \(y^T\) and \(u\) come from?</h1>
+				<h2>Where does \(y^T\) and \(u\) come from?</h2>
 				<h2>1. Where does \(y^T\) come from? (\(\lambda\) vs. \(y\))</h2>
 				<p>In the simple 1D example, the multiplier is just a single number, \(\lambda\).</p>
 				<p>However, in ADMM, we are usually solving large-scale problems where \(x\) and \(z\) are <strong>vectors</strong> (for example, \(x\) might be an image flattened into a 1 million-pixel column vector). Because \(x\) and \(z\) are vectors, the constraint \(Ax + Bz = c\) actually represents thousands or millions of individual equations.</p>
@@ -138,7 +138,7 @@
 				<p class="kn-math-display">\[\frac{\rho}{2} \|Ax + Bz - c + u\|_2^2\]</p>
 				<p>This makes calculating the gradients and proximal operators in your code significantly easier.</p>
 				<hr />
-				<h1>Why ADMM works?</h1>
+				<h2>Why ADMM works?</h2>
 				<h2>1. The "Impossible" Joint Update</h2>
 				<p>If we wanted to be mathematically perfect, we wouldn't use ADMM. We would use the standard <strong>Method of Multipliers</strong>. In that method, you update \(x\) and \(z\) *jointly* at the exact same time:</p>
 				<p class="kn-math-display">\[(x^{k+1}, z^{k+1}) = \underset{x, z}{\text{argmin}} \ L_\rho(x, z, y^k)\]</p>

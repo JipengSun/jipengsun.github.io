@@ -1,0 +1,94 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<title>VAE: Variational Auto Encoder — Paper Notes — Jipeng Sun</title>
+	<!-- seo:auto:start -->
+	<meta name="description" content="The motivation of VAE came from improving the representation (latent space, z) quality of the traditional autoencoder, so that we could take random samples…" />
+	<meta name="author" content="Jipeng Sun" />
+	<meta name="robots" content="index, follow" />
+	<link rel="canonical" href="https://jipengsun.github.io/blog/2022/11/22/VAE" />
+	<meta property="og:type" content="article" />
+	<meta property="og:site_name" content="Jipeng Sun — Paper Notes" />
+	<meta property="og:title" content="VAE: Variational Auto Encoder" />
+	<meta property="og:description" content="The motivation of VAE came from improving the representation (latent space, z) quality of the traditional autoencoder, so that we could take random samples…" />
+	<meta property="og:url" content="https://jipengsun.github.io/blog/2022/11/22/VAE" />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="VAE: Variational Auto Encoder" />
+	<meta name="twitter:description" content="The motivation of VAE came from improving the representation (latent space, z) quality of the traditional autoencoder, so that we could take random samples…" />
+	<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"VAE: Variational Auto Encoder","description":"The motivation of VAE came from improving the representation (latent space, z) quality of the traditional autoencoder, so that we could take random samples…","url":"https://jipengsun.github.io/blog/2022/11/22/VAE","mainEntityOfPage":"https://jipengsun.github.io/blog/2022/11/22/VAE","inLanguage":"en","datePublished":"2022-11-22","dateModified":"2022-11-22","author":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"publisher":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"isPartOf":{"@type":"Blog","name":"Jipeng Sun — Paper Notes","url":"https://jipengsun.github.io/blog/index.html"}}</script>
+	<!-- seo:auto:end -->
+	<link rel="stylesheet" href="../../../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../../../assets/css/knowledge-article.css" />
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-LCC4R0HD24"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'G-LCC4R0HD24');
+	</script>
+	<script src="../../../../assets/js/ga-events.js"></script>
+</head>
+<body class="is-preload kn-page">
+	<div id="wrapper">
+		<header id="header">
+			<p class="site-title"><a href="../../../../index.html">Jipeng Sun</a></p>
+			<nav class="links">
+				<ul>
+					<li><a href="../../../../index.html">Home</a></li>
+					<li><a href="../../../../research.html">Research</a></li>
+					<li><a href="../../../../knowledge-share.html">Knowledge Share</a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course">VR/AR Course</a></li>
+				</ul>
+			</nav>
+			<nav class="main">
+				<ul>
+					<li class="menu"><a class="fa-bars" href="#menu">Menu</a></li>
+				</ul>
+			</nav>
+		</header>
+		<section id="menu">
+			<section>
+				<ul class="links">
+					<li><a href="../../../../index.html"><h3>Home</h3><p>Jipeng Sun's Homepage</p></a></li>
+					<li><a href="../../../../research.html"><h3>Research</h3><p>Publications &amp; Papers</p></a></li>
+					<li><a href="../../../../knowledge-share.html"><h3>Knowledge Share</h3><p>Study notes</p></a></li>
+					<li><a href="../../../../blog/index.html"><h3>Paper Notes Archive</h3><p>2022 paper reviews</p></a></li>
+				</ul>
+			</section>
+		</section>
+		<div id="main">
+			<article class="post">
+				<header><div class="title"><h1>VAE: Variational Auto Encoder</h1></div></header>
+				<p class="kn-back"><a href="../../../../blog/index.html">&larr; Paper Notes archive</a>
+					<span class="kn-date">November 22, 2022</span></p>
+				<div class="kn-body">
+<p><strong>Variational Inference: A Review for Statisticians</strong></p>
+<p>Blei, David M and Kucukelbir, Alp and McAuliffe, Jon D</p>
+<p>Journal of the American statistical Association 2017</p>
+<h2>Summary:</h2>
+<p>The motivation of VAE came from improving the representation (latent space, z) quality of the traditional autoencoder, so that we could take random samples from the latent space and pass it to decoder to generate similar images of our training dataset. The traditional autoencoder is hard to achieve this goal due to there are many gaps and characteristics overlaps in the latent space, which results in the sampling inside the latent gap doesn’t have meaningful generation in the image space. VAE tries to alleviate this problem by regularizing the latent space as a standard Gaussian distribution.</p>
+<p>For every input data, rather than encode it directly to the latent space as autoencoder does, the VAE uses neural network to predict a particular Gaussian distribution for that input, which are the mean and the variance. With such parameters, the VAE sample a latent variable from that Gaussian distribution. That latent variable is the output of the encoder part and it is passed to a decoder NN to get the final decoded results. To make sure the final generated results match the desired output and the latent space could be regularized by a standard normal distribution, the loss function contains two parts: a reconstruction loss and a KL divergence regularization loss. By feeding and updating such network with all training dataset using gradient descent, we expect to get an optimized latent space so that the latent space is a standard Gaussian distribution. The reason behind this is we can write p(z) as the sum of the product of the p(x) and p(z\|x). Since the sum of the p(x) is 1, if p(z \|x) follows the standard Gaussian distribution, then p(z) will also fit for standard Gaussian distribution. Since the latent space fit for a standard normal distribution, we expect this is a continuous space rather than a discrete one. When we want to generate new images, we could directly do a standard Gaussian sampling to get the generated images. Since there is some overlapping area in the center due to the normal distribution, we can do characteristic mixing in those overlapping area.</p>
+<p>Adversarial generation is another insightful angle to rethink the training process of the VAE, in other words, the relationship between the variance generator encoder and the VAE decoder. If there is no regularization term, the encoder might encode the latent vector for similar input to different places since the loss function is only about getting the better reconstruction. This is actually equal to add a regularization term with zero variance. Especially at the beginning of the training phase, the decoder doesn’t learn well which cause the VAE to generate a smaller variance to make the reconstruction loss easier. However, too much improvement on the decoder side will be limited by the regularization of the encoder side. In the later training phase, the decoder is good enough to make the reconstruction loss small. In that case, the regularization loss will behave as the main part of the loss and increase the generated variance close to 1, thus, force the decoder to learn better. This idea is similar in the D and G networks relationship in GAN. But VAE did it in a more implicit way.</p>
+<h2>Strength:</h2>
+<p>Comparing with the autoencoder, VAE has more continuous and explainable latent space to sample. This is due to the overall standard normalization constraint on the p(z) and the similar images tend to generate the similar mean and variance (Thus tend to gather together). It’s training process is relatively simple compared with the GAN methods since the converging speed is automatically controlled by the model itself rather than hyperparameters in GAN. Compared with the diffusion process, the generation speed is as fast as the inference time of the decoder.</p>
+<h2>Critique:</h2>
+<p>VAE regularization term actually deteriorates the image quality since it is competing with the reconstruction loss. There seems to be an inherent tradeoff between the image quality and the latent space quality, which seems to be different from the GAN and diffusion methods.</p>
+				</div>
+				<aside class="kn-related">
+					<h2>More paper notes</h2>
+					<ul class="kn-link-list"><li><a href="../../../../blog/2022/11/23/VQVAE.html">VQ-VAE</a></li><li><a href="../../../../blog/2022/11/20/styleGAN.html">StyleGAN</a></li><li><a href="../../../../blog/2022/11/19/GAN.html">GAN: Generative Adversarial Nets</a></li></ul>
+				</aside>
+				<p class="kn-back"><a href="../../../../knowledge-share.html">
+					Newer notes are published in Knowledge Share &rarr;</a></p>
+			</article>
+		</div>
+	</div>
+	<script src="../../../../assets/js/jquery.min.js"></script>
+	<script src="../../../../assets/js/browser.min.js"></script>
+	<script src="../../../../assets/js/breakpoints.min.js"></script>
+	<script src="../../../../assets/js/util.js"></script>
+	<script src="../../../../assets/js/main.js"></script>
+</body>
+</html>

@@ -36,7 +36,7 @@
 <body class="is-preload kn-page">
 	<div id="wrapper">
 		<header id="header">
-			<h1><a href="../../index.html">Jipeng Sun</a></h1>
+			<p class="site-title"><a href="../../index.html">Jipeng Sun</a></p>
 			<nav class="links">
 				<ul>
 					<li><a href="../../index.html">Home</a></li>
@@ -65,7 +65,7 @@
 		</section>
 		<div id="main">
 			<article class="post">
-				<header><div class="title"><h2>Diffusion Transformer (DiT)</h2></div></header>
+				<header><div class="title"><h1>Diffusion Transformer (DiT)</h1></div></header>
 				<p class="kn-back"><a href="../../knowledge-share.html">&larr; Back to Knowledge Share</a></p>
 				<div class="kn-body">
 				<p>To understand the math behind the Diffusion Transformer (DiT), we have to separate it into two distinct parts: the <strong>mathematical framework</strong> (the objective function defining how noise transitions to data) and the <strong>neural architecture</strong> (how the tensor operations actually process the space and time variables).</p>
@@ -80,14 +80,14 @@
 				<p class="kn-math-display">\[v = \frac{d z_t}{d t} = \epsilon - x\]</p>
 				<p>The goal of the DiT, denoted as \(v_\theta(z_t, t, c)\), is to predict this velocity (or alternatively, to predict the noise \(\epsilon\) or the clean image \(x_0\)), conditioned on the timestep \(t\) and any global condition \(c\). The network minimizes the Mean Squared Error:</p>
 				<p class="kn-math-display">\[\mathcal{L} = \mathbb{E}_{t, x, \epsilon} \left[ \| v_\theta(z_t, t, c) - (\epsilon - x) \|^2 \right]\]</p>
-				<figure class="kn-figure"><img src="../assets/4ff10cd9-d162-4c15-baee-d62fce49d813.png" alt="" loading="lazy" /></figure>
+				<figure class="kn-figure"><img src="../assets/4ff10cd9-d162-4c15-baee-d62fce49d813.png" alt="Figure from “1. The Mathematical Objective: Flow Matching &amp; Diffusion” in Diffusion Transformer (DiT)" loading="lazy" /></figure>
 				<h3>2. The DiT Architecture: Patchification</h3>
 				<p>Unlike a UNet, which maintains 2D spatial feature maps and uses convolutions, the DiT flattens the image into a 1D sequence of tokens.</p>
 				<p>Given a noisy image \(z_t \in \mathbb{R}^{C \times H \times W}\) and a patch size \(p\), the image is sliced into \(N\) patches, where \(N = \frac{H}{p} \times \frac{W}{p}\).</p>
 				<p>Each patch is linearly projected into a hidden dimension \(D\). The resulting sequence \(Z \in \mathbb{R}^{N \times D}\) represents the spatial information.</p>
 				<p>To retain spatial awareness (since self-attention is permutation-invariant), 2D sinusoidal positional embeddings \(P_{pos} \in \mathbb{R}^{N \times D}\) are added:</p>
 				<p class="kn-math-display">\[X_0 = Z + P_{pos}\]</p>
-				<figure class="kn-figure"><img src="../assets/b93daee3-c933-46f7-9b02-9f4c6c117599.png" alt="" loading="lazy" /></figure>
+				<figure class="kn-figure"><img src="../assets/b93daee3-c933-46f7-9b02-9f4c6c117599.png" alt="Figure from “2. The DiT Architecture: Patchification” in Diffusion Transformer (DiT)" loading="lazy" /></figure>
 				<h3>3. The Core Innovation: AdaLN-Zero Math</h3>
 				<p>The secret to the DiT's success is how it injects the temporal and conditional information (\(t\) and \(c\)). Standard transformers use Layer Normalization (LN). DiTs replace this with <strong>Adaptive Layer Normalization (AdaLN)</strong>.</p>
 				<p>First, the timestep \(t\) and condition \(c\) are embedded and passed through a multi-layer perceptron (MLP) to generate six modulation parameters per transformer block:</p>

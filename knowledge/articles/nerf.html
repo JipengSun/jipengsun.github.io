@@ -36,7 +36,7 @@
 <body class="is-preload kn-page">
 	<div id="wrapper">
 		<header id="header">
-			<h1><a href="../../index.html">Jipeng Sun</a></h1>
+			<p class="site-title"><a href="../../index.html">Jipeng Sun</a></p>
 			<nav class="links">
 				<ul>
 					<li><a href="../../index.html">Home</a></li>
@@ -65,12 +65,12 @@
 		</section>
 		<div id="main">
 			<article class="post">
-				<header><div class="title"><h2>NeRF</h2></div></header>
+				<header><div class="title"><h1>NeRF</h1></div></header>
 				<p class="kn-back"><a href="../../knowledge-share.html">&larr; Back to Knowledge Share</a></p>
 				<div class="kn-body">
 				<p>Neural Radiance Fields (NeRF) represent a breakthrough approach to synthesizing novel views of complex 3D scenes from a sparse set of 2D images. Instead of using discrete representations like meshes or point clouds, NeRF encodes the geometry and appearance of a scene directly into the weights of a continuous, deep, fully connected neural network (a Multilayer Perceptron, or MLP).</p>
 				<p>Here is the mathematical breakdown of how NeRF works, from the continuous scene representation to the loss function used for training.</p>
-				<figure class="kn-figure"><img src="../assets/c92444e3-4466-45a4-8bda-f7d5dc3ce9c9.png" alt="" loading="lazy" /></figure>
+				<figure class="kn-figure"><img src="../assets/c92444e3-4466-45a4-8bda-f7d5dc3ce9c9.png" alt="Figure from NeRF" loading="lazy" /></figure>
 				<hr />
 				<h3>1. The Continuous 5D Representation</h3>
 				<p>At its core, a NeRF models a scene as a continuous 5D function. The inputs are a 3D spatial location \(\mathbf{x} = (x, y, z)\) and a 2D viewing direction \(\mathbf{d} = (\theta, \phi)\), which is often represented as a 3D Cartesian unit vector.</p>
@@ -78,7 +78,7 @@
 				<p>We can express the neural network \(F_\Theta\) with weights \(\Theta\) as:</p>
 				<p class="kn-math-display">\[F_\Theta : (\mathbf{x}, \mathbf{d}) \rightarrow (\mathbf{c}, \sigma)\]</p>
 				<p>To ensure the representation is multi-view consistent, the density \(\sigma\) is restricted to be a function of the position \(\mathbf{x}\) only, while the color \(\mathbf{c}\) is a function of both position \(\mathbf{x}\) and viewing direction \(\mathbf{d}\) (which allows it to model view-dependent effects like specular reflections).</p>
-				<figure class="kn-figure"><img src="../assets/36046a63-8a22-468e-8e55-dfdf0160a280.png" alt="" loading="lazy" /></figure>
+				<figure class="kn-figure"><img src="../assets/36046a63-8a22-468e-8e55-dfdf0160a280.png" alt="Figure from “1. The Continuous 5D Representation” in NeRF" loading="lazy" /></figure>
 				<h3>2. The Volume Rendering Equation</h3>
 				<p>To render an image, we shoot camera rays through the scene. Let a ray \(\mathbf{r}(t)\) be parameterized by an origin \(\mathbf{o}\) and a direction \(\mathbf{d}\):</p>
 				<p class="kn-math-display">\[\mathbf{r}(t) = \mathbf{o} + t\mathbf{d}\]</p>

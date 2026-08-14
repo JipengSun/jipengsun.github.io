@@ -263,7 +263,26 @@ def replace_notion_math(md: str) -> str:
     return md
 
 
-def notion_body_to_html(md: str) -> str:
+def figure_alt(heading: str, title: str) -> str:
+    """Describe where a figure sits, since Notion gives us no alt text to carry over."""
+
+    def clean(text: str) -> str:
+        text = re.sub(r"<[^>]+>", "", text)
+        text = re.sub(r"[*`#]", "", text)
+        text = re.sub(r"\\[\(\)\[\]]", "", text)
+        return re.sub(r"\s+", " ", text).strip(" :–—-")
+
+    heading, title = clean(heading), clean(title)
+    if heading and title:
+        return f"Figure from “{heading}” in {title}"
+    if heading:
+        return f"Figure from “{heading}”"
+    if title:
+        return f"Figure from {title}"
+    return "Figure"
+
+
+def notion_body_to_html(md: str, title: str = "") -> str:
     md = replace_mentions(md)
     md = replace_notion_math(md)
     md = re.sub(r"<empty-block/>", "\n\n", md)
@@ -315,6 +334,9 @@ def notion_body_to_html(md: str) -> str:
         flush_shorts(shorts)
 
     buf: list[str] = []
+    # Notion exports images as bare ![](url) with no alt text, so the best available
+    # description is where the figure sits: the section it follows, plus the article.
+    last_heading = ""
     while i < n:
         line = lines[i]
         st = line.strip()
@@ -341,16 +363,21 @@ def notion_body_to_html(md: str) -> str:
             flush_para(buf)
             buf = []
             src = html.escape(mimg.group(1).strip(), quote=True)
-            blocks.append(f'<figure class="kn-figure"><img src="{src}" alt="" loading="lazy" /></figure>')
+            alt = html.escape(figure_alt(last_heading, title), quote=True)
+            blocks.append(
+                f'<figure class="kn-figure"><img src="{src}" alt="{alt}" loading="lazy" /></figure>'
+            )
             i += 1
             continue
         mh = re.match(r"(#{1,6})\s+(.*)$", st)
         if mh:
             flush_para(buf)
             buf = []
-            lv = min(len(mh.group(1)), 6)
+            # The page <h1> is the article title, so in-body headings start at <h2>.
+            lv = min(max(len(mh.group(1)), 2), 6)
             tag = f"h{lv}"
-            blocks.append(f"<{tag}>{inline_format_text(mh.group(2).strip())}</{tag}>")
+            last_heading = mh.group(2).strip()
+            blocks.append(f"<{tag}>{inline_format_text(last_heading)}</{tag}>")
             i += 1
             continue
         link_item = parse_link_only(st)
@@ -418,7 +445,7 @@ def build_full_page(title: str, inner_html: str, slug: str) -> str:
 <body class="is-preload kn-page">
 \t<div id="wrapper">
 \t\t<header id="header">
-\t\t\t<h1><a href="../../index.html">Jipeng Sun</a></h1>
+\t\t\t<p class="site-title"><a href="../../index.html">Jipeng Sun</a></p>
 \t\t\t<nav class="links">
 \t\t\t\t<ul>
 \t\t\t\t\t<li><a href="../../index.html">Home</a></li>
@@ -447,7 +474,7 @@ def build_full_page(title: str, inner_html: str, slug: str) -> str:
 \t\t</section>
 \t\t<div id="main">
 \t\t\t<article class="post">
-\t\t\t\t<header><div class="title"><h2>{html.escape(title)}</h2></div></header>
+\t\t\t\t<header><div class="title"><h1>{html.escape(title)}</h1></div></header>
 \t\t\t\t<p class="kn-back"><a href="{nav_back}">&larr; Back to Knowledge Share</a></p>
 \t\t\t\t<div class="kn-body">
 {inner_html}
@@ -476,7 +503,7 @@ def main() -> None:
     title, body = extract_from_mcp_view(raw)
     # slug from filename stem convention: slug.html's stem
     slug = args.out_html.stem
-    inner = notion_body_to_html(body)
+    inner = notion_body_to_html(body, title)
     args.out_html.parent.mkdir(parents=True, exist_ok=True)
     args.out_html.write_text(build_full_page(title, "\t\t\t\t" + inner.replace("\n", "\n\t\t\t\t"), slug), encoding="utf-8")
 

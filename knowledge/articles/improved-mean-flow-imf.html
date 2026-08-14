@@ -36,7 +36,7 @@
 <body class="is-preload kn-page">
 	<div id="wrapper">
 		<header id="header">
-			<h1><a href="../../index.html">Jipeng Sun</a></h1>
+			<p class="site-title"><a href="../../index.html">Jipeng Sun</a></p>
 			<nav class="links">
 				<ul>
 					<li><a href="../../index.html">Home</a></li>
@@ -65,7 +65,7 @@
 		</section>
 		<div id="main">
 			<article class="post">
-				<header><div class="title"><h2>Improved Mean Flow (iMF)</h2></div></header>
+				<header><div class="title"><h1>Improved Mean Flow (iMF)</h1></div></header>
 				<p class="kn-back"><a href="../../knowledge-share.html">&larr; Back to Knowledge Share</a></p>
 				<div class="kn-body">
 				<p>To understand exactly why predicting instantaneous velocity (\(v\)) fixes the problem, we have to look at how variance propagates through the Jacobian matrix during optimization.</p>
@@ -77,7 +77,7 @@
 				<p>From this, two types of velocities emerge:</p>
 				<ul><li><strong>Conditional Velocity (</strong>\(v_c\)<strong>):</strong> The exact velocity of the specific trajectory from \(x\) to \(e\). It is defined as \(v_c = e - x\).</li><li><strong>Marginal Velocity (</strong>\(v(z_t)\)<strong>):</strong> For a given point \(z_t\), there are infinite pairs of \((x, e)\) that could have created it. The marginal velocity is the expectation over all those possible paths: \(v(z_t) = \mathbb{E}[e - x | z_t]\).</li></ul>
 				<p>Crucially, given a fixed state \(z_t\), the marginal velocity \(v(z_t)\) is <strong>deterministic</strong>. The conditional velocity \((e-x)\) is <strong>highly stochastic</strong> because \(e\) is drawn from a pure Gaussian prior.</p>
-				<figure class="kn-figure"><img src="../assets/afd70384-e2a0-4c0c-bd74-e59dceef0a45.png" alt="" loading="lazy" /></figure>
+				<figure class="kn-figure"><img src="../assets/afd70384-e2a0-4c0c-bd74-e59dceef0a45.png" alt="Figure from “1. The Core Variables” in Improved Mean Flow (iMF)" loading="lazy" /></figure>
 				<h3>2. The Original MeanFlow (MF) Problem: Variance Multiplication</h3>
 				<p>Original MF attempts to learn the average velocity \(u_\theta\) by matching a target that involves a Jacobian-Vector Product (JVP). Writing out the JVP explicitly as the Jacobian matrix \(\nabla_z u_\theta\) multiplied by a tangent vector, the apparent target is:</p>
 				<p class="kn-math-display">\[u_{tgt} \approx (e - x) - (t - r)\nabla_z u_\theta(z_t) \cdot (e - x)\]</p>
@@ -85,7 +85,7 @@
 				<p class="kn-math-display">\[\mathcal{L}_{MF} = ||u_\theta(z_t) - u_{tgt}||^2\]</p>
 				<p><strong>The Mathematical Flaw:</strong> Look at the JVP term: \(\nabla_z u_\theta(z_t) \cdot (e - x)\).&lt;br&gt;The tangent vector input to the JVP is the highly stochastic conditional velocity \((e-x)\). As the paper points out, the variance of this conditional velocity is significantly magnified by the Jacobian matrix. Because you are multiplying the network's own derivative by a violently oscillating noise vector on every forward pass, the resulting loss is dominated by massive variance. This forces the optimizer to chase a highly erratic target, making the loss curve unstable and non-decreasing.</p>
 				<h3>3. The Improved MeanFlow (iMF) Solution: Deterministic Tangents</h3>
-				<figure class="kn-figure"><img src="../assets/9ca86440-9890-45b2-a46e-a974226fdaea.png" alt="" loading="lazy" /></figure>
+				<figure class="kn-figure"><img src="../assets/9ca86440-9890-45b2-a46e-a974226fdaea.png" alt="Figure from “3. The Improved MeanFlow (iMF) Solution: Deterministic Tangents” in Improved Mean Flow (iMF)" loading="lazy" /></figure>
 				<p>iMF mathematically rearranges the MeanFlow identity into a standard Flow Matching regression problem (\(v\)-loss). They define a compound function \(V_\theta(z_t)\) that predicts the instantaneous velocity:</p>
 				<p class="kn-math-display">\[V_\theta(z_t) \triangleq u_\theta(z_t) + (t - r)\nabla_z u_\theta(z_t) \cdot v_\theta(z_t)\]</p>
 				<p>Notice the JVP term here: \(\nabla_z u_\theta(z_t) \cdot v_\theta(z_t)\).&lt;br&gt;Instead of the noisy \((e-x)\) vector, the input to the JVP is \(v_\theta(z_t)\), which is the network's own prediction of the marginal velocity.</p>

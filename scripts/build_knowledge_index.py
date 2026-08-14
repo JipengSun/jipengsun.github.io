@@ -63,6 +63,23 @@ TOPIC: dict[str, tuple[str, str, str | None]] = {
     "orthographic-images-to-hologram": ("Optics", "optics", None),
     "nano-optical-polarization-control": ("Optics", "optics", None),
     "neural-tangent-kernel-ntk": ("Machine Learning", "machine-learning", None),
+    "classifier-free-guidance": ("Machine Learning", "machine-learning", None),
+}
+
+# Overview pages that collect links to the notes in one area. They are not listed in the
+# main feed, but they must be reachable: before they were linked from here they were
+# sitemap-only orphans, which Google files as "crawled, currently not indexed".
+HUB_LABELS = {
+    "machine-learning": "Machine Learning",
+    "computer-vision": "Computer Vision",
+    "optimization": "Optimization",
+    "optics": "Optics",
+    "neuromorphic-computing": "Neuromorphic Computing",
+    "math": "Math",
+    "computational-imaging": "Computational Imaging",
+    "computer-graphics": "Computer Graphics",
+    "world-models": "World Models",
+    "robotics": "Robotics",
 }
 
 DEK_OVERRIDE = {
@@ -177,6 +194,18 @@ def render_topic_chips() -> str:
     return "\n".join(lines) + "\n"
 
 
+def render_hub_links() -> str:
+    lines = []
+    for slug, label in HUB_LABELS.items():
+        if not (ARTICLES / f"{slug}.html").is_file():
+            continue
+        lines.append(
+            f'\t\t\t\t\t\t\t\t\t<li><a href="knowledge/articles/{slug}.html">'
+            f"{html.escape(label)}</a></li>"
+        )
+    return "\n".join(lines) + "\n"
+
+
 def render_stories() -> str:
     updated_at = load_slug_updated_at()
     lines: list[str] = []
@@ -220,6 +249,19 @@ def main() -> None:
         sys.exit("ks-topic-grid not found in knowledge-share.html")
     topic_block = render_topic_chips()
     text = text[: grid_m.start(1)] + grid_m.group(1) + "\n" + topic_block + "\t\t\t\t\t\t\t" + grid_m.group(2) + text[grid_m.end(2) :]
+
+    hub_m = re.search(r'(<ul class="ks-hub-list">)\s*.*?\s*(</ul>)', text, re.S)
+    if not hub_m:
+        sys.exit("ks-hub-list not found in knowledge-share.html")
+    text = (
+        text[: hub_m.start(1)]
+        + hub_m.group(1)
+        + "\n"
+        + render_hub_links()
+        + "\t\t\t\t\t\t\t\t"
+        + hub_m.group(2)
+        + text[hub_m.end(2) :]
+    )
 
     start = text.index('<ol class="ks-story-list"')
     start = text.index(">", start) + 1

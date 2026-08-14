@@ -36,7 +36,7 @@
 <body class="is-preload kn-page">
 	<div id="wrapper">
 		<header id="header">
-			<h1><a href="../../index.html">Jipeng Sun</a></h1>
+			<p class="site-title"><a href="../../index.html">Jipeng Sun</a></p>
 			<nav class="links">
 				<ul>
 					<li><a href="../../index.html">Home</a></li>
@@ -65,7 +65,7 @@
 		</section>
 		<div id="main">
 			<article class="post">
-				<header><div class="title"><h2>Neural Proximal Operators</h2></div></header>
+				<header><div class="title"><h1>Neural Proximal Operators</h1></div></header>
 				<p class="kn-back"><a href="../../knowledge-share.html">&larr; Back to Knowledge Share</a></p>
 				<div class="kn-body">
 				<p>This is the exact conceptual leap that birthed the <strong>Plug-and-Play (PnP)</strong> and <strong>Regularization by Denoising (RED)</strong> frameworks, revolutionizing how we solve general noisy inverse problems.</p>
@@ -94,7 +94,7 @@
 				<ul><li><strong>Diffusion Models &amp; Score Matching:</strong> By Tweedie's Formula, a denoiser is fundamentally estimating the score function \(\nabla_z \log p(z)\). Diffusion models are explicitly trained to estimate this exact score vector at varying noise levels. Placed inside the \(z\)-update, a single reverse-diffusion step acts as a vastly superior proximal operator.</li><li><strong>Flow Matching:</strong> Similarly, flow matching models learn continuous normalizing flows (vector fields) that transport probability mass from a simple base distribution (like Gaussian noise) to the complex data distribution. This learned transport acts as the ultimate data-driven regularizer.</li><li><strong>VAEs:</strong> A VAE projects the noisy input \(v\) into a learned, constrained latent space and decodes it, effectively forcing the output \(z\) to lie entirely on the manifold of "realistic" data, acting as a powerful implicit projection operator.</li></ul>
 				<p><strong>In short:</strong> You don't plug a denoiser in because it's a heuristic hack. You plug it in because the ADMM algorithm mathematically *asks* for a denoiser, and a generative neural network is simply the best denoiser humanity has built so far.</p>
 				<hr />
-				<h1>Proof: Why \(-\log p(v|z) \propto \frac{1}{2\sigma^2} \|z - v\|_2^2\)</h1>
+				<h2>Proof: Why \(-\log p(v|z) \propto \frac{1}{2\sigma^2} \|z - v\|_2^2\)</h2>
 				<p>This relationship is one of the most fundamental connections in machine learning and optimization. It proves that <strong>minimizing the Mean Squared Error (or L2 norm) is mathematically identical to assuming your noise is Gaussian.</strong></p>
 				<p>Here is the step-by-step derivation of exactly how the multivariate Gaussian probability density function (PDF) turns into that simple quadratic penalty.</p>
 				<h3>1. The Forward Model</h3>

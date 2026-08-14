@@ -36,7 +36,7 @@
 <body class="is-preload kn-page">
 	<div id="wrapper">
 		<header id="header">
-			<h1><a href="../../index.html">Jipeng Sun</a></h1>
+			<p class="site-title"><a href="../../index.html">Jipeng Sun</a></p>
 			<nav class="links">
 				<ul>
 					<li><a href="../../index.html">Home</a></li>
@@ -65,7 +65,7 @@
 		</section>
 		<div id="main">
 			<article class="post">
-				<header><div class="title"><h2>Camera Intrinsic Matrix</h2></div></header>
+				<header><div class="title"><h1>Camera Intrinsic Matrix</h1></div></header>
 				<p class="kn-back"><a href="../../knowledge-share.html">&larr; Back to Knowledge Share</a></p>
 				<div class="kn-body">
 				<p>The camera intrinsic matrix is the fundamental mathematical bridge between the 3D physical world (in the camera's local coordinate system) and the 2D pixel grid of the image sensor.</p>
@@ -76,7 +76,7 @@
 				<ul><li>A 3D point in the camera's local coordinate frame: \(P_c = [X, Y, Z]^T\)</li><li>The corresponding 2D projection on the image plane (in pixel coordinates): \(p = [u, v]^T\)</li></ul>
 				<p>Because this is a projective transformation, it is non-linear in standard Cartesian coordinates (due to the perspective divide by \(Z\)). To make it linear, we express the points in <strong>homogeneous coordinates</strong> by appending a \(1\):</p>
 				<ul><li>\(P_{c,h} = [X, Y, Z, 1]^T\)</li><li>\(p_h = [u, v, 1]^T\)</li></ul>
-				<figure class="kn-figure"><img src="../assets/f394dd95-99fe-4e3e-9037-e192225d8d17.png" alt="" loading="lazy" /></figure>
+				<figure class="kn-figure"><img src="../assets/f394dd95-99fe-4e3e-9037-e192225d8d17.png" alt="Figure from “1. The Pinhole Camera Model” in Camera Intrinsic Matrix" loading="lazy" /></figure>
 				<h3>2. The Intrinsic Matrix (\(K\))</h3>
 				<p>The intrinsic matrix \(K\) is a \(3 \times 3\) upper-triangular matrix that encodes the camera's internal parameters:</p>
 				<p class="kn-math-display">\[K = \begin{bmatrix} f_x & \gamma & c_x \\ 0 & f_y & c_y \\ 0 & 0 & 1 \end{bmatrix}\]</p>
@@ -94,10 +94,10 @@
 				<p class="kn-math-display">\[v = f_y \frac{Y}{Z} + c_y\]</p>
 				<p>&lt;columns&gt;</p>
 				<p>&lt;column&gt;</p>
-				<figure class="kn-figure"><img src="../assets/0bdf3c03-bd47-474a-9435-d7dd4c0b6741.png" alt="" loading="lazy" /></figure>
+				<figure class="kn-figure"><img src="../assets/0bdf3c03-bd47-474a-9435-d7dd4c0b6741.png" alt="Figure from “3. The Projection Equation” in Camera Intrinsic Matrix" loading="lazy" /></figure>
 				<p>&lt;/column&gt;</p>
 				<p>&lt;column&gt;</p>
-				<figure class="kn-figure"><img src="../assets/a0db348f-1276-42ae-b165-6eaf14c03e2e.png" alt="" loading="lazy" /></figure>
+				<figure class="kn-figure"><img src="../assets/a0db348f-1276-42ae-b165-6eaf14c03e2e.png" alt="Figure from “3. The Projection Equation” in Camera Intrinsic Matrix" loading="lazy" /></figure>
 				<p>&lt;/column&gt;</p>
 				<p>&lt;/columns&gt;</p>
 				</div>

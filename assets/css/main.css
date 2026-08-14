@@ -2791,7 +2791,7 @@ input, select, textarea {
 				padding: 3.75em 3em 3.3em 3em;
 			}
 
-				.post > header .title h2 {
+				.post > header .title h1, .post > header .title h2 {
 					font-weight: 900;
 					font-size: 1.5em;
 				}
@@ -2995,7 +2995,7 @@ input, select, textarea {
 					width: calc(100% + 3em);
 				}
 
-					.post > header .title h2 {
+					.post > header .title h1, .post > header .title h2 {
 						font-size: 1.1em;
 					}
 
@@ -3178,14 +3178,20 @@ input, select, textarea {
 				padding-left: 0;
 			}
 
-		#header h1 {
+		#header h1, #header .site-title {
 			height: inherit;
 			line-height: inherit;
 			padding: 0 0 0 1.5em;
 			white-space: nowrap;
+			color: #3c3b3b;
+			font-family: "Raleway", Helvetica, sans-serif;
+			font-weight: 800;
+			letter-spacing: 0.25em;
+			margin: 0;
+			text-transform: uppercase;
 		}
 
-			#header h1 a {
+			#header h1 a, #header .site-title a {
 				font-size: 0.7em;
 			}
 
@@ -3331,7 +3337,7 @@ input, select, textarea {
 				line-height: 2.75em;
 			}
 
-				#header h1 {
+				#header h1, #header .site-title {
 					padding: 0 0 0 1em;
 				}
 

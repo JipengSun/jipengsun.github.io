@@ -90,6 +90,38 @@ body.ks-page #main {
 	color: #ffffff;
 }
 
+/* Topic overview links — crawlable counterparts to the filter chips above. */
+.ks-hub-links {
+	margin-top: 1.75em;
+}
+
+.ks-hub-links h3 {
+	margin-bottom: 0.75em;
+}
+
+.ks-hub-list {
+	list-style: none;
+	margin: 0;
+	padding-left: 0;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.35em 1.1em;
+}
+
+.ks-hub-list li {
+	padding-left: 0;
+}
+
+.ks-hub-list a {
+	font-size: 0.85em;
+	color: var(--ks-accent-deep);
+	border-bottom: solid 1px rgba(46, 186, 174, 0.35);
+}
+
+.ks-hub-list a:hover {
+	border-bottom-color: var(--ks-accent-deep);
+}
+
 /* Toolbar */
 .ks-toolbar {
 	display: flex;

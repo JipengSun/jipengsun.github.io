@@ -1,66 +1,279 @@
 <!DOCTYPE HTML>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<title>Blog — Jipeng Sun</title>
-		<meta name="description" content="Jipeng Sun's public research notes on machine learning, computer vision, optics, computational imaging, and optimization. Continued as Knowledge Share." />
-		<meta name="author" content="Jipeng Sun" />
-		<meta name="robots" content="index, follow" />
-		<link rel="canonical" href="https://jipengsun.github.io/knowledge-share.html" />
-		<meta http-equiv="refresh" content="0; url=../knowledge-share.html" />
-		<meta property="og:type" content="website" />
-		<meta property="og:site_name" content="Jipeng Sun — Knowledge Share" />
-		<meta property="og:title" content="Blog — Jipeng Sun" />
-		<meta property="og:description" content="Jipeng Sun's public research notes. Continued as Knowledge Share." />
-		<meta property="og:url" content="https://jipengsun.github.io/knowledge-share.html" />
-		<meta name="twitter:card" content="summary" />
-		<meta name="twitter:title" content="Blog — Jipeng Sun" />
-		<meta name="twitter:description" content="Jipeng Sun's public research notes. Continued as Knowledge Share." />
-		<script type="application/ld+json">{"@context":"https://schema.org","@type":"Blog","name":"Jipeng Sun — Knowledge Share","url":"https://jipengsun.github.io/knowledge-share.html","author":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"alternateName":"Jipeng Sun's Public Research Notes"}</script>
-		<link rel="stylesheet" href="../assets/css/main.css" />
-		<script>
-			window.location.replace("../knowledge-share.html");
-		</script>
-		<script async src="https://www.googletagmanager.com/gtag/js?id=G-LCC4R0HD24"></script>
-		<script>
-		  window.dataLayer = window.dataLayer || [];
-		  function gtag(){dataLayer.push(arguments);}
-		  gtag('js', new Date());
-		  gtag('config', 'G-LCC4R0HD24');
-		</script>
-		<script src="../assets/js/ga-events.js"></script>
-	</head>
-	<body class="is-preload">
-		<div id="wrapper">
-			<header id="header">
-				<h1><a href="../index.html">Jipeng Sun</a></h1>
-				<nav class="links">
-					<ul>
-						<li><a href="../index.html">Home</a></li>
-						<li><a href="../research.html">Research</a></li>
-						<li class="active"><a href="../knowledge-share.html">Knowledge Share</a></li>
-						<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course">VR/AR Course</a></li>
-					</ul>
-				</nav>
-			</header>
-			<div id="main">
-				<article class="post">
-					<header>
-						<div class="title">
-							<h2>Blog</h2>
-						</div>
-					</header>
-					<p>
-						My research notes now live under
-						<strong><a href="../knowledge-share.html">Knowledge Share</a></strong>.
-					</p>
-					<p>
-						If you are not redirected automatically, continue here:
-						<a href="../knowledge-share.html">https://jipengsun.github.io/knowledge-share.html</a>
-					</p>
-				</article>
-			</div>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<title>Paper Notes Archive — Jipeng Sun</title>
+	<!-- seo:auto:start -->
+	<meta name="description" content="Archive of 22 paper reading notes by Jipeng Sun (2022) on transformers, diffusion models, GANs, and holographic displays." />
+	<meta name="author" content="Jipeng Sun" />
+	<meta name="robots" content="index, follow" />
+	<link rel="canonical" href="https://jipengsun.github.io/blog/index.html" />
+	<meta property="og:type" content="article" />
+	<meta property="og:site_name" content="Jipeng Sun — Paper Notes" />
+	<meta property="og:title" content="Paper Notes Archive — Jipeng Sun" />
+	<meta property="og:description" content="Archive of 22 paper reading notes by Jipeng Sun (2022) on transformers, diffusion models, GANs, and holographic displays." />
+	<meta property="og:url" content="https://jipengsun.github.io/blog/index.html" />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Paper Notes Archive — Jipeng Sun" />
+	<meta name="twitter:description" content="Archive of 22 paper reading notes by Jipeng Sun (2022) on transformers, diffusion models, GANs, and holographic displays." />
+	<script type="application/ld+json">{"@context":"https://schema.org","@type":"Blog","name":"Jipeng Sun — Paper Notes","url":"https://jipengsun.github.io/blog/index.html","description":"Archive of 22 paper reading notes by Jipeng Sun (2022) on transformers, diffusion models, GANs, and holographic displays.","author":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"}}</script>
+	<!-- seo:auto:end -->
+	<link rel="stylesheet" href="../assets/css/main.css" />
+	<link rel="stylesheet" href="../assets/css/knowledge-share.css" />
+	<link rel="stylesheet" href="../assets/css/knowledge-article.css" />
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-LCC4R0HD24"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'G-LCC4R0HD24');
+	</script>
+	<script src="../assets/js/ga-events.js"></script>
+</head>
+<body class="is-preload ks-page">
+	<div id="wrapper">
+		<header id="header">
+			<p class="site-title"><a href="../index.html">Jipeng Sun</a></p>
+			<nav class="links">
+				<ul>
+					<li><a href="../index.html">Home</a></li>
+					<li><a href="../research.html">Research</a></li>
+					<li><a href="../knowledge-share.html">Knowledge Share</a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course">VR/AR Course</a></li>
+				</ul>
+			</nav>
+			<nav class="main">
+				<ul>
+					<li class="menu"><a class="fa-bars" href="#menu">Menu</a></li>
+				</ul>
+			</nav>
+		</header>
+		<section id="menu">
+			<section>
+				<ul class="links">
+					<li><a href="../index.html"><h3>Home</h3><p>Jipeng Sun's Homepage</p></a></li>
+					<li><a href="../research.html"><h3>Research</h3><p>Publications &amp; Papers</p></a></li>
+					<li><a href="../knowledge-share.html"><h3>Knowledge Share</h3><p>Study notes</p></a></li>
+					<li><a href="../blog/index.html"><h3>Paper Notes Archive</h3><p>2022 paper reviews</p></a></li>
+				</ul>
+			</section>
+		</section>
+		<div id="main">
+			<section class="ks-intro">
+				<h1>Paper Notes Archive</h1>
+				<p>Reading notes I wrote in 2022 while working through papers on sequence models,
+					transformers, generative models, and holographic displays. Each note follows the same
+					shape: summary, strengths, critique, and the resources I found useful.</p>
+				<p>These are kept online because people still link to them. Newer notes live in
+					<a href="../knowledge-share.html">Knowledge Share</a>.</p>
+			</section>
+			<ol class="ks-story-list">
+					<li class="ks-story">
+						<a class="ks-story-link" href="2022/11/28/cascaded-diffusion.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">November 2022</span>
+								<span class="ks-story-title">Cascaded Diffusion for Super-resolution Image Generation</span>
+								<span class="ks-story-dek">Cascaded Diffusion Models for High Fidelity Image Generation</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story">
+						<a class="ks-story-link" href="2022/11/26/guidance-diffusion.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">November 2022</span>
+								<span class="ks-story-title">Review of the Guidance in Diffusion Models</span>
+								<span class="ks-story-dek">I plan to use Diffusion Models Beat GANs on Image Synthesis NIPS2021 paper as a foundation and review several diffusion guidance methods in this article…</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story">
+						<a class="ks-story-link" href="2022/11/23/VQVAE.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">November 2022</span>
+								<span class="ks-story-title">VQ-VAE</span>
+								<span class="ks-story-dek">VQ-VAE is aiming to provide a discrete latent representation space rather than continuous VAE ones so that it could better model discrete modalities such as…</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story">
+						<a class="ks-story-link" href="2022/11/22/VAE.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">November 2022</span>
+								<span class="ks-story-title">VAE: Variational Auto Encoder</span>
+								<span class="ks-story-dek">The motivation of VAE came from improving the representation (latent space, z) quality of the traditional autoencoder, so that we could take random samples…</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story">
+						<a class="ks-story-link" href="2022/11/20/styleGAN.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">November 2022</span>
+								<span class="ks-story-title">StyleGAN</span>
+								<span class="ks-story-dek">StyleGAN: A Style-Based Generator Architecture for Generative Adversarial Networks</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story">
+						<a class="ks-story-link" href="2022/11/19/GAN.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">November 2022</span>
+								<span class="ks-story-title">GAN: Generative Adversarial Nets</span>
+								<span class="ks-story-dek">Goodfellow, Ian and Pouget-Abadie, Jean and Mirza, Mehdi and Xu, Bing and Warde-Farley, David and Ozair, Sherjil and Courville, Aaron and Bengio, Yoshua</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story">
+						<a class="ks-story-link" href="2022/11/13/GLIDE.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">November 2022</span>
+								<span class="ks-story-title">GLIDE: Text Guided Photorealistic Image Generation and Editing using Diffusion</span>
+								<span class="ks-story-dek">GLIDE: Towards Photorealistic Image Generation and Editing with Text-Guided Diffusion Models</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story">
+						<a class="ks-story-link" href="2022/11/12/DDPM.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">November 2022</span>
+								<span class="ks-story-title">DDPM: Diffusion Model for Image Generation</span>
+								<span class="ks-story-dek">Come down to the implementation level, there are several modules to implement diffusion model: the noise scheduler, which sequentially adds up noise; the…</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story">
+						<a class="ks-story-link" href="2022/11/06/Hogel-Free-Holography.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">November 2022</span>
+								<span class="ks-story-title">Hogel-free Holography</span>
+								<span class="ks-story-dek">Praneeth Chakravarthula, Ethan Tseng, Henry Fuchs, Felix Heide</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story">
+						<a class="ks-story-link" href="2022/11/01/DALLE.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">November 2022</span>
+								<span class="ks-story-title">DALL-E</span>
+								<span class="ks-story-dek">Ramesh, Aditya and Pavlov, Mikhail and Goh, Gabriel and Gray, and others PMLR 2021</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story">
+						<a class="ks-story-link" href="2022/10/26/3D-GAN.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">October 2022</span>
+								<span class="ks-story-title">Efficient Geometry-aware 3D Generative Adversarial Networks</span>
+								<span class="ks-story-dek">I review this paper mainly for curiosity of the term ‘geometry-aware’ and ‘3D’. We always see works from 2D face generation and the physical correctness the…</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story">
+						<a class="ks-story-link" href="2022/10/23/holograph-near-eye-display.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">October 2022</span>
+								<span class="ks-story-title">Holographic Glasses for Virtual Reality</span>
+								<span class="ks-story-dek">Jonghyun Kim, Manu Gopakumar, Suyeon Choi, Yifan Peng, Ward Lopes, Gordon Wetzstein</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story">
+						<a class="ks-story-link" href="2022/10/20/Reformer.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">October 2022</span>
+								<span class="ks-story-title">Reformer: The Efficient Transformer</span>
+								<span class="ks-story-dek">The original Transformer self-attention takes NND parameter space in Q K dot product operation. A sequence of 64k will thus result in 16GB of memory. However…</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story">
+						<a class="ks-story-link" href="2022/10/19/CLIP.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">October 2022</span>
+								<span class="ks-story-title">CLIP</span>
+								<span class="ks-story-dek">The intuition behind such success is that the task for model now is not blindly find the discrimination line for image data distribution and assign clusters…</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story">
+						<a class="ks-story-link" href="2022/10/17/ImageGPT.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">October 2022</span>
+								<span class="ks-story-title">ImageGPT</span>
+								<span class="ks-story-dek">Recall that for Transformer structure, the parameter space of the self-attention layer is $$O(dn^2)$$ where n is the sequence token number. Even for a 300300…</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story">
+						<a class="ks-story-link" href="2022/10/15/GPT2.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">October 2022</span>
+								<span class="ks-story-title">GPT-2</span>
+								<span class="ks-story-dek">The revision of the Transformer decoder to fit for unsupervised training is quite straightforward. First, since there is no Transform encoder part in the…</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story">
+						<a class="ks-story-link" href="2022/10/10/BERT-language-model.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">October 2022</span>
+								<span class="ks-story-title">BERT Language Model</span>
+								<span class="ks-story-dek">Fine-tunning demands the BERT to model the context information (both left-to-right and right-to-left) of each word to better capture the semantics. By that…</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story">
+						<a class="ks-story-link" href="2022/10/06/self-attention-mechanism.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">October 2022</span>
+								<span class="ks-story-title">Self-attention with Relative Position Representations</span>
+								<span class="ks-story-dek">Absolute position encodes the relative position information based on the fact that for any fixed position offset k, $$sin((pos+k)/c)$$ can be acquired by the…</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story">
+						<a class="ks-story-link" href="2022/10/03/Transformer.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">October 2022</span>
+								<span class="ks-story-title">Attention Is All You Need</span>
+								<span class="ks-story-dek">For encoder stack, the intuition behind self-attention comes from the coreference phenomenon in language. When considering the semantics of a word in the…</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story">
+						<a class="ks-story-link" href="2022/10/01/Pixel-Recurrent-Neural-Network.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">October 2022</span>
+								<span class="ks-story-title">Pixel Recurrent Neural Network</span>
+								<span class="ks-story-dek">The LSTM contains two components: state-to-state and input-to-state. For input-to-state component, the Row LSTM will take the whole input map and apply k1…</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story">
+						<a class="ks-story-link" href="2022/09/30/additive-attention-methods.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">September 2022</span>
+								<span class="ks-story-title">Sequence to Sequence Learning with Neural Networks</span>
+								<span class="ks-story-dek">Second it stacks multiple LSTM layers rather than one by having multiple hidden states for a single timestep. The increase of the parameter numbers help the…</span>
+							</div>
+						</a>
+					</li>
+					<li class="ks-story">
+						<a class="ks-story-link" href="2022/09/25/sequence-to-sequence-models.html">
+							<div class="ks-story-body">
+								<span class="ks-story-kicker">September 2022</span>
+								<span class="ks-story-title">Sequence to Sequence Learning with Neural Networks</span>
+								<span class="ks-story-dek">First is using separated LSTMs for encoder and decoder rather than a straight end to end design. This indirect idea makes it possible to train multiple…</span>
+							</div>
+						</a>
+					</li>
+			</ol>
 		</div>
-	</body>
+	</div>
+	<script src="../assets/js/jquery.min.js"></script>
+	<script src="../assets/js/browser.min.js"></script>
+	<script src="../assets/js/breakpoints.min.js"></script>
+	<script src="../assets/js/util.js"></script>
+	<script src="../assets/js/main.js"></script>
+</body>
 </html>

@@ -36,7 +36,7 @@
 <body class="is-preload kn-page">
 	<div id="wrapper">
 		<header id="header">
-			<h1><a href="../../index.html">Jipeng Sun</a></h1>
+			<p class="site-title"><a href="../../index.html">Jipeng Sun</a></p>
 			<nav class="links">
 				<ul>
 					<li><a href="../../index.html">Home</a></li>
@@ -65,13 +65,13 @@
 		</section>
 		<div id="main">
 			<article class="post">
-				<header><div class="title"><h2>Flow Matching</h2></div></header>
+				<header><div class="title"><h1>Flow Matching</h1></div></header>
 				<p class="kn-back"><a href="../../knowledge-share.html">&larr; Back to Knowledge Share</a></p>
 				<div class="kn-body">
 				<p>Flow matching is a highly effective mathematical framework for generative modeling. It serves as an alternative to Diffusion Models and provides a more intuitive, efficient way to train Continuous Normalizing Flows (CNFs).</p>
 				<p>At its core, flow matching aims to learn a <strong>vector field</strong> that gradually transforms a simple, known probability distribution (like standard Gaussian noise) into a complex, unknown distribution (like a dataset of high-resolution images).</p>
 				<p>Here is a detailed breakdown of the mathematics behind flow matching.</p>
-				<figure class="kn-figure"><img src="../assets/50aa8602-3d0d-4a1b-913b-38501af45d5f.png" alt="" loading="lazy" /></figure>
+				<figure class="kn-figure"><img src="../assets/50aa8602-3d0d-4a1b-913b-38501af45d5f.png" alt="Figure from Flow Matching" loading="lazy" /></figure>
 				<hr />
 				<h3>1. The Core Objective: Probability Paths and Vector Fields</h3>
 				<p>In generative modeling, we want to transform a simple base distribution, \(p_0(x)\) (typically noise), into our target data distribution, \(p_1(x)\).</p>
@@ -102,7 +102,7 @@
 				<p class="kn-math-display">\[\mathcal{L}_{OT-CFM}(\theta) = \mathbb{E}_{t \sim \mathcal{U}(0,1), x_0 \sim p_0, x_1 \sim p_1} [||v_\theta(x_t, t) - (x_1 - x_0)||^2]\]</p>
 				<p>During training, the neural network predicts the direction \((x_1 - x_0)\) given the intermediate noisy point \(x_t\) and the time \(t\). During inference, we start with pure noise, step through the ODE solver guided by the network's velocity predictions, and arrive at a newly generated data point.</p>
 				<hr />
-				<figure class="kn-figure"><img src="../assets/e38b2253-74ab-4078-84c1-28e3faa008fe.png" alt="" loading="lazy" /></figure>
+				<figure class="kn-figure"><img src="../assets/e38b2253-74ab-4078-84c1-28e3faa008fe.png" alt="Figure from “4. Optimal Transport (OT) Flow Matching” in Flow Matching" loading="lazy" /></figure>
 				</div>
 			</article>
 		</div>

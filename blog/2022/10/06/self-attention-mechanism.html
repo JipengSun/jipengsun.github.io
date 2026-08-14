@@ -1,0 +1,97 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<title>Self-attention with Relative Position Representations — Paper Notes — Jipeng Sun</title>
+	<!-- seo:auto:start -->
+	<meta name="description" content="Absolute position encodes the relative position information based on the fact that for any fixed position offset k, $$sin((pos+k)/c)$$ can be acquired by the…" />
+	<meta name="author" content="Jipeng Sun" />
+	<meta name="robots" content="index, follow" />
+	<link rel="canonical" href="https://jipengsun.github.io/blog/2022/10/06/self-attention-mechanism" />
+	<meta property="og:type" content="article" />
+	<meta property="og:site_name" content="Jipeng Sun — Paper Notes" />
+	<meta property="og:title" content="Self-attention with Relative Position Representations" />
+	<meta property="og:description" content="Absolute position encodes the relative position information based on the fact that for any fixed position offset k, $$sin((pos+k)/c)$$ can be acquired by the…" />
+	<meta property="og:url" content="https://jipengsun.github.io/blog/2022/10/06/self-attention-mechanism" />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Self-attention with Relative Position Representations" />
+	<meta name="twitter:description" content="Absolute position encodes the relative position information based on the fact that for any fixed position offset k, $$sin((pos+k)/c)$$ can be acquired by the…" />
+	<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Self-attention with Relative Position Representations","description":"Absolute position encodes the relative position information based on the fact that for any fixed position offset k, $$sin((pos+k)/c)$$ can be acquired by the…","url":"https://jipengsun.github.io/blog/2022/10/06/self-attention-mechanism","mainEntityOfPage":"https://jipengsun.github.io/blog/2022/10/06/self-attention-mechanism","inLanguage":"en","datePublished":"2022-10-06","dateModified":"2022-10-06","author":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"publisher":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"isPartOf":{"@type":"Blog","name":"Jipeng Sun — Paper Notes","url":"https://jipengsun.github.io/blog/index.html"}}</script>
+	<!-- seo:auto:end -->
+	<link rel="stylesheet" href="../../../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../../../assets/css/knowledge-article.css" />
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-LCC4R0HD24"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'G-LCC4R0HD24');
+	</script>
+	<script src="../../../../assets/js/ga-events.js"></script>
+</head>
+<body class="is-preload kn-page">
+	<div id="wrapper">
+		<header id="header">
+			<p class="site-title"><a href="../../../../index.html">Jipeng Sun</a></p>
+			<nav class="links">
+				<ul>
+					<li><a href="../../../../index.html">Home</a></li>
+					<li><a href="../../../../research.html">Research</a></li>
+					<li><a href="../../../../knowledge-share.html">Knowledge Share</a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course">VR/AR Course</a></li>
+				</ul>
+			</nav>
+			<nav class="main">
+				<ul>
+					<li class="menu"><a class="fa-bars" href="#menu">Menu</a></li>
+				</ul>
+			</nav>
+		</header>
+		<section id="menu">
+			<section>
+				<ul class="links">
+					<li><a href="../../../../index.html"><h3>Home</h3><p>Jipeng Sun's Homepage</p></a></li>
+					<li><a href="../../../../research.html"><h3>Research</h3><p>Publications &amp; Papers</p></a></li>
+					<li><a href="../../../../knowledge-share.html"><h3>Knowledge Share</h3><p>Study notes</p></a></li>
+					<li><a href="../../../../blog/index.html"><h3>Paper Notes Archive</h3><p>2022 paper reviews</p></a></li>
+				</ul>
+			</section>
+		</section>
+		<div id="main">
+			<article class="post">
+				<header><div class="title"><h1>Self-attention with Relative Position Representations</h1></div></header>
+				<p class="kn-back"><a href="../../../../blog/index.html">&larr; Paper Notes archive</a>
+					<span class="kn-date">October 6, 2022</span></p>
+				<div class="kn-body">
+<h2>Self-attention with Relative Position Representations</h2>
+<p>Shaw, Peter and Uszkoreit, Jakob and Vaswani, Ashish NAACL 2018</p>
+<h3>Summary:</h3>
+<p>The relative positional encoding is the to use the relative position offset relationship to encode the position of the token rather than use the absolute position representation. The purpose of the position encoding is to add position information into the input tokens since Transformer use fully connected network so that the model could distinguish what is the difference between the same word in different position and learn the possible relative position semantics relationship of a type of sequence. To fulfill these two goals, absolute position is capable but not perfect:</p>
+<p>Absolute position encodes the relative position information based on the fact that for any fixed position offset k, $$sin((pos+k)/c)$$ can be acquired by the linear (rotation) operation on $$sin(pos/c)$$. However, this rotation matrix is implicit and hard for model to fit.</p>
+<p>For any long output sequence that is longer than the training sequence, the absolute position is totally new for the model and thus can’t easily reuse the learned positional information. These two disadvantages (especially the second) make the model difficult to achieve good performance on long sequence generation tasks (music, paragraph, etc). Thus, a way to directly modeling the relative position for each token is emerging.</p>
+<p>The Shaw’s solution is to create a N*N*D tensor to store the relative position information compared with the N*D tensor in abs position. (Notice that there is more space) The modeling way is quite straightforward, for every token, a relative position of other N tokens is encoded into a N*D tensor. The token itself is the center with the position index as k, while the range of the rest of the positions indice are $$[0,2k+1]$$. The k here is the window size. For any tokens that go out of the window size, the position encoding index will be 0 (left) or 2k+1(right). By this setting, every token has a relative position relationship mapping with others and the problem now is to combine this N*N*D tensor into the computation flow since the previous N*D tensor addition operation won’t fit for such size.</p>
+<p>To combine the relative position representation into the flow, they modify two operations:</p>
+<p>Previously, the final output value is the attention-based weighted sum of different tokens semantics embeddings. Now, it modified to be the weighted sum of different tokens semantics + relative position embeddings.</p>
+<p>When calculating the attention energy between token i and token j, previously we get it by dot product the query i and key j vectors, now, we change to add the relative positional encoding ij onto the key vector j first and then multiply with the query i. So that it has one more term for dot product the positional encoding with the query vector. Somehow it is combined, but this term doesn’t make so much sense to me. (Why not add the attention term directly here)</p>
+<h3>Strength:</h3>
+<p>The relative position provides more explicit position encoding information to the model and thus brings better performance. The further modification of the relative position encoding by Huang makes it easier to generalize to longer sequence due to the save of the memory space. In some way, it mitigate the extra memory usage drawback of this approach.</p>
+<h3>Critique:</h3>
+<p>In the Music Transformer developed by Huang et al, the space of relative position encoding is further shrunk to N*D by smartly reusing (skewing) the Q*E matrix. This shows a N fold memory saving and thus could add more heads inside. Even though the information flow is unchanged.</p>
+				</div>
+				<aside class="kn-related">
+					<h2>More paper notes</h2>
+					<ul class="kn-link-list"><li><a href="../../../../blog/2022/10/10/BERT-language-model.html">BERT Language Model</a></li><li><a href="../../../../blog/2022/10/03/Transformer.html">Attention Is All You Need</a></li><li><a href="../../../../blog/2022/10/01/Pixel-Recurrent-Neural-Network.html">Pixel Recurrent Neural Network</a></li></ul>
+				</aside>
+				<p class="kn-back"><a href="../../../../knowledge-share.html">
+					Newer notes are published in Knowledge Share &rarr;</a></p>
+			</article>
+		</div>
+	</div>
+	<script src="../../../../assets/js/jquery.min.js"></script>
+	<script src="../../../../assets/js/browser.min.js"></script>
+	<script src="../../../../assets/js/breakpoints.min.js"></script>
+	<script src="../../../../assets/js/util.js"></script>
+	<script src="../../../../assets/js/main.js"></script>
+</body>
+</html>

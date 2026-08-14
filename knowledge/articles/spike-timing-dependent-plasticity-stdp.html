@@ -36,7 +36,7 @@
 <body class="is-preload kn-page">
 	<div id="wrapper">
 		<header id="header">
-			<h1><a href="../../index.html">Jipeng Sun</a></h1>
+			<p class="site-title"><a href="../../index.html">Jipeng Sun</a></p>
 			<nav class="links">
 				<ul>
 					<li><a href="../../index.html">Home</a></li>
@@ -65,7 +65,7 @@
 		</section>
 		<div id="main">
 			<article class="post">
-				<header><div class="title"><h2>Spike-Timing-Dependent Plasticity (STDP)</h2></div></header>
+				<header><div class="title"><h1>Spike-Timing-Dependent Plasticity (STDP)</h1></div></header>
 				<p class="kn-back"><a href="../../knowledge-share.html">&larr; Back to Knowledge Share</a></p>
 				<div class="kn-body">
 				<p>Spike-Timing-Dependent Plasticity (STDP) is a biologically plausible learning rule that adjusts the strength of synaptic connections based on the relative timing of action potentials (spikes) from pre-synaptic and post-synaptic neurons. It introduces strict temporal asymmetry to the classic Hebbian postulate ("cells that fire together, wire together").</p>
@@ -76,7 +76,7 @@
 				<p class="kn-math-display">\[\Delta w(\Delta t) = \begin{cases} A_+ e^{-\frac{\Delta t}{\tau_+}} & \text{if} \quad \Delta t > 0 \\ -A_- e^{\frac{\Delta t}{\tau_-}} & \text{if} \quad \Delta t < 0 \\ 0 & \text{if} \quad \Delta t = 0 \end{cases}\]</p>
 				<h3>Variable Definitions</h3>
 				<ul><li>\(A_+\) and \(A_-\): The maximum amplitude of synaptic change. These represent the learning rates for potentiation (strengthening) and depression (weakening).</li><li>\(\tau_+\) and \(\tau_-\): The time constants that define the width of the learning window. They dictate how quickly the effect of a spike decays over time, typically acting on the order of 10 to 20 milliseconds.</li><li>\(t_{\text{pre}}\) and \(t_{\text{post}}\): The exact timestamps of the pre-synaptic and post-synaptic spikes.</li></ul>
-				<figure class="kn-figure"><img src="../assets/5bd9c771-7192-4ae3-ac1c-3671d938afe6.png" alt="" loading="lazy" /></figure>
+				<figure class="kn-figure"><img src="../assets/5bd9c771-7192-4ae3-ac1c-3671d938afe6.png" alt="Figure from “Variable Definitions” in Spike-Timing-Dependent Plasticity (STDP)" loading="lazy" /></figure>
 				<h3>The Biological Mechanisms</h3>
 				<ol><li><strong>Long-Term Potentiation (LTP) [</strong>\(\Delta t &gt; 0\)<strong>]:</strong> If the pre-synaptic neuron fires *just before* the post-synaptic neuron, it strongly implies a causal relationship (the pre-synaptic spike contributed to the post-synaptic spike). The synapse is strengthened (\(\Delta w &gt; 0\)). The tighter the temporal correlation, the stronger the potentiation.</li><li><strong>Long-Term Depression (LTD) [</strong>\(\Delta t &lt; 0\)<strong>]:</strong> If the post-synaptic neuron fires *before* the pre-synaptic neuron, the pre-synaptic spike could not have caused the post-synaptic spike. This anti-causal relationship weakens the synapse (\(\Delta w &lt; 0\)).</li></ol>
 				</div>

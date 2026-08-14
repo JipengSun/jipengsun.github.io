@@ -44,7 +44,7 @@ def main() -> None:
         raw = path.read_text(encoding="utf-8")
         title, body = extract_from_mcp_view(raw)
         body, n_img = mirror_images_in_markdown(body)
-        inner = notion_body_to_html(body)
+        inner = notion_body_to_html(body, title)
         patched = "\t\t\t\t" + inner.replace("\n", "\n\t\t\t\t")
         html_out = build_full_page(title, patched, slug)
         (out_dir / f"{slug}.html").write_text(html_out, encoding="utf-8")

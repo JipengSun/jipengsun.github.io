@@ -36,7 +36,7 @@
 <body class="is-preload kn-page">
 	<div id="wrapper">
 		<header id="header">
-			<h1><a href="../../index.html">Jipeng Sun</a></h1>
+			<p class="site-title"><a href="../../index.html">Jipeng Sun</a></p>
 			<nav class="links">
 				<ul>
 					<li><a href="../../index.html">Home</a></li>
@@ -65,13 +65,13 @@
 		</section>
 		<div id="main">
 			<article class="post">
-				<header><div class="title"><h2>Vision Transformer (ViT)</h2></div></header>
+				<header><div class="title"><h1>Vision Transformer (ViT)</h1></div></header>
 				<p class="kn-back"><a href="../../knowledge-share.html">&larr; Back to Knowledge Share</a></p>
 				<div class="kn-body">
 				<p>The Vision Transformer (ViT) represents a massive paradigm shift in computer vision. Introduced by Google in 2020 (<a href="https://arxiv.org/pdf/2010.11929" target="_blank" rel="noopener">"An Image is Worth 16x16 Words</a>"), it completely removes convolutional layers (CNNs) and applies a standard Natural Language Processing (NLP) Transformer directly to images.</p>
 				<p>The core philosophy of ViT is to treat an image exactly like a sentence, where the "words" (tokens) are simply small, flattened patches of the image.</p>
 				<p>Here is a breakdown of the architecture and the underlying tensor math, starting from the raw image input.</p>
-				<figure class="kn-figure"><img src="../assets/fa3d79ce-07ef-4692-a642-47dff5893e69.png" alt="" loading="lazy" /></figure>
+				<figure class="kn-figure"><img src="../assets/fa3d79ce-07ef-4692-a642-47dff5893e69.png" alt="Figure from Vision Transformer (ViT)" loading="lazy" /></figure>
 				<h3>1. Patch Extraction and Flattening</h3>
 				<p>Standard Transformers expect a 1D sequence of token embeddings as input, but an image is a 2D spatial grid. To bridge this, ViT splits the image into a grid of non-overlapping patches.</p>
 				<p>Given an input image \(x \in \mathbb{R}^{H \times W \times C}\) (Height, Width, Channels), we extract patches of size \(P \times P\). This creates a sequence of \(N\) flattened 2D patches \(x_p \in \mathbb{R}^{N \times (P^2 \cdot C)}\), where the sequence length \(N\) is calculated as:</p>

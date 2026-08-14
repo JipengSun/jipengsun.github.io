@@ -1,0 +1,111 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<title>StyleGAN — Paper Notes — Jipeng Sun</title>
+	<!-- seo:auto:start -->
+	<meta name="description" content="StyleGAN: A Style-Based Generator Architecture for Generative Adversarial Networks" />
+	<meta name="author" content="Jipeng Sun" />
+	<meta name="robots" content="index, follow" />
+	<link rel="canonical" href="https://jipengsun.github.io/blog/2022/11/20/styleGAN" />
+	<meta property="og:type" content="article" />
+	<meta property="og:site_name" content="Jipeng Sun — Paper Notes" />
+	<meta property="og:title" content="StyleGAN" />
+	<meta property="og:description" content="StyleGAN: A Style-Based Generator Architecture for Generative Adversarial Networks" />
+	<meta property="og:url" content="https://jipengsun.github.io/blog/2022/11/20/styleGAN" />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="StyleGAN" />
+	<meta name="twitter:description" content="StyleGAN: A Style-Based Generator Architecture for Generative Adversarial Networks" />
+	<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"StyleGAN","description":"StyleGAN: A Style-Based Generator Architecture for Generative Adversarial Networks","url":"https://jipengsun.github.io/blog/2022/11/20/styleGAN","mainEntityOfPage":"https://jipengsun.github.io/blog/2022/11/20/styleGAN","inLanguage":"en","datePublished":"2022-11-20","dateModified":"2022-11-20","author":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"publisher":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"isPartOf":{"@type":"Blog","name":"Jipeng Sun — Paper Notes","url":"https://jipengsun.github.io/blog/index.html"}}</script>
+	<!-- seo:auto:end -->
+	<link rel="stylesheet" href="../../../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../../../assets/css/knowledge-article.css" />
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-LCC4R0HD24"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'G-LCC4R0HD24');
+	</script>
+	<script src="../../../../assets/js/ga-events.js"></script>
+</head>
+<body class="is-preload kn-page">
+	<div id="wrapper">
+		<header id="header">
+			<p class="site-title"><a href="../../../../index.html">Jipeng Sun</a></p>
+			<nav class="links">
+				<ul>
+					<li><a href="../../../../index.html">Home</a></li>
+					<li><a href="../../../../research.html">Research</a></li>
+					<li><a href="../../../../knowledge-share.html">Knowledge Share</a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course">VR/AR Course</a></li>
+				</ul>
+			</nav>
+			<nav class="main">
+				<ul>
+					<li class="menu"><a class="fa-bars" href="#menu">Menu</a></li>
+				</ul>
+			</nav>
+		</header>
+		<section id="menu">
+			<section>
+				<ul class="links">
+					<li><a href="../../../../index.html"><h3>Home</h3><p>Jipeng Sun's Homepage</p></a></li>
+					<li><a href="../../../../research.html"><h3>Research</h3><p>Publications &amp; Papers</p></a></li>
+					<li><a href="../../../../knowledge-share.html"><h3>Knowledge Share</h3><p>Study notes</p></a></li>
+					<li><a href="../../../../blog/index.html"><h3>Paper Notes Archive</h3><p>2022 paper reviews</p></a></li>
+				</ul>
+			</section>
+		</section>
+		<div id="main">
+			<article class="post">
+				<header><div class="title"><h1>StyleGAN</h1></div></header>
+				<p class="kn-back"><a href="../../../../blog/index.html">&larr; Paper Notes archive</a>
+					<span class="kn-date">November 20, 2022</span></p>
+				<div class="kn-body">
+<p><strong>StyleGAN: A Style-Based Generator Architecture for Generative Adversarial Networks</strong></p>
+<p>Karras, Tero and Laine, Samuli and Aila, Timo</p>
+<p>CVPR 2019</p>
+<h2>Summary:</h2>
+<p>StyleGAN demonstrated astonishing controllable face generation results in 2019 which somehow broke the stereotype that GAN was unfit for generating photorealistic results. The revision of the StyleGAN on the traditional GAN structure mainly happened in the generator G part, where it adds up an extra mapping network before the synthesis network so that the latent space Z is no longer directly mapping to the image feature space. In the paper they argued and experimented on many insightful hypothesis they proposed, which helped readers understand the motivation behind the design and the interpretation of the GAN.</p>
+<p>The style-based generator took the latent variable z as input and first mapped it to the W space, where w later provided the scaling and offset control on the adaptive instance normalization (AdaIN) operations. For the synthesis network, the backbone network is the progressive GAN, which upscales the feature map size progressively. However, several differences from the building blocks of ProGAN are: the input is no longer the latent z but a constant layer; noise will be added on the convolved feature maps at different scales; and AdaIN operatons are applied on all noised convolved feature maps. Under this setting, the noise is added into different scale of the generation process which could better model the stochastic variation features and the w will control the generation in different scales in a spatially invariant way, which provides disentanglement in different levels. Below, I plan to answer several core questions.</p>
+<p><strong>Why mapping to w space first rather than directly using z space?</strong></p>
+<p>The training set feature space could lack some style combination (long hair + man), which inherently doesn’t support a well-trained generation for such combination. However, the z space has a distribution to sample (normal distribution), it has to map the z space to the image space which needs some non-linearity to expand that original image space. Non-linearity results in entanglement. The w space here is not sampled with any fixed distribution since the the sampling intensity is induced by the learned piecewise continuous mapping, which can adapt to the image space.</p>
+<p><strong>Why would AdaIN work?</strong></p>
+<p>The AdaIN is to normalize the channel first and then applies scale and bias based on the style from w. The new per-channel statistics, as dictated by the style, modify the relative importance of features for the subsequent convolution, but don’t depend on the original statistics due to the normalization. Thus each style only control one convolution before being overridden by the next AdaIN. Thus, the style is localized so that modifying a specific subset of the styles can be expected to affect only certain aspects of the image. This help the network disentangle the different features.</p>
+<p><strong>Why adding explicit noise before every AdaIN?</strong></p>
+<p>There is pressure for NN to introduce new content in all scales as soon as possible. The easiest way for the networks is taking a fresh set of noise for all the layers as input feature so that there is no incentive to generate the stochastic effects from earlier activations.</p>
+<p><strong>Why and how does the style mixing work?</strong></p>
+<p>The mapping process can be thought as a way to draw samples for each style from a learned distribution and the synthesis network as a way to generate a novel image based on a collection of styles. The earlier the style affects larger scale of images due to the ProGAN upsampling. Thus, coarse resolution style maps to global features (pose, hair style, face shape etc.) and high resolution style maps to finer details such as color scheme and microstructure. Due to the disentanglement property we introduced before, they can just linearly select different level of styles from different latent vectors and combine them to different level to achieve the effect they want.</p>
+<p><strong>Why and how does the network automatically separate the global effects from stochasticity?</strong></p>
+<p>Suppose if network relies on the noise to generate the high level information (pose, face, etc.), the spatially inconsistent decision from noise would be penalized by the discriminator. Thus, the network learns to use global and local channels appropriately without explicit guidance.</p>
+<h2>Strength:</h2>
+<p>The written of this paper is very intuitive, insightful, and thorough. The interpretation of the design motivation of such NN architecture clearly showed the deep thinking of the authors.</p>
+<p>It provides nice disentanglement property of the style and highly photorealistic results. Besides, it also provides two metrics for measuring the perceptual smoothness and linear separability. Which is also very helpful for future works.</p>
+<h2>Critique:</h2>
+<p>The noise adding near the final layer might cause the ‘white dots noise’ effects on the generated images. Is it reasonable to avoid noise adding to the final part? Besides, is it reasonable to keep using uncontrolled AdaIN layer even for the later layers? The goal of the later layers is to generate local features of the images, which is inconsistent with the AdaIN’s property to override the previous layer. The high level feature should maintain and it is more reasonable to explicitly decrease the weight w to smaller and smaller when it comes down to the final layers.</p>
+<h2>Resources:</h2>
+<p>I actualy strongly recommend to read the original paper several times rather than looking for other online explanation. It is actually not a good manner to put so much deep discussion distributed to all the sections considering the readability of writing, but the authors of this paper think things so deeply and it contains very thorough design motivation. Reading such paper is like listening a master teaching.</p>
+<p><strong>Video:</strong></p>
+<p>A good entry-level introduction. Lack of depth.</p>
+<p><a href="https://www.youtube.com/watch?v=4LNO8nLxF4Y&amp;ab_channel=AIBites" rel="noopener">https://www.youtube.com/watch?v=4LNO8nLxF4Y&amp;ab_channel=AIBites</a></p>
+<p><strong>Code:</strong></p>
+<p><a href="https://github.com/NVlabs/stylegan" rel="noopener">https://github.com/NVlabs/stylegan</a></p>
+				</div>
+				<aside class="kn-related">
+					<h2>More paper notes</h2>
+					<ul class="kn-link-list"><li><a href="../../../../blog/2022/11/22/VAE.html">VAE: Variational Auto Encoder</a></li><li><a href="../../../../blog/2022/11/19/GAN.html">GAN: Generative Adversarial Nets</a></li><li><a href="../../../../blog/2022/11/13/GLIDE.html">GLIDE: Text Guided Photorealistic Image Generation and Editing using Diffusion</a></li></ul>
+				</aside>
+				<p class="kn-back"><a href="../../../../knowledge-share.html">
+					Newer notes are published in Knowledge Share &rarr;</a></p>
+			</article>
+		</div>
+	</div>
+	<script src="../../../../assets/js/jquery.min.js"></script>
+	<script src="../../../../assets/js/browser.min.js"></script>
+	<script src="../../../../assets/js/breakpoints.min.js"></script>
+	<script src="../../../../assets/js/util.js"></script>
+	<script src="../../../../assets/js/main.js"></script>
+</body>
+</html>

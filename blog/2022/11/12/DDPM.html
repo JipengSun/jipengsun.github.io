@@ -1,0 +1,103 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<title>DDPM: Diffusion Model for Image Generation — Paper Notes — Jipeng Sun</title>
+	<!-- seo:auto:start -->
+	<meta name="description" content="Come down to the implementation level, there are several modules to implement diffusion model: the noise scheduler, which sequentially adds up noise; the…" />
+	<meta name="author" content="Jipeng Sun" />
+	<meta name="robots" content="index, follow" />
+	<link rel="canonical" href="https://jipengsun.github.io/blog/2022/11/12/DDPM" />
+	<meta property="og:type" content="article" />
+	<meta property="og:site_name" content="Jipeng Sun — Paper Notes" />
+	<meta property="og:title" content="DDPM: Diffusion Model for Image Generation" />
+	<meta property="og:description" content="Come down to the implementation level, there are several modules to implement diffusion model: the noise scheduler, which sequentially adds up noise; the…" />
+	<meta property="og:url" content="https://jipengsun.github.io/blog/2022/11/12/DDPM" />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="DDPM: Diffusion Model for Image Generation" />
+	<meta name="twitter:description" content="Come down to the implementation level, there are several modules to implement diffusion model: the noise scheduler, which sequentially adds up noise; the…" />
+	<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"DDPM: Diffusion Model for Image Generation","description":"Come down to the implementation level, there are several modules to implement diffusion model: the noise scheduler, which sequentially adds up noise; the…","url":"https://jipengsun.github.io/blog/2022/11/12/DDPM","mainEntityOfPage":"https://jipengsun.github.io/blog/2022/11/12/DDPM","inLanguage":"en","datePublished":"2022-11-12","dateModified":"2022-11-12","author":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"publisher":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"isPartOf":{"@type":"Blog","name":"Jipeng Sun — Paper Notes","url":"https://jipengsun.github.io/blog/index.html"}}</script>
+	<!-- seo:auto:end -->
+	<link rel="stylesheet" href="../../../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../../../assets/css/knowledge-article.css" />
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-LCC4R0HD24"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'G-LCC4R0HD24');
+	</script>
+	<script src="../../../../assets/js/ga-events.js"></script>
+</head>
+<body class="is-preload kn-page">
+	<div id="wrapper">
+		<header id="header">
+			<p class="site-title"><a href="../../../../index.html">Jipeng Sun</a></p>
+			<nav class="links">
+				<ul>
+					<li><a href="../../../../index.html">Home</a></li>
+					<li><a href="../../../../research.html">Research</a></li>
+					<li><a href="../../../../knowledge-share.html">Knowledge Share</a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course">VR/AR Course</a></li>
+				</ul>
+			</nav>
+			<nav class="main">
+				<ul>
+					<li class="menu"><a class="fa-bars" href="#menu">Menu</a></li>
+				</ul>
+			</nav>
+		</header>
+		<section id="menu">
+			<section>
+				<ul class="links">
+					<li><a href="../../../../index.html"><h3>Home</h3><p>Jipeng Sun's Homepage</p></a></li>
+					<li><a href="../../../../research.html"><h3>Research</h3><p>Publications &amp; Papers</p></a></li>
+					<li><a href="../../../../knowledge-share.html"><h3>Knowledge Share</h3><p>Study notes</p></a></li>
+					<li><a href="../../../../blog/index.html"><h3>Paper Notes Archive</h3><p>2022 paper reviews</p></a></li>
+				</ul>
+			</section>
+		</section>
+		<div id="main">
+			<article class="post">
+				<header><div class="title"><h1>DDPM: Diffusion Model for Image Generation</h1></div></header>
+				<p class="kn-back"><a href="../../../../blog/index.html">&larr; Paper Notes archive</a>
+					<span class="kn-date">November 12, 2022</span></p>
+				<div class="kn-body">
+<p><strong>DDPM: Denoising Diffusion Probabilistic Models</strong></p>
+<p>Ho, Jonathan and Jain, Ajay and Abbeel, Pieter</p>
+<p>NIPS 2020</p>
+<h2>Summary:</h2>
+<p>The denoising diffusion probabilistic model is an extended diffusion version to the 2015 paper on image generation area. The model is inspired by consideration from nonequilibrium thermodynamics, where an original distribution can be gradually and slowly destroyed by iterative diffusion process. To apply it in the image dataset, we could gradually add up small Gaussian noise to the original image. With enough time step T, we could get a pure Gaussian noise image. So if we could train a model to recover the previous distribution given by the later noised distribution and time step, we could denoise the image by one step. The goal of the model here is to understand how much noise is added at that timestep for a given dataset. Furthermore, if we continue to denoise the final generated noise image at timestep T with that trained model T times, we would expect to get the original image at timestep 0. In that case, we could generate an image from pure white noise.</p>
+<p>Come down to the implementation level, there are several modules to implement diffusion model: the noise scheduler, which sequentially adds up noise; the trained NN (U-Net), which learns to denoise the image given a time step; and a timestep encoding, which adds sequential information to the image input.</p>
+<p>The noise scheduler suppose the noise adding process as a Markov process, which the noise add at the current timestep only depends on the previous one timestep image. So given an input image, the noise to add is a Gaussian distribution with mean as a sqrt(1-beta_t) scaled previous image, and beta_t I variance. So the beta_t here can be thought as a measurement of the noise level. If beta_t is 0 the image of next step will be same as the current step; if beta_t is 1 the next image will be pure Gaussian noise. It can be mathematically proofed that if we linearly increase the beta_t from 0 to 0.1 for around 1000 time steps, the final generated image would be a standard Gaussian distribution. Also, if we could precompute the noisy images for all timesteps and calculate the cumulated product of 1-beta_t term for all time steps, we can directly generated the noisy image of arbitrary timestep without doing that sequential noising process again, which makes the retrieval of the noisy image at any timestep really fast.</p>
+<p>The U-Net architecture is chosen to be the denoise NN since the added noise of the image has the same dimension with the original image size. Besides, because the U-Net structure is not recurrent, the denoise process for all the timestep noisy image will always share same U-Net weights, thus, a time-embedding to the input data is needed to notify the U-Net which timestep it is since the added noise level depends on the timestep information. So during training, the timestep T can be sampled randomly so that to recover the original image, they first retrieve the noise image at T timestep with the forward model we explained above, and then sequentially push the output image from later timestep with timestep encoding to the U-Net T times to get the original image estimation. With the estimation and the original image, the paper applied L2 norm as loss function to back propagate the error to make the NN denoise better next time.</p>
+<h2>Strength:</h2>
+<p>The method achieved SOTA image generation quality. The generated images have same dimension as training dataset images, I guess the magics might lie in this lossless dimensionality. No compression to the latent space might maintain as much detail as possible since the task of the NN is denoising based on a given dataset distribution. They don’t need to bother the compression and generation part. In the training stage, what they do is to remember what might be a good next step to denoise out the images they have seen before in the previous training dataset. In the inference stage,  based on their memory, they try to denoise out an similar image they remembered in the training dataset from a pure Gaussian noise. There is no need for the model to compress the latent space like VAE or GAN.</p>
+<h2>Critique:</h2>
+<p>The inference phase needs to go 1000 time steps which is time-consuming. Also, the controllability here is modeled on interpolation, which requires more semantics level elegant way.</p>
+<h2>Useful Resources:</h2>
+<p><strong><em>Video:</em></strong></p>
+<p><a href="https://www.youtube.com/watch?v=a4Yfz2FxXiY&amp;ab_channel=DeepFindr" rel="noopener">https://www.youtube.com/watch?v=a4Yfz2FxXiY&amp;ab_channel=DeepFindr</a></p>
+<p><strong><em>Blogs:</em></strong></p>
+<p><a href="https://www.assemblyai.com/blog/diffusion-models-for-machine-learning-introduction/" rel="noopener">https://www.assemblyai.com/blog/diffusion-models-for-machine-learning-introduction/</a></p>
+<p><a href="https://lilianweng.github.io/posts/2021-07-11-diffusion-models/#forward-diffusion-process" rel="noopener">https://lilianweng.github.io/posts/2021-07-11-diffusion-models/#forward-diffusion-process</a></p>
+<p><strong><em>Code:</em></strong></p>
+<p><a href="https://colab.research.google.com/drive/1sjy9odlSSy0RBVgMTgP7s99NXsqglsUL?usp=sharing" rel="noopener">https://colab.research.google.com/drive/1sjy9odlSSy0RBVgMTgP7s99NXsqglsUL?usp=sharing</a></p>
+				</div>
+				<aside class="kn-related">
+					<h2>More paper notes</h2>
+					<ul class="kn-link-list"><li><a href="../../../../blog/2022/11/13/GLIDE.html">GLIDE: Text Guided Photorealistic Image Generation and Editing using Diffusion</a></li><li><a href="../../../../blog/2022/11/06/Hogel-Free-Holography.html">Hogel-free Holography</a></li><li><a href="../../../../blog/2022/11/01/DALLE.html">DALL-E</a></li></ul>
+				</aside>
+				<p class="kn-back"><a href="../../../../knowledge-share.html">
+					Newer notes are published in Knowledge Share &rarr;</a></p>
+			</article>
+		</div>
+	</div>
+	<script src="../../../../assets/js/jquery.min.js"></script>
+	<script src="../../../../assets/js/browser.min.js"></script>
+	<script src="../../../../assets/js/breakpoints.min.js"></script>
+	<script src="../../../../assets/js/util.js"></script>
+	<script src="../../../../assets/js/main.js"></script>
+</body>
+</html>

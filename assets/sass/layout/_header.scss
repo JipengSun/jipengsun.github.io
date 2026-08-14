@@ -39,11 +39,19 @@
 			}
 		}
 
-		h1 {
+		// .site-title is the non-heading variant used on pages whose <h1> belongs to
+		// the page's own subject rather than to the site name.
+		h1, .site-title {
 			height: inherit;
 			line-height: inherit;
 			padding: 0 0 0 1.5em;
 			white-space: nowrap;
+			color: _palette(fg-bold);
+			font-family: _font(family-heading);
+			font-weight: _font(weight-heading);
+			letter-spacing: 0.25em;
+			margin: 0;
+			text-transform: uppercase;
 
 			a {
 				font-size: 0.7em;
@@ -170,7 +178,7 @@
 			height: 2.75em;
 			line-height: 2.75em;
 
-			h1 {
+			h1, .site-title {
 				padding: 0 0 0 1em;
 			}
 
