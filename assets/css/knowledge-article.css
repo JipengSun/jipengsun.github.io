@@ -162,63 +162,6 @@ body.kn-page #main .post {
 	margin-top: 0.35em;
 }
 
-/* Archived paper notes: publication date and cross-links to neighbouring posts. */
-.kn-date {
-	color: #7c7c7c;
-	font-weight: 400;
-}
-
-.kn-date::before {
-	content: "·";
-	margin: 0 0.5em;
-	color: #b8b8b8;
-}
-
-.kn-related {
-	margin: 2.5em 0 1.5em;
-	padding-top: 1.5em;
-	border-top: 1px solid rgba(160, 160, 160, 0.3);
-}
-
-.kn-related h2 {
-	font-family: Raleway, Helvetica, sans-serif;
-	font-size: 1.05em;
-	font-weight: 800;
-	margin: 0 0 0.75em;
-}
-
-.kn-related .kn-link-list {
-	list-style: none;
-	padding: 0;
-	margin: 0;
-	border: 1px solid rgba(160, 160, 160, 0.25);
-	border-radius: 2px;
-	overflow: hidden;
-}
-
-.kn-related .kn-link-list li {
-	margin: 0;
-	padding-left: 0;
-	border-bottom: 1px solid rgba(160, 160, 160, 0.2);
-}
-
-.kn-related .kn-link-list li:last-child {
-	border-bottom: none;
-}
-
-.kn-related .kn-link-list a {
-	display: block;
-	padding: 0.7em 1em;
-	color: #3c3b3b;
-	border-bottom: none;
-	font-size: 0.95em;
-}
-
-.kn-related .kn-link-list a:hover {
-	background: rgba(46, 186, 174, 0.08);
-	color: #259a8f;
-}
-
 @media screen and (max-width: 736px) {
 	body.kn-page #wrapper {
 		padding-top: 2em;

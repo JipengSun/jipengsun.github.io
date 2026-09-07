@@ -25,13 +25,21 @@ ROOT = Path(__file__).resolve().parents[1]
 ARTICLES = ROOT / "knowledge" / "articles"
 INDEX = ROOT / "knowledge-share.html"
 HOME = ROOT / "index.html"
-BLOG = ROOT / "blog"
 SYNC_STATE = ROOT / "knowledge" / "raw" / "sync-state.json"
 
-# A page with less body text than this is an overview stub — still crawlable and still
-# linked from knowledge-share.html, but not worth asking Google to index, since thin
-# pages come back as "crawled, currently not indexed" and drag down the whole section.
+# A page with less body text than this is an overview stub, not worth asking Google to
+# index: thin pages come back as "crawled, currently not indexed" and drag down the
+# whole section.
 MIN_SITEMAP_BODY_CHARS = 250
+
+# Per-topic overview pages. Notion still syncs them, but nothing links to them, so they
+# stay out of the sitemap regardless of length — an unreachable page is not a candidate
+# for indexing.
+UNLINKED_OVERVIEWS = {
+    "machine-learning", "computer-vision", "optimization", "optics",
+    "neuromorphic-computing", "math", "computational-imaging",
+    "computer-graphics", "world-models", "robotics",
+}
 
 BASE_URL = "https://jipengsun.github.io"
 AUTHOR = "Jipeng Sun"
@@ -242,11 +250,6 @@ def body_text_length(html_text: str) -> int:
     return len(re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", body)).strip())
 
 
-def blog_post_paths() -> list[Path]:
-    """Restored Jekyll-era posts, at blog/YYYY/MM/DD/slug.html."""
-    return sorted(BLOG.glob("[0-9][0-9][0-9][0-9]/[0-9][0-9]/[0-9][0-9]/*.html"))
-
-
 def sitemap_entries() -> list[tuple[str, str | None]]:
     today = datetime.now(timezone.utc).date().isoformat()
     lastmod = load_slug_lastmod()
@@ -259,6 +262,8 @@ def sitemap_entries() -> list[tuple[str, str | None]]:
         (BASE_URL + "/blog/index.html", today),
     ]
     for path in sorted(ARTICLES.glob("*.html")):
+        if path.stem in UNLINKED_OVERVIEWS:
+            continue
         if body_text_length(path.read_text(encoding="utf-8")) < MIN_SITEMAP_BODY_CHARS:
             continue
         canonical = f"{BASE_URL}/knowledge/articles/{path.name}"
@@ -266,11 +271,6 @@ def sitemap_entries() -> list[tuple[str, str | None]]:
         if not mod:
             mod = datetime.fromtimestamp(path.stat().st_mtime, timezone.utc).date().isoformat()
         entries.append((canonical, mod))
-
-    for path in blog_post_paths():
-        # Canonicals use the extensionless URL Google already has indexed.
-        rel = path.relative_to(ROOT).with_suffix("").as_posix()
-        entries.append((f"{BASE_URL}/{rel}", "-".join(path.parts[-4:-1])))
     return entries
 
 
