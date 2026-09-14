@@ -9,6 +9,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from build_knowledge_index import LOCAL_ARTICLES
+
 ROOT = Path(__file__).resolve().parents[1]
 RAW = ROOT / "knowledge" / "raw"
 IN_DIR = RAW / "_in"
@@ -184,6 +186,8 @@ def plan_sync(notion_to_slug: dict[str, str]) -> list[SyncPlanItem]:
             detail += f"; article still at {html_path.relative_to(ROOT)}"
         items.append(SyncPlanItem(page_id, slug, "removed", detail=detail))
 
+    # Hand-written articles have no Notion page by design, so they are not orphans.
+    known_slugs |= set(LOCAL_ARTICLES)
     for slug in sorted(p for p in ARTICLES.glob("*.html") if p.stem not in known_slugs):
         items.append(
             SyncPlanItem(

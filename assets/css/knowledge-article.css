@@ -101,6 +101,45 @@ body.kn-page #main .post {
 	margin: 0 auto;
 }
 
+.kn-figure svg {
+	display: block;
+	max-width: 100%;
+	height: auto;
+	margin: 0 auto;
+}
+
+.kn-figure figcaption {
+	max-width: 40rem;
+	margin: 0.6em auto 0;
+	font-size: 0.9em;
+	line-height: 1.5;
+	color: #646464;
+	text-align: left;
+}
+
+/* position: relative keeps KaTeX's absolutely positioned MathML inside the scroll
+   container; without it, math in the right-hand cells widened the page on phones. */
+.kn-body .table-wrapper {
+	position: relative;
+	margin: 0 0 1.5em;
+}
+
+.kn-body table {
+	margin: 0;
+	font-variant-numeric: tabular-nums;
+}
+
+.kn-body table th,
+.kn-body table td {
+	text-align: center;
+	white-space: nowrap;
+}
+
+.kn-body table th:first-child,
+.kn-body table td:first-child {
+	text-align: left;
+}
+
 .kn-body a {
 	color: #259a8f !important;
 	border-bottom: 1px solid rgba(37, 154, 143, 0.35) !important;

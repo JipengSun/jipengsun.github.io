@@ -8,7 +8,7 @@ from __future__ import annotations
 import html
 import re
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -64,6 +64,7 @@ TOPIC: dict[str, tuple[str, str, str | None]] = {
     "nano-optical-polarization-control": ("Optics", "optics", None),
     "neural-tangent-kernel-ntk": ("Machine Learning", "machine-learning", None),
     "classifier-free-guidance": ("Machine Learning", "machine-learning", None),
+    "friction-cone-antipodal-grasps": ("Robotics", "robotics", None),
 }
 
 
@@ -72,6 +73,14 @@ DEK_OVERRIDE = {
     "pnp-with-diffusion": "Plug-and-play priors with diffusion models for computational imaging inverse problems.",
     "mean-flow": "Notes on mean-flow generative modeling and its connection to flow matching.",
     "improved-mean-flow-imf": "Improved mean flow (iMF) — faster sampling and training for flow-based generative models.",
+}
+
+
+# Articles written directly in this repo rather than synced from Notion, with the date
+# each was last revised. They have no sync-state.json record, so without a date here
+# they would sort after every Notion note and get no sitemap lastmod.
+LOCAL_ARTICLES: dict[str, str] = {
+    "friction-cone-antipodal-grasps": "2026-09-14",
 }
 
 
@@ -106,12 +115,15 @@ def extract(slug: str) -> tuple[str, str]:
 
 
 def load_slug_updated_at() -> dict[str, datetime]:
-    """Map article slug → Notion content snapshot time from sync-state.json."""
+    """Map article slug → Notion content snapshot time, or its LOCAL_ARTICLES date."""
+    out: dict[str, datetime] = {
+        slug: datetime.fromisoformat(day).replace(tzinfo=timezone.utc)
+        for slug, day in LOCAL_ARTICLES.items()
+    }
     if not SYNC_STATE.is_file():
-        return {}
+        return out
     import json
 
-    out: dict[str, datetime] = {}
     for rec in json.loads(SYNC_STATE.read_text(encoding="utf-8")).get("pages", {}).values():
         slug = rec.get("slug")
         raw = rec.get("notion_fetched_at") or rec.get("synced_at")

@@ -21,6 +21,8 @@ import re
 from datetime import datetime, timezone
 from pathlib import Path
 
+from build_knowledge_index import LOCAL_ARTICLES
+
 ROOT = Path(__file__).resolve().parents[1]
 ARTICLES = ROOT / "knowledge" / "articles"
 INDEX = ROOT / "knowledge-share.html"
@@ -82,9 +84,9 @@ def _truncate(text: str, limit: int = 160) -> str:
 
 
 def load_slug_lastmod() -> dict[str, str]:
+    out: dict[str, str] = dict(LOCAL_ARTICLES)
     if not SYNC_STATE.is_file():
-        return {}
-    out: dict[str, str] = {}
+        return out
     data = json.loads(SYNC_STATE.read_text(encoding="utf-8"))
     for rec in data.get("pages", {}).values():
         slug = rec.get("slug")
@@ -315,7 +317,7 @@ def run() -> None:
             canonical=BASE_URL + "/knowledge-share.html",
             description=(
                 f"Study notes by {AUTHOR} on machine learning, computer vision, optics, "
-                "computational imaging, optimization, and math."
+                "computational imaging, optimization, math, and robotics."
             ),
             jsonld={
                 "@context": "https://schema.org",
