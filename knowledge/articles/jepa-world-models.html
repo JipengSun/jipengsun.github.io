@@ -1,0 +1,416 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<title>JEPA-Style World Models — Knowledge Share — Jipeng Sun</title>
+	<!-- seo:auto:start -->
+	<meta name="description" content="A world model answers one question: if I do this, what happens next? The obvious way to build one is to predict the future frame by frame, pixel by pixel. The…" />
+	<meta name="author" content="Jipeng Sun" />
+	<meta name="robots" content="index, follow" />
+	<link rel="canonical" href="https://jipengsun.github.io/knowledge/articles/jepa-world-models.html" />
+	<meta property="og:type" content="article" />
+	<meta property="og:site_name" content="Jipeng Sun — Knowledge Share" />
+	<meta property="og:title" content="JEPA-Style World Models" />
+	<meta property="og:description" content="A world model answers one question: if I do this, what happens next? The obvious way to build one is to predict the future frame by frame, pixel by pixel. The…" />
+	<meta property="og:url" content="https://jipengsun.github.io/knowledge/articles/jepa-world-models.html" />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="JEPA-Style World Models" />
+	<meta name="twitter:description" content="A world model answers one question: if I do this, what happens next? The obvious way to build one is to predict the future frame by frame, pixel by pixel. The…" />
+	<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"JEPA-Style World Models","description":"A world model answers one question: if I do this, what happens next? The obvious way to build one is to predict the future frame by frame, pixel by pixel. The…","url":"https://jipengsun.github.io/knowledge/articles/jepa-world-models.html","mainEntityOfPage":"https://jipengsun.github.io/knowledge/articles/jepa-world-models.html","inLanguage":"en","author":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"publisher":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"isPartOf":{"@type":"Blog","name":"Jipeng Sun — Knowledge Share","url":"https://jipengsun.github.io/knowledge-share.html"},"dateModified":"2026-09-15"}</script>
+	<!-- seo:auto:end -->
+	<link rel="stylesheet" href="../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="(function(){var b=document.querySelector('.kn-body');if(!b)return;b.querySelectorAll('span').forEach(function(s){if(s.children.length)return;var t=s.textContent.trim();if(/^\\\([\s\S]*\\\)$/.test(t)||/^\\\[[\s\S]*\\\]$/.test(t))s.replaceWith(document.createTextNode(t));});renderMathInElement(b,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false,ignoredTags:['script','noscript','style','textarea','pre','code']});})();"></script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-LCC4R0HD24"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'G-LCC4R0HD24');
+	</script>
+	<script src="../../assets/js/ga-events.js"></script>
+</head>
+<body class="is-preload kn-page">
+	<div id="wrapper">
+		<header id="header">
+			<p class="site-title"><a href="../../index.html">Jipeng Sun</a></p>
+			<nav class="links">
+				<ul>
+					<li><a href="../../index.html">Home</a></li>
+					<li><a href="../../research.html">Research</a></li>
+					<li class="active"><a href="../../knowledge-share.html">Knowledge Share</a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course">VR/AR Course</a></li>
+				</ul>
+			</nav>
+			<nav class="main">
+				<ul>
+					<li class="search"><a class="fa-search" href="#search">Search</a><form id="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></li>
+					<li class="menu"><a class="fa-bars" href="#menu">Menu</a></li>
+				</ul>
+			</nav>
+		</header>
+		<section id="menu">
+			<section><form class="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></section>
+			<section>
+				<ul class="links">
+					<li><a href="../../index.html"><h3>Home</h3><p>Jipeng Sun's Homepage</p></a></li>
+					<li><a href="../../research.html"><h3>Research</h3><p>Publications &amp; Papers</p></a></li>
+					<li><a href="../../knowledge-share.html"><h3>Knowledge Share</h3><p>Study notes</p></a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course"><h3>Teaching</h3><p>VR Summer Course</p></a></li>
+				</ul>
+			</section>
+		</section>
+		<div id="main">
+			<article class="post">
+				<header><div class="title"><h1>JEPA-Style World Models</h1></div></header>
+				<p class="kn-back"><a href="../../knowledge-share.html">&larr; Back to Knowledge Share</a></p>
+				<div class="kn-body">
+				<p>A world model answers one question: if I do this, what happens next? The obvious way to build one is to predict the future frame by frame, pixel by pixel. The Joint-Embedding Predictive Architecture, or JEPA, which Yann LeCun proposed in 2022 as the world-model module of an autonomous agent, argues that this is the wrong target. Much of the next frame, such as the ripple of water or the flutter of leaves, cannot be predicted and does not matter for acting.</p>
+				<p>A JEPA predicts in representation space instead. It encodes the present and the future, and learns to predict the encoding of the future from the encoding of the present, so the encoder is free to drop whatever is unpredictable. That one change brings its own problem, since an encoder that maps everything to the same vector makes prediction trivially perfect. It has also produced a family of models: I-JEPA for images, V-JEPA for video, and V-JEPA 2, whose action-conditioned version plans robot-arm motions without generating a single pixel.</p>
+				<hr />
+				<h2>1. The Architecture</h2>
+				<p>Take a pair of related inputs: a context \(x\) and a target \(y\). They might be the visible and hidden parts of an image, the first and second halves of a video clip, or the current camera frame and the frame after an action. A JEPA has three networks, each written with its weights as a subscript:</p>
+				<ul><li>the context encoder \(f_\theta\), with weights \(\theta\), which turns \(x\) into an embedding: a vector, or one vector per image or video patch;</li><li>the target encoder \(f_{\bar\theta}\), the same architecture with its own weights \(\bar\theta\), which turns \(y\) into an embedding the same way;</li><li>the predictor \(g_\phi\), with weights \(\phi\), which takes the context embedding and guesses the target embedding.</li></ul>
+				<p>Training runs all three and compares the guess with the real target embedding:</p>
+				<p class="kn-math-display">\[s_x = f_\theta(x), \qquad s_y = f_{\bar\theta}(y), \qquad \hat s_y = g_\phi(s_x, z), \qquad \mathcal{L} = D\big(\hat s_y,\; s_y\big).\]</p>
+				<p>Reading left to right: \(s_x\) is the context embedding and \(s_y\) the target embedding; \(\hat s_y\) (“s-y hat”) is the predictor’s guess of \(s_y\); and the loss \(\mathcal{L}\) is the distance \(D\) between guess and target, squared L2 in I-JEPA and L1 in V-JEPA. The remaining input \(z\) tells the predictor which target to produce: the position of a hidden block, an action the agent is about to take, or a latent variable standing in for whatever the context cannot determine. The loss trains \(\theta\) and \(\phi\); how \(\bar\theta\) is set is the subject of section 3.</p>
+				<figure class="kn-figure">
+				<svg viewBox="0 0 640 280" role="img" aria-labelledby="jp1-t" style="width:100%;max-width:640px;font-family:&quot;Source Sans Pro&quot;, Helvetica, sans-serif">
+				<title id="jp1-t">JEPA: a context encoder and a predictor estimate the target encoder's embedding of y. The loss is a distance between embeddings, gradients do not flow into the target branch, and the target encoder's weights are a moving average of the context encoder's.</title>
+				<defs><marker id="jp1-a" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="10" markerHeight="10" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#3c3b3b"/></marker></defs>
+				<rect x="10" y="40" width="100" height="50" rx="4" fill="#e3f1ef" stroke="#259a8f" stroke-width="1.5"/>
+				<text x="60" y="62" font-size="14" text-anchor="middle" fill="#3c3b3b">context</text>
+				<text x="60" y="78" font-size="14" text-anchor="middle" fill="#3c3b3b">x</text>
+				<rect x="150" y="40" width="130" height="50" rx="4" fill="#ffffff" stroke="#8a9a98" stroke-width="1.5"/>
+				<text x="215" y="70" font-size="14" text-anchor="middle" fill="#3c3b3b">context encoder</text>
+				<rect x="340" y="40" width="110" height="50" rx="4" fill="#ffffff" stroke="#8a9a98" stroke-width="1.5"/>
+				<text x="395" y="70" font-size="14" text-anchor="middle" fill="#3c3b3b">predictor</text>
+				<rect x="335" y="122" width="120" height="36" rx="4" fill="#ffffff" stroke="#8a9a98" stroke-width="1.5"/>
+				<text x="395" y="145" font-size="12" text-anchor="middle" fill="#646464">latent z or action a</text>
+				<rect x="505" y="105" width="125" height="70" rx="4" fill="#ffffff" stroke="#8a9a98" stroke-width="1.5"/>
+				<text x="567.5" y="137" font-size="14" text-anchor="middle" fill="#3c3b3b">distance</text>
+				<text x="567.5" y="153" font-size="11" text-anchor="middle" fill="#646464">in embedding space</text>
+				<rect x="10" y="190" width="100" height="50" rx="4" fill="#f6dcd8" stroke="#c8483f" stroke-width="1.5"/>
+				<text x="60" y="212" font-size="14" text-anchor="middle" fill="#3c3b3b">target</text>
+				<text x="60" y="228" font-size="14" text-anchor="middle" fill="#3c3b3b">y</text>
+				<rect x="150" y="190" width="130" height="50" rx="4" fill="#ffffff" stroke="#8a9a98" stroke-width="1.5"/>
+				<text x="215" y="220" font-size="14" text-anchor="middle" fill="#3c3b3b">target encoder</text>
+				<path d="M110 65 H146" fill="none" stroke="#3c3b3b" stroke-width="1.5" marker-end="url(#jp1-a)"/>
+				<path d="M280 65 H336" fill="none" stroke="#3c3b3b" stroke-width="1.5" marker-end="url(#jp1-a)"/>
+				<text x="308" y="56" font-size="15" font-style="italic" text-anchor="middle" fill="#3c3b3b">s<tspan dy="4" font-size="11">x</tspan></text>
+				<path d="M450 65 H567 V101" fill="none" stroke="#3c3b3b" stroke-width="1.5" marker-end="url(#jp1-a)"/>
+				<text x="500" y="56" font-size="15" font-style="italic" text-anchor="middle" fill="#3c3b3b">ŝ<tspan dy="4" font-size="11">y</tspan></text>
+				<path d="M395 122 V94" fill="none" stroke="#3c3b3b" stroke-width="1.5" marker-end="url(#jp1-a)"/>
+				<path d="M110 215 H146" fill="none" stroke="#3c3b3b" stroke-width="1.5" marker-end="url(#jp1-a)"/>
+				<path d="M280 215 H567 V179" fill="none" stroke="#3c3b3b" stroke-width="1.5" marker-end="url(#jp1-a)"/>
+				<text x="420" y="206" font-size="15" font-style="italic" text-anchor="middle" fill="#3c3b3b">s<tspan dy="4" font-size="11">y</tspan></text>
+				<text x="420" y="236" font-size="11" text-anchor="middle" fill="#646464">no gradient flows back here</text>
+				<path d="M215 90 V186" fill="none" stroke="#3c3b3b" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#jp1-a)"/>
+				<text x="224" y="142" font-size="11" fill="#646464">weights: moving</text>
+				<text x="224" y="156" font-size="11" fill="#646464">average (EMA)</text>
+				</svg>
+				<figcaption>Figure 1. The JEPA training setup. The context branch (top) is trained by the loss; the target branch (bottom) only supplies the answer. No gradient flows into it, and its weights follow a moving average of the context encoder’s (section 3).</figcaption>
+				</figure>
+				<p>LeCun frames this as an energy-based model. The energy of a pair is the prediction error, minimized over the latent:</p>
+				<p class="kn-math-display">\[E(x, y) = \min_{z}\; D\big(g_\phi(f_\theta(x), z),\; f_{\bar\theta}(y)\big).\]</p>
+				<p>Compatible pairs, a scene and a plausible continuation of it, should get low energy; incompatible pairs should get high energy. Training shapes this landscape, and planning searches it: find the actions whose predicted outcome has low energy with respect to a goal.</p>
+				<p>Two older families of self-supervised learning bracket the design. Generative models, such as masked autoencoders and video predictors, reconstruct \(y\) itself, so every pixel counts. Joint-embedding methods, such as SimCLR and DINO, pull together the embeddings of two augmented views of the same image; nothing tells the model where or when the second view comes from, so they learn invariance to the augmentations rather than prediction. A JEPA keeps the embedding-space loss of the second family and the conditional prediction of the first.</p>
+				<h2>2. Why Not Predict Pixels?</h2>
+				<p>Consider the simplest unpredictable future. A ball sits in the middle of the frame, and in the next frame it will have moved left or right with equal probability. Say it covers \(A\) pixels, and train a predictor with squared error in pixel space. A sharp guess, the ball on one side, is right half the time and otherwise wrong on \(2A\) pixels, since the ball is missing where it is and drawn where it is not. Its expected error is</p>
+				<p class="kn-math-display">\[\tfrac12 \cdot 0 + \tfrac12 \cdot 2A = A.\]</p>
+				<p>The blurry guess, half a ball on each side, is off by \(\tfrac12\) on \(2A\) pixels whichever future happens:</p>
+				<p class="kn-math-display">\[2A \cdot \big(\tfrac12\big)^2 = \tfrac{A}{2}.\]</p>
+				<p>Squared error rewards the blur by a factor of two. In general the minimizer of expected squared error is the conditional mean \(\mathbb{E}[\,y \mid x\,]\), the average of every future consistent with the context \(x\), and when several futures are possible, their average is usually not one of them.</p>
+				<figure class="kn-figure">
+				<svg viewBox="0 0 640 200" role="img" aria-labelledby="jp2-t" style="width:100%;max-width:600px;font-family:&quot;Source Sans Pro&quot;, Helvetica, sans-serif">
+				<title id="jp2-t">Two equally likely futures, the ball moving left or right, and the pixel prediction that minimizes squared error: a half-bright ghost of the ball in both places.</title>
+				<rect x="20" y="20" width="180" height="120" fill="#ffffff" stroke="#8a9a98" stroke-width="1.5"/>
+				<circle cx="110" cy="80" r="18" fill="none" stroke="#c9d3d1" stroke-width="1.5" stroke-dasharray="4 3"/>
+				<circle cx="70" cy="80" r="18" fill="#3c3b3b" fill-opacity="1"/>
+				<text x="110" y="165" font-size="14" text-anchor="middle" fill="#3c3b3b">possible future A</text>
+				<text x="110" y="184" font-size="12" text-anchor="middle" fill="#646464">probability 1/2</text>
+				<rect x="230" y="20" width="180" height="120" fill="#ffffff" stroke="#8a9a98" stroke-width="1.5"/>
+				<circle cx="320" cy="80" r="18" fill="none" stroke="#c9d3d1" stroke-width="1.5" stroke-dasharray="4 3"/>
+				<circle cx="360" cy="80" r="18" fill="#3c3b3b" fill-opacity="1"/>
+				<text x="320" y="165" font-size="14" text-anchor="middle" fill="#3c3b3b">possible future B</text>
+				<text x="320" y="184" font-size="12" text-anchor="middle" fill="#646464">probability 1/2</text>
+				<rect x="440" y="20" width="180" height="120" fill="#ffffff" stroke="#8a9a98" stroke-width="1.5"/>
+				<circle cx="530" cy="80" r="18" fill="none" stroke="#c9d3d1" stroke-width="1.5" stroke-dasharray="4 3"/>
+				<circle cx="490" cy="80" r="18" fill="#3c3b3b" fill-opacity="0.5"/>
+				<circle cx="570" cy="80" r="18" fill="#3c3b3b" fill-opacity="0.5"/>
+				<text x="530" y="165" font-size="14" text-anchor="middle" fill="#3c3b3b">best pixel prediction</text>
+				<text x="530" y="184" font-size="12" text-anchor="middle" fill="#646464">under squared error</text>
+				</svg>
+				<figcaption>Figure 2. Two equally likely futures and the pixel prediction that minimizes expected squared error: a half-bright ghost of the ball in both places, which is not a frame that can actually occur. The dashed circle marks where the ball is now.</figcaption>
+				</figure>
+				<p>Now make the target an embedding. If the encoder describes the frame by what is predictable, say “one ball, one step from where it was, same color”, both futures get the same embedding and the predictor can match it exactly. The encoder has learned to drop the direction, which it cannot predict. If the direction matters, for instance to an agent that has to catch the ball, it moves into the latent variable: the predictor outputs one sharp embedding for each value of \(z\), and both futures get low energy instead of sharing a blur.</p>
+				<p>That is the JEPA bet in a sentence: spend model capacity on what is predictable, and let the representation or the latent absorb the rest. Real video is full of the unpredictable, such as water, foliage, crowds and sensor noise, so the saving is large.</p>
+				<h2>3. The Collapse Problem</h2>
+				<p>The loss in section 1 has a trivial minimum. If both encoders output the same constant vector for every input, the predictor copies it and the loss is zero. Nothing in “predict the embedding of \(y\)” forbids this, because the target is itself learned. Every JEPA needs something that keeps the embeddings informative, and there are four main answers.</p>
+				<h3>Contrastive Losses</h3>
+				<p>Methods like SimCLR also push the embeddings of unrelated inputs apart, so a constant encoder is penalized. They work, but they need many negative examples per batch, and LeCun argues that the number needed grows quickly with the dimension of the embedding. JEPA work has mostly moved to the three non-contrastive options below.</p>
+				<h3>Variance and Covariance Regularization</h3>
+				<p>VICReg (Bardes, Ponce and LeCun, 2022) penalizes the collapse directly. Stack a batch of \(n\) embeddings as the rows of a matrix \(Z\), so that it has \(d\) columns, one per embedding dimension, and write \(Z_{:,j}\) for column \(j\). VICReg adds a variance term \(v(Z)\), which wants every dimension to keep a standard deviation of at least \(\gamma\) across the batch, and a covariance term \(c(Z)\), which wants different dimensions to be uncorrelated:</p>
+				<p class="kn-math-display">\[v(Z) = \frac{1}{d}\sum_{j=1}^{d} \max\Big(0,\; \gamma - \sqrt{\operatorname{Var}(Z_{:,j}) + \epsilon}\Big), \qquad c(Z) = \frac{1}{d}\sum_{i \ne j} C(Z)_{ij}^2.\]</p>
+				<p>Here \(\operatorname{Var}(Z_{:,j})\) is the variance of dimension \(j\) over the batch; \(C(Z)\) is the \(d \times d\) covariance matrix of the columns, so \(C(Z)_{ij}\) is the covariance between dimensions \(i\) and \(j\); and \(\epsilon = 10^{-4}\) keeps the square root well behaved near zero. Both terms are applied to the embeddings on each side of the loss, \(Z\) and \(Z'\). With the default weights (25 on the prediction term, 25 on variance, 1 on covariance) and \(\gamma = 1\), a collapsed encoder has zero variance in every dimension, so \(v(Z) = v(Z') = 1 - \sqrt{\epsilon} = 0.99\) and the variance penalty totals \(25 \times (0.99 + 0.99) = 49.5\). Features with unit standard deviation pay nothing. The covariance term blocks a subtler failure: copying one informative feature into every dimension.</p>
+				<h3>Stop-Gradient and a Moving-Average Target</h3>
+				<p>I-JEPA and V-JEPA use the recipe from BYOL instead. The loss is never backpropagated into the target encoder; its weights just track the context encoder’s,</p>
+				<p class="kn-math-display">\[\bar\theta \leftarrow \tau\,\bar\theta + (1 - \tau)\,\theta,\]</p>
+				<p>where \(\tau\), the momentum, is ramped from 0.996 to 1.0 over training. At 0.996, each step keeps 99.6% of the old target weights and mixes in 0.4% of the current context weights, which amounts to averaging over roughly the last 250 steps. The target moves slowly and the predictor has to chase it. In practice this is enough to prevent collapse, although the theory of why is still incomplete.</p>
+				<h3>Pushing Embeddings Toward a Gaussian</h3>
+				<p>LeJEPA (Balestriero and LeCun, 2025) replaces these heuristics with a single regularizer, SIGReg, which pushes the distribution of embeddings toward an isotropic Gaussian, the shape they show is optimal for downstream prediction. Testing whether a high-dimensional distribution is Gaussian is expensive, so SIGReg projects the embeddings onto random directions and applies a one-dimensional test of normality along each, which keeps the cost linear. There is no stop-gradient, no teacher network and no schedule, and one weight trades the regularizer against prediction. LeWorldModel uses the same kind of Gaussian regularizer to train a world model end to end from pixels (section 5).</p>
+				<h2>4. I-JEPA: Predicting Hidden Parts of an Image</h2>
+				<p>I-JEPA (Assran et al., 2023) is the image version. A Vision Transformer with 16-pixel patches cuts a 224 × 224 image into a 14 × 14 grid. Each training example samples four target blocks, each covering 15–20% of the image with an aspect ratio between 0.75 and 1.5, and one context block covering 85–100% of the image, from which every patch that falls inside a target is removed.</p>
+				<p>The target encoder sees the whole image, and the targets are its output embeddings at the target patches. The context encoder sees only the context patches. The predictor, a narrower transformer, receives the context embeddings plus one placeholder token per target patch carrying that patch’s position, and fills in the missing embeddings. The loss averages squared error over the \(M = 4\) blocks,</p>
+				<p class="kn-math-display">\[\mathcal{L} = \frac{1}{M}\sum_{i=1}^{M}\;\sum_{j \in B_i} \big\|\hat s_{y_j} - s_{y_j}\big\|_2^2,\]</p>
+				<p>where \(B_i\) is the set of patches in block \(i\), and \(\hat s_{y_j}\) and \(s_{y_j}\) are the predicted and the target embedding of patch \(j\), each a single vector.</p>
+				<figure class="kn-figure">
+				<svg viewBox="0 0 316 316" role="img" aria-labelledby="jp3-t" style="width:100%;max-width:330px;font-family:&quot;Source Sans Pro&quot;, Helvetica, sans-serif">
+				<title id="jp3-t">An I-JEPA training example on a 14 by 14 grid of image patches: four target blocks to predict, and a context block with the targets removed.</title>
+				<rect x="4" y="4" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="26" y="4" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="48" y="4" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="70" y="4" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="92" y="4" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="114" y="4" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="136" y="4" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="158" y="4" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="180" y="4" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="202" y="4" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="224" y="4" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="246" y="4" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="268" y="4" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="290" y="4" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="4" y="26" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="26" y="26" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="48" y="26" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="70" y="26" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="92" y="26" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="114" y="26" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="136" y="26" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="158" y="26" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="180" y="26" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="202" y="26" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="224" y="26" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="246" y="26" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="268" y="26" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="290" y="26" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="4" y="48" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="26" y="48" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="48" y="48" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="70" y="48" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="92" y="48" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="114" y="48" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="136" y="48" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="158" y="48" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="180" y="48" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="202" y="48" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="224" y="48" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="246" y="48" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="268" y="48" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="290" y="48" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="4" y="70" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="26" y="70" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="48" y="70" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="70" y="70" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="92" y="70" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="114" y="70" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="136" y="70" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="158" y="70" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="180" y="70" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="202" y="70" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="224" y="70" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="246" y="70" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="268" y="70" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="290" y="70" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="4" y="92" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="26" y="92" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="48" y="92" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="70" y="92" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="92" y="92" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="114" y="92" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="136" y="92" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="158" y="92" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="180" y="92" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="202" y="92" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="224" y="92" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="246" y="92" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="268" y="92" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="290" y="92" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="4" y="114" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="26" y="114" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="48" y="114" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="70" y="114" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="92" y="114" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="114" y="114" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="136" y="114" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="158" y="114" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="180" y="114" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="202" y="114" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="224" y="114" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="246" y="114" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="268" y="114" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="290" y="114" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="4" y="136" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="26" y="136" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="48" y="136" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="70" y="136" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="92" y="136" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="114" y="136" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="136" y="136" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="158" y="136" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="180" y="136" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="202" y="136" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="224" y="136" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="246" y="136" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="268" y="136" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="290" y="136" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="4" y="158" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="26" y="158" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="48" y="158" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="70" y="158" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="92" y="158" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="114" y="158" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="136" y="158" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="158" y="158" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="180" y="158" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="202" y="158" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="224" y="158" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="246" y="158" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="268" y="158" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="290" y="158" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="4" y="180" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="26" y="180" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="48" y="180" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="70" y="180" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="92" y="180" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="114" y="180" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="136" y="180" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="158" y="180" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="180" y="180" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="202" y="180" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="224" y="180" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="246" y="180" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="268" y="180" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="290" y="180" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="4" y="202" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="26" y="202" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="48" y="202" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="70" y="202" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="92" y="202" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="114" y="202" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="136" y="202" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="158" y="202" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="180" y="202" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="202" y="202" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="224" y="202" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="246" y="202" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="268" y="202" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="290" y="202" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="4" y="224" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="26" y="224" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="48" y="224" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="70" y="224" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="92" y="224" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="114" y="224" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="136" y="224" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="158" y="224" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="180" y="224" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="202" y="224" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="224" y="224" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="246" y="224" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="268" y="224" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="290" y="224" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="4" y="246" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="26" y="246" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="48" y="246" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="70" y="246" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="92" y="246" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="114" y="246" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="136" y="246" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="158" y="246" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="180" y="246" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="202" y="246" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="224" y="246" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="246" y="246" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="268" y="246" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="290" y="246" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="4" y="268" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="26" y="268" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="48" y="268" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="70" y="268" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="92" y="268" width="22" height="22" fill="#f6dcd8" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="114" y="268" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="136" y="268" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="158" y="268" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="180" y="268" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="202" y="268" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="224" y="268" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="246" y="268" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="268" y="268" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="290" y="268" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="4" y="290" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="26" y="290" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="48" y="290" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="70" y="290" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="92" y="290" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="114" y="290" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="136" y="290" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="158" y="290" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="180" y="290" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="202" y="290" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="224" y="290" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="246" y="290" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="268" y="290" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="290" y="290" width="22" height="22" fill="#e3f1ef" stroke="#d5dddc" stroke-width="1"/>
+				<rect x="4" y="4" width="308" height="308" fill="none" stroke="#259a8f" stroke-width="2.5"/>
+				<rect x="4" y="136" width="110" height="154" fill="none" stroke="#c8483f" stroke-width="2"/>
+				<rect x="92" y="136" width="110" height="132" fill="none" stroke="#c8483f" stroke-width="2"/>
+				<rect x="180" y="70" width="132" height="132" fill="none" stroke="#c8483f" stroke-width="2"/>
+				<rect x="92" y="26" width="132" height="110" fill="none" stroke="#c8483f" stroke-width="2"/>
+				</svg>
+				<figcaption>Figure 3. One I-JEPA training example, sampled with the paper’s settings. The four target blocks (outlined in red) cover 30 to 36 patches each and 116 of the 196 together. The 80 teal patches are all the context encoder gets to see; in this sample the context block covered the whole image, so only the targets were cut out of it.</figcaption>
+				</figure>
+				<p>Two choices make this work. The targets are large blocks rather than scattered patches, so predicting them takes knowing what object is there, not interpolating texture from the neighbors. And the loss lives in embedding space, so the model is never asked to reproduce the exact fur of a dog, only what the target encoder makes of it. I-JEPA needs no hand-designed augmentations either, and it is cheap: the paper trains a ViT-H/14 on ImageNet with 16 A100 GPUs in under 72 hours.</p>
+				<h2>5. From Video to Action</h2>
+				<p>V-JEPA (Bardes et al., 2024) applies the same recipe to video. The clip is cut into space-time patches, and the hidden regions are tubes, the same spatial blocks masked in every frame, so the model cannot solve the task by copying from the previous frame. The loss is L1 between predicted and target embeddings, and the encoder is evaluated frozen, with only a light probe trained on top for each downstream task.</p>
+				<p>V-JEPA 2 (Meta, 2025) scales this to a ViT-g encoder of about a billion parameters, pretrained on more than a million hours of internet video. A second stage turns it into a world model. With the encoder frozen, an action-conditioned predictor, V-JEPA 2-AC, is trained on under 62 hours of unlabeled robot video from the DROID dataset to predict the embedding of the next frame from the current embedding and the robot’s action, a change in end-effector pose and gripper state.</p>
+				<h3>Planning in Embedding Space</h3>
+				<p>To reach a goal given as an image \(x_g\), the robot encodes it into a goal embedding \(s_g = f_\theta(x_g)\), then searches over sequences of \(T\) future actions, \(a_{1:T} = (a_1, \dots, a_T)\), for the one whose predicted outcome lands closest to the goal:</p>
+				<p class="kn-math-display">\[a^\star_{1:T} = \arg\min_{a_{1:T}}\; \big\| g_\phi(s_t, a_{1:T}) - s_g \big\|_1.\]</p>
+				<p>Here \(s_t\) is the embedding of the current camera frame, \(g_\phi(s_t, a_{1:T})\) applies the predictor \(T\) times to roll that embedding forward under the chosen actions, \(\|\cdot\|_1\) is the L1 distance, and \(a^\star_{1:T}\) is the best sequence found. \(T\) is the planning horizon, how many steps ahead the robot looks. The search uses the cross-entropy method:</p>
+				<ol><li>Sample many candidate action sequences from a Gaussian.</li><li>Roll each one out with the predictor, entirely in embedding space, and score it by its distance to the goal.</li><li>Refit the Gaussian to the best-scoring sequences and repeat for a few iterations.</li><li>Execute only the first action, observe the new frame, and plan again.</li></ol>
+				<p>The last step, model-predictive control, is what makes an imperfect model usable: errors never compound for long, because every step starts again from a real observation. With this loop, V-JEPA 2-AC picked and placed objects with Franka arms in two labs whose scenes it had never seen, without task-specific training or rewards.</p>
+				<h3>Frozen or End to End?</h3>
+				<p>V-JEPA 2-AC keeps its encoder frozen, and so does DINO-WM, which plans on top of frozen DINOv2 patch features: the representation is learned once from large data, and only the predictor learns the dynamics. LeWorldModel (Maes, Le Lidec, Scieur, LeCun and Balestriero) goes the other way and trains the encoder and predictor together from raw pixels, which has historically been unstable. The Gaussian regularizer from section 3 keeps it from collapsing, with two loss terms and one hyperparameter where the only earlier end-to-end method needed six. The model has about 15 million parameters, trains on a single GPU in a few hours, and plans up to 48 times faster than world models built on large pretrained encoders, on small control tasks such as pushing a T-shaped block and navigating between two rooms.</p>
+				<h2>6. How JEPA Differs from Other World Models</h2>
+				<p>All world models predict the future from the present; they differ in what they predict and what trains them.</p>
+				<div class="table-wrapper"><table>
+				<thead><tr><th>family</th><th>predicts</th><th>trained by</th><th>example</th></tr></thead>
+				<tbody>
+				<tr><td>pixel generative</td><td>future frames</td><td>reconstruction</td><td>Genie, video diffusion</td></tr>
+				<tr><td>latent + decoder</td><td>latent state and pixels</td><td>reconstruction, reward</td><td>Dreamer</td></tr>
+				<tr><td>value-equivalent</td><td>latent state</td><td>reward, value, policy</td><td>MuZero</td></tr>
+				<tr><td>JEPA</td><td>future embedding</td><td>embedding distance</td><td>V-JEPA 2-AC</td></tr>
+				</tbody>
+				</table></div>
+				<p>Pixel models are the easiest to inspect, because you can watch what they imagine, but they spend most of their capacity on appearance. MuZero sits at the other extreme: its latent state only has to predict reward and value, so it learns nothing the task does not reward. A JEPA sits between them. It learns from observation alone, like the generative models, but keeps only what is predictable, and it needs no reward to do so.</p>
+				<h3>Limitations</h3>
+				<ul><li>There is no decoder, so there is nothing to look at. Debugging a JEPA world model means probing its embeddings, or training a separate decoder after the fact.</li><li>What the encoder drops as unpredictable may be exactly what a task needs. Contact geometry is a good example: a grasp planner cares about surface normals to within a few degrees (see <a href="friction-cone-antipodal-grasps.html">Friction Cone and Antipodal Grasps</a>), and a representation trained on internet video has no particular reason to keep them.</li><li>Goals have to live in the same space, which in current systems usually means an image of the goal state rather than an instruction.</li><li>Long horizons remain hard, since errors still compound across predictor steps. LeCun’s proposed answer is a hierarchical JEPA that predicts coarse, abstract states far ahead and detailed ones only in the near term.</li></ul>
+				<h2>Intuitively: Predicting the Gist</h2>
+				<p>A goalkeeper facing a penalty does not imagine the ball’s seams, the grass it kicks up or the crowd behind it. They predict one thing, where the ball will be when it reaches the line, and they predict it from the few cues that carry that information: the kicker’s hips, the angle of the run-up. Everything else is noise they have learned to ignore.</p>
+				<p>A pixel world model tries to imagine the whole scene and, when it is unsure, paints the average of everything that might happen. A JEPA learns what the goalkeeper learned: which parts of the future can be predicted, and how to predict only those. The hard part, as section 3 showed, is making sure it does not decide that the easiest thing to predict is nothing at all.</p>
+				</div>
+			</article>
+		</div>
+	</div>
+	<script src="../../assets/js/jquery.min.js"></script>
+	<script src="../../assets/js/browser.min.js"></script>
+	<script src="../../assets/js/breakpoints.min.js"></script>
+	<script src="../../assets/js/util.js"></script>
+	<script src="../../assets/js/main.js"></script>
+</body>
+</html>

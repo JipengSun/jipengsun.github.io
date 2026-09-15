@@ -65,6 +65,8 @@ TOPIC: dict[str, tuple[str, str, str | None]] = {
     "neural-tangent-kernel-ntk": ("Machine Learning", "machine-learning", None),
     "classifier-free-guidance": ("Machine Learning", "machine-learning", None),
     "friction-cone-antipodal-grasps": ("Robotics", "robotics", None),
+    "octree": ("Computer Graphics", "computer-graphics", None),
+    "jepa-world-models": ("Machine Learning", "machine-learning", None),
 }
 
 
@@ -81,6 +83,8 @@ DEK_OVERRIDE = {
 # they would sort after every Notion note and get no sitemap lastmod.
 LOCAL_ARTICLES: dict[str, str] = {
     "friction-cone-antipodal-grasps": "2026-09-14",
+    "octree": "2026-09-15",
+    "jepa-world-models": "2026-09-15",
 }
 
 
@@ -148,7 +152,9 @@ def ordered_slugs(updated_at: dict[str, datetime]) -> list[str]:
     def sort_key(item: tuple[str, datetime | None, int]) -> tuple:
         slug, ts, idx = item
         if ts is not None:
-            return (0, -ts.timestamp(), idx)
+            # Equal timestamps happen for LOCAL_ARTICLES published the same day; the
+            # one added to TOPIC later is the newer article, so it goes first.
+            return (0, -ts.timestamp(), -idx)
         return (1, idx, 0)
 
     items.sort(key=sort_key)

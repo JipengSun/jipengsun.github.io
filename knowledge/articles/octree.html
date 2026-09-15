@@ -1,0 +1,781 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<title>Octree — Knowledge Share — Jipeng Sun</title>
+	<!-- seo:auto:start -->
+	<meta name="description" content="Divide a one-meter cube into millimeter voxels and you get about a billion cells. Put a coffee mug inside and its surface passes through roughly one in ten…" />
+	<meta name="author" content="Jipeng Sun" />
+	<meta name="robots" content="index, follow" />
+	<link rel="canonical" href="https://jipengsun.github.io/knowledge/articles/octree.html" />
+	<meta property="og:type" content="article" />
+	<meta property="og:site_name" content="Jipeng Sun — Knowledge Share" />
+	<meta property="og:title" content="Octree" />
+	<meta property="og:description" content="Divide a one-meter cube into millimeter voxels and you get about a billion cells. Put a coffee mug inside and its surface passes through roughly one in ten…" />
+	<meta property="og:url" content="https://jipengsun.github.io/knowledge/articles/octree.html" />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Octree" />
+	<meta name="twitter:description" content="Divide a one-meter cube into millimeter voxels and you get about a billion cells. Put a coffee mug inside and its surface passes through roughly one in ten…" />
+	<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Octree","description":"Divide a one-meter cube into millimeter voxels and you get about a billion cells. Put a coffee mug inside and its surface passes through roughly one in ten…","url":"https://jipengsun.github.io/knowledge/articles/octree.html","mainEntityOfPage":"https://jipengsun.github.io/knowledge/articles/octree.html","inLanguage":"en","author":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"publisher":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"isPartOf":{"@type":"Blog","name":"Jipeng Sun — Knowledge Share","url":"https://jipengsun.github.io/knowledge-share.html"},"dateModified":"2026-09-15"}</script>
+	<!-- seo:auto:end -->
+	<link rel="stylesheet" href="../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="(function(){var b=document.querySelector('.kn-body');if(!b)return;b.querySelectorAll('span').forEach(function(s){if(s.children.length)return;var t=s.textContent.trim();if(/^\\\([\s\S]*\\\)$/.test(t)||/^\\\[[\s\S]*\\\]$/.test(t))s.replaceWith(document.createTextNode(t));});renderMathInElement(b,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false,ignoredTags:['script','noscript','style','textarea','pre','code']});})();"></script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-LCC4R0HD24"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'G-LCC4R0HD24');
+	</script>
+	<script src="../../assets/js/ga-events.js"></script>
+</head>
+<body class="is-preload kn-page">
+	<div id="wrapper">
+		<header id="header">
+			<p class="site-title"><a href="../../index.html">Jipeng Sun</a></p>
+			<nav class="links">
+				<ul>
+					<li><a href="../../index.html">Home</a></li>
+					<li><a href="../../research.html">Research</a></li>
+					<li class="active"><a href="../../knowledge-share.html">Knowledge Share</a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course">VR/AR Course</a></li>
+				</ul>
+			</nav>
+			<nav class="main">
+				<ul>
+					<li class="search"><a class="fa-search" href="#search">Search</a><form id="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></li>
+					<li class="menu"><a class="fa-bars" href="#menu">Menu</a></li>
+				</ul>
+			</nav>
+		</header>
+		<section id="menu">
+			<section><form class="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></section>
+			<section>
+				<ul class="links">
+					<li><a href="../../index.html"><h3>Home</h3><p>Jipeng Sun's Homepage</p></a></li>
+					<li><a href="../../research.html"><h3>Research</h3><p>Publications &amp; Papers</p></a></li>
+					<li><a href="../../knowledge-share.html"><h3>Knowledge Share</h3><p>Study notes</p></a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course"><h3>Teaching</h3><p>VR Summer Course</p></a></li>
+				</ul>
+			</section>
+		</section>
+		<div id="main">
+			<article class="post">
+				<header><div class="title"><h1>Octree</h1></div></header>
+				<p class="kn-back"><a href="../../knowledge-share.html">&larr; Back to Knowledge Share</a></p>
+				<div class="kn-body">
+				<p>Divide a one-meter cube into millimeter voxels and you get about a billion cells. Put a coffee mug inside and its surface passes through roughly one in ten thousand of them. The rest is air, and a dense voxel grid pays for every one of those empty cells.</p>
+				<p>An octree describes space the way you would describe it out loud: coarsely where nothing happens, finely where something does. Split the cube into eight smaller cubes, split again only the ones that contain something, and stop wherever a region is uniform. The result stores a surface at millimeter detail in a small fraction of the memory, answers “what is at this point?” in a handful of steps, and lets a ray cross empty space in long strides. It sits under real-time NeRF renderers, robot occupancy maps, point-cloud libraries and point-cloud compression.</p>
+				<hr />
+				<h2>1. Recursive Subdivision</h2>
+				<p>Start with an axis-aligned cube of side \(L\) that encloses everything you care about: the root. A node is either a leaf, or it has exactly eight children, the octants you get by halving the cube along \(x\), \(y\) and \(z\). A node at depth \(d\), counting the root as depth 0, has side</p>
+				<p class="kn-math-display">\[s_d = \frac{L}{2^d},\]</p>
+				<p>so a tree of depth \(D\) resolves detail down to \(L/2^D\). Ten levels take a 1 m cube to cells just under 1 mm.</p>
+				<p>Each child is named by three bits: \(b_x = 1\) if it lies in the upper half along \(x\), and likewise \(b_y\) and \(b_z\). Packing them into an octant index, and moving from the parent’s center \(\mathbf{c}\) and side \(s\) to the child’s center, gives</p>
+				<p class="kn-math-display">\[i = b_x + 2\,b_y + 4\,b_z \in \{0, \dots, 7\}, \qquad \mathbf{c}_{\text{child}} = \mathbf{c} + \frac{s}{4}\,\big(2b_x - 1,\; 2b_y - 1,\; 2b_z - 1\big).\]</p>
+				<p>To find which child holds a point \(\mathbf{p}\), compare it with the parent’s center: \(b_x = 1\) if \(p_x \ge c_x\), and the same for \(y\) and \(z\).</p>
+				<p>What makes a leaf a leaf depends on what the tree stores. A region octree stores space itself, such as occupancy or a signed distance, and stops splitting when a cell is uniform (entirely empty or entirely full) or reaches the maximum depth. An octree over points stores samples instead: each leaf holds a bucket of points and splits once the bucket is too full or the cell reaches a minimum size. The tree machinery is the same; only the stopping rule changes.</p>
+				<p>Figure 1 shows the 2D version, a quadtree with four children per node, refined only where a circle passes. Away from the curve the squares stay large, whether empty or full; along it they shrink to the finest level.</p>
+				<figure class="kn-figure">
+				<svg viewBox="0 0 520 520" role="img" aria-labelledby="oc1-t" style="width:100%;max-width:400px;font-family:&quot;Source Sans Pro&quot;, Helvetica, sans-serif">
+				<title id="oc1-t">A quadtree refined along a circle: large empty and full squares away from the curve, the smallest squares only where the curve passes.</title>
+				<g fill="#ffffff" stroke="#a9b8b6" stroke-width="1">
+				<rect x="4" y="4" width="128" height="128"/>
+				<rect x="132" y="4" width="64" height="64"/>
+				<rect x="196" y="4" width="64" height="64"/>
+				<rect x="132" y="68" width="32" height="32"/>
+				<rect x="164" y="68" width="16" height="16"/>
+				<rect x="180" y="68" width="16" height="16"/>
+				<rect x="164" y="84" width="8" height="8"/>
+				<rect x="172" y="84" width="8" height="8"/>
+				<rect x="164" y="92" width="8" height="8"/>
+				<rect x="180" y="84" width="8" height="8"/>
+				<rect x="188" y="84" width="8" height="8"/>
+				<rect x="132" y="100" width="16" height="16"/>
+				<rect x="148" y="100" width="8" height="8"/>
+				<rect x="156" y="100" width="8" height="8"/>
+				<rect x="132" y="116" width="8" height="8"/>
+				<rect x="196" y="68" width="16" height="16"/>
+				<rect x="212" y="68" width="8" height="8"/>
+				<rect x="220" y="68" width="8" height="8"/>
+				<rect x="212" y="76" width="8" height="8"/>
+				<rect x="228" y="68" width="8" height="8"/>
+				<rect x="236" y="68" width="8" height="8"/>
+				<rect x="244" y="68" width="8" height="8"/>
+				<rect x="252" y="68" width="8" height="8"/>
+				<rect x="4" y="132" width="64" height="64"/>
+				<rect x="68" y="132" width="32" height="32"/>
+				<rect x="100" y="132" width="16" height="16"/>
+				<rect x="116" y="132" width="8" height="8"/>
+				<rect x="100" y="148" width="8" height="8"/>
+				<rect x="100" y="156" width="8" height="8"/>
+				<rect x="68" y="164" width="16" height="16"/>
+				<rect x="84" y="164" width="8" height="8"/>
+				<rect x="92" y="164" width="8" height="8"/>
+				<rect x="84" y="172" width="8" height="8"/>
+				<rect x="68" y="180" width="16" height="16"/>
+				<rect x="84" y="180" width="8" height="8"/>
+				<rect x="84" y="188" width="8" height="8"/>
+				<rect x="4" y="196" width="64" height="64"/>
+				<rect x="68" y="196" width="16" height="16"/>
+				<rect x="68" y="212" width="8" height="8"/>
+				<rect x="76" y="212" width="8" height="8"/>
+				<rect x="68" y="220" width="8" height="8"/>
+				<rect x="68" y="228" width="8" height="8"/>
+				<rect x="68" y="236" width="8" height="8"/>
+				<rect x="68" y="244" width="8" height="8"/>
+				<rect x="68" y="252" width="8" height="8"/>
+				<rect x="260" y="4" width="64" height="64"/>
+				<rect x="324" y="4" width="64" height="64"/>
+				<rect x="260" y="68" width="8" height="8"/>
+				<rect x="268" y="68" width="8" height="8"/>
+				<rect x="276" y="68" width="8" height="8"/>
+				<rect x="284" y="68" width="8" height="8"/>
+				<rect x="292" y="68" width="8" height="8"/>
+				<rect x="300" y="68" width="8" height="8"/>
+				<rect x="300" y="76" width="8" height="8"/>
+				<rect x="308" y="68" width="16" height="16"/>
+				<rect x="324" y="68" width="16" height="16"/>
+				<rect x="340" y="68" width="16" height="16"/>
+				<rect x="324" y="84" width="8" height="8"/>
+				<rect x="332" y="84" width="8" height="8"/>
+				<rect x="340" y="84" width="8" height="8"/>
+				<rect x="348" y="84" width="8" height="8"/>
+				<rect x="348" y="92" width="8" height="8"/>
+				<rect x="356" y="68" width="32" height="32"/>
+				<rect x="356" y="100" width="8" height="8"/>
+				<rect x="364" y="100" width="8" height="8"/>
+				<rect x="372" y="100" width="16" height="16"/>
+				<rect x="380" y="116" width="8" height="8"/>
+				<rect x="388" y="4" width="128" height="128"/>
+				<rect x="396" y="132" width="8" height="8"/>
+				<rect x="404" y="132" width="16" height="16"/>
+				<rect x="412" y="148" width="8" height="8"/>
+				<rect x="412" y="156" width="8" height="8"/>
+				<rect x="420" y="132" width="32" height="32"/>
+				<rect x="420" y="164" width="8" height="8"/>
+				<rect x="428" y="164" width="8" height="8"/>
+				<rect x="428" y="172" width="8" height="8"/>
+				<rect x="436" y="164" width="16" height="16"/>
+				<rect x="428" y="180" width="8" height="8"/>
+				<rect x="428" y="188" width="8" height="8"/>
+				<rect x="436" y="180" width="16" height="16"/>
+				<rect x="452" y="132" width="64" height="64"/>
+				<rect x="436" y="196" width="16" height="16"/>
+				<rect x="436" y="212" width="8" height="8"/>
+				<rect x="444" y="212" width="8" height="8"/>
+				<rect x="444" y="220" width="8" height="8"/>
+				<rect x="444" y="228" width="8" height="8"/>
+				<rect x="444" y="236" width="8" height="8"/>
+				<rect x="444" y="244" width="8" height="8"/>
+				<rect x="444" y="252" width="8" height="8"/>
+				<rect x="452" y="196" width="64" height="64"/>
+				<rect x="4" y="260" width="64" height="64"/>
+				<rect x="68" y="260" width="8" height="8"/>
+				<rect x="68" y="268" width="8" height="8"/>
+				<rect x="68" y="276" width="8" height="8"/>
+				<rect x="68" y="284" width="8" height="8"/>
+				<rect x="68" y="292" width="8" height="8"/>
+				<rect x="68" y="300" width="8" height="8"/>
+				<rect x="76" y="300" width="8" height="8"/>
+				<rect x="68" y="308" width="16" height="16"/>
+				<rect x="4" y="324" width="64" height="64"/>
+				<rect x="68" y="324" width="16" height="16"/>
+				<rect x="84" y="324" width="8" height="8"/>
+				<rect x="84" y="332" width="8" height="8"/>
+				<rect x="68" y="340" width="16" height="16"/>
+				<rect x="84" y="340" width="8" height="8"/>
+				<rect x="84" y="348" width="8" height="8"/>
+				<rect x="92" y="348" width="8" height="8"/>
+				<rect x="68" y="356" width="32" height="32"/>
+				<rect x="100" y="356" width="8" height="8"/>
+				<rect x="100" y="364" width="8" height="8"/>
+				<rect x="100" y="372" width="16" height="16"/>
+				<rect x="116" y="380" width="8" height="8"/>
+				<rect x="4" y="388" width="128" height="128"/>
+				<rect x="132" y="396" width="8" height="8"/>
+				<rect x="132" y="404" width="16" height="16"/>
+				<rect x="148" y="412" width="8" height="8"/>
+				<rect x="156" y="412" width="8" height="8"/>
+				<rect x="132" y="420" width="32" height="32"/>
+				<rect x="164" y="420" width="8" height="8"/>
+				<rect x="164" y="428" width="8" height="8"/>
+				<rect x="172" y="428" width="8" height="8"/>
+				<rect x="180" y="428" width="8" height="8"/>
+				<rect x="188" y="428" width="8" height="8"/>
+				<rect x="164" y="436" width="16" height="16"/>
+				<rect x="180" y="436" width="16" height="16"/>
+				<rect x="196" y="436" width="16" height="16"/>
+				<rect x="212" y="436" width="8" height="8"/>
+				<rect x="212" y="444" width="8" height="8"/>
+				<rect x="220" y="444" width="8" height="8"/>
+				<rect x="228" y="444" width="8" height="8"/>
+				<rect x="236" y="444" width="8" height="8"/>
+				<rect x="244" y="444" width="8" height="8"/>
+				<rect x="252" y="444" width="8" height="8"/>
+				<rect x="132" y="452" width="64" height="64"/>
+				<rect x="196" y="452" width="64" height="64"/>
+				<rect x="444" y="260" width="8" height="8"/>
+				<rect x="444" y="268" width="8" height="8"/>
+				<rect x="444" y="276" width="8" height="8"/>
+				<rect x="444" y="284" width="8" height="8"/>
+				<rect x="444" y="292" width="8" height="8"/>
+				<rect x="436" y="300" width="8" height="8"/>
+				<rect x="444" y="300" width="8" height="8"/>
+				<rect x="436" y="308" width="16" height="16"/>
+				<rect x="452" y="260" width="64" height="64"/>
+				<rect x="428" y="324" width="8" height="8"/>
+				<rect x="428" y="332" width="8" height="8"/>
+				<rect x="436" y="324" width="16" height="16"/>
+				<rect x="428" y="340" width="8" height="8"/>
+				<rect x="420" y="348" width="8" height="8"/>
+				<rect x="428" y="348" width="8" height="8"/>
+				<rect x="436" y="340" width="16" height="16"/>
+				<rect x="412" y="356" width="8" height="8"/>
+				<rect x="412" y="364" width="8" height="8"/>
+				<rect x="396" y="380" width="8" height="8"/>
+				<rect x="404" y="372" width="16" height="16"/>
+				<rect x="420" y="356" width="32" height="32"/>
+				<rect x="452" y="324" width="64" height="64"/>
+				<rect x="260" y="444" width="8" height="8"/>
+				<rect x="268" y="444" width="8" height="8"/>
+				<rect x="276" y="444" width="8" height="8"/>
+				<rect x="284" y="444" width="8" height="8"/>
+				<rect x="300" y="436" width="8" height="8"/>
+				<rect x="292" y="444" width="8" height="8"/>
+				<rect x="300" y="444" width="8" height="8"/>
+				<rect x="308" y="436" width="16" height="16"/>
+				<rect x="380" y="396" width="8" height="8"/>
+				<rect x="356" y="412" width="8" height="8"/>
+				<rect x="364" y="412" width="8" height="8"/>
+				<rect x="372" y="404" width="16" height="16"/>
+				<rect x="324" y="428" width="8" height="8"/>
+				<rect x="332" y="428" width="8" height="8"/>
+				<rect x="348" y="420" width="8" height="8"/>
+				<rect x="340" y="428" width="8" height="8"/>
+				<rect x="348" y="428" width="8" height="8"/>
+				<rect x="324" y="436" width="16" height="16"/>
+				<rect x="340" y="436" width="16" height="16"/>
+				<rect x="356" y="420" width="32" height="32"/>
+				<rect x="260" y="452" width="64" height="64"/>
+				<rect x="324" y="452" width="64" height="64"/>
+				<rect x="388" y="388" width="128" height="128"/>
+				</g>
+				<g fill="#e3f1ef" stroke="#a9b8b6" stroke-width="1">
+				<rect x="156" y="116" width="8" height="8"/>
+				<rect x="148" y="124" width="8" height="8"/>
+				<rect x="156" y="124" width="8" height="8"/>
+				<rect x="172" y="108" width="8" height="8"/>
+				<rect x="180" y="100" width="16" height="16"/>
+				<rect x="164" y="116" width="16" height="16"/>
+				<rect x="180" y="116" width="16" height="16"/>
+				<rect x="204" y="92" width="8" height="8"/>
+				<rect x="212" y="92" width="8" height="8"/>
+				<rect x="220" y="92" width="8" height="8"/>
+				<rect x="228" y="84" width="16" height="16"/>
+				<rect x="244" y="84" width="16" height="16"/>
+				<rect x="196" y="100" width="32" height="32"/>
+				<rect x="228" y="100" width="32" height="32"/>
+				<rect x="124" y="148" width="8" height="8"/>
+				<rect x="116" y="156" width="8" height="8"/>
+				<rect x="124" y="156" width="8" height="8"/>
+				<rect x="108" y="172" width="8" height="8"/>
+				<rect x="116" y="164" width="16" height="16"/>
+				<rect x="100" y="180" width="16" height="16"/>
+				<rect x="116" y="180" width="16" height="16"/>
+				<rect x="92" y="204" width="8" height="8"/>
+				<rect x="92" y="212" width="8" height="8"/>
+				<rect x="92" y="220" width="8" height="8"/>
+				<rect x="100" y="196" width="32" height="32"/>
+				<rect x="84" y="228" width="16" height="16"/>
+				<rect x="84" y="244" width="16" height="16"/>
+				<rect x="100" y="228" width="32" height="32"/>
+				<rect x="140" y="132" width="8" height="8"/>
+				<rect x="132" y="140" width="8" height="8"/>
+				<rect x="140" y="140" width="8" height="8"/>
+				<rect x="148" y="132" width="16" height="16"/>
+				<rect x="132" y="148" width="16" height="16"/>
+				<rect x="148" y="148" width="16" height="16"/>
+				<rect x="164" y="132" width="32" height="32"/>
+				<rect x="132" y="164" width="32" height="32"/>
+				<rect x="164" y="164" width="32" height="32"/>
+				<rect x="196" y="132" width="64" height="64"/>
+				<rect x="132" y="196" width="64" height="64"/>
+				<rect x="196" y="196" width="64" height="64"/>
+				<rect x="260" y="84" width="16" height="16"/>
+				<rect x="276" y="84" width="16" height="16"/>
+				<rect x="292" y="92" width="8" height="8"/>
+				<rect x="300" y="92" width="8" height="8"/>
+				<rect x="308" y="92" width="8" height="8"/>
+				<rect x="260" y="100" width="32" height="32"/>
+				<rect x="292" y="100" width="32" height="32"/>
+				<rect x="324" y="100" width="16" height="16"/>
+				<rect x="340" y="108" width="8" height="8"/>
+				<rect x="324" y="116" width="16" height="16"/>
+				<rect x="340" y="116" width="16" height="16"/>
+				<rect x="356" y="116" width="8" height="8"/>
+				<rect x="356" y="124" width="8" height="8"/>
+				<rect x="364" y="124" width="8" height="8"/>
+				<rect x="260" y="132" width="64" height="64"/>
+				<rect x="324" y="132" width="32" height="32"/>
+				<rect x="356" y="132" width="16" height="16"/>
+				<rect x="372" y="132" width="8" height="8"/>
+				<rect x="372" y="140" width="8" height="8"/>
+				<rect x="380" y="140" width="8" height="8"/>
+				<rect x="356" y="148" width="16" height="16"/>
+				<rect x="372" y="148" width="16" height="16"/>
+				<rect x="324" y="164" width="32" height="32"/>
+				<rect x="356" y="164" width="32" height="32"/>
+				<rect x="260" y="196" width="64" height="64"/>
+				<rect x="324" y="196" width="64" height="64"/>
+				<rect x="388" y="148" width="8" height="8"/>
+				<rect x="388" y="156" width="8" height="8"/>
+				<rect x="396" y="156" width="8" height="8"/>
+				<rect x="388" y="164" width="16" height="16"/>
+				<rect x="404" y="172" width="8" height="8"/>
+				<rect x="388" y="180" width="16" height="16"/>
+				<rect x="404" y="180" width="16" height="16"/>
+				<rect x="388" y="196" width="32" height="32"/>
+				<rect x="420" y="204" width="8" height="8"/>
+				<rect x="420" y="212" width="8" height="8"/>
+				<rect x="420" y="220" width="8" height="8"/>
+				<rect x="388" y="228" width="32" height="32"/>
+				<rect x="420" y="228" width="16" height="16"/>
+				<rect x="420" y="244" width="16" height="16"/>
+				<rect x="84" y="260" width="16" height="16"/>
+				<rect x="84" y="276" width="16" height="16"/>
+				<rect x="100" y="260" width="32" height="32"/>
+				<rect x="92" y="292" width="8" height="8"/>
+				<rect x="92" y="300" width="8" height="8"/>
+				<rect x="92" y="308" width="8" height="8"/>
+				<rect x="100" y="292" width="32" height="32"/>
+				<rect x="100" y="324" width="16" height="16"/>
+				<rect x="116" y="324" width="16" height="16"/>
+				<rect x="108" y="340" width="8" height="8"/>
+				<rect x="116" y="340" width="16" height="16"/>
+				<rect x="116" y="356" width="8" height="8"/>
+				<rect x="124" y="356" width="8" height="8"/>
+				<rect x="124" y="364" width="8" height="8"/>
+				<rect x="132" y="260" width="64" height="64"/>
+				<rect x="196" y="260" width="64" height="64"/>
+				<rect x="132" y="324" width="32" height="32"/>
+				<rect x="164" y="324" width="32" height="32"/>
+				<rect x="132" y="356" width="16" height="16"/>
+				<rect x="148" y="356" width="16" height="16"/>
+				<rect x="132" y="372" width="8" height="8"/>
+				<rect x="140" y="372" width="8" height="8"/>
+				<rect x="140" y="380" width="8" height="8"/>
+				<rect x="148" y="372" width="16" height="16"/>
+				<rect x="164" y="356" width="32" height="32"/>
+				<rect x="196" y="324" width="64" height="64"/>
+				<rect x="148" y="388" width="8" height="8"/>
+				<rect x="156" y="388" width="8" height="8"/>
+				<rect x="156" y="396" width="8" height="8"/>
+				<rect x="164" y="388" width="16" height="16"/>
+				<rect x="180" y="388" width="16" height="16"/>
+				<rect x="172" y="404" width="8" height="8"/>
+				<rect x="180" y="404" width="16" height="16"/>
+				<rect x="196" y="388" width="32" height="32"/>
+				<rect x="228" y="388" width="32" height="32"/>
+				<rect x="204" y="420" width="8" height="8"/>
+				<rect x="212" y="420" width="8" height="8"/>
+				<rect x="220" y="420" width="8" height="8"/>
+				<rect x="228" y="420" width="16" height="16"/>
+				<rect x="244" y="420" width="16" height="16"/>
+				<rect x="260" y="260" width="64" height="64"/>
+				<rect x="324" y="260" width="64" height="64"/>
+				<rect x="260" y="324" width="64" height="64"/>
+				<rect x="324" y="324" width="32" height="32"/>
+				<rect x="356" y="324" width="32" height="32"/>
+				<rect x="324" y="356" width="32" height="32"/>
+				<rect x="356" y="356" width="16" height="16"/>
+				<rect x="372" y="356" width="16" height="16"/>
+				<rect x="356" y="372" width="16" height="16"/>
+				<rect x="372" y="372" width="8" height="8"/>
+				<rect x="380" y="372" width="8" height="8"/>
+				<rect x="372" y="380" width="8" height="8"/>
+				<rect x="388" y="260" width="32" height="32"/>
+				<rect x="420" y="260" width="16" height="16"/>
+				<rect x="420" y="276" width="16" height="16"/>
+				<rect x="388" y="292" width="32" height="32"/>
+				<rect x="420" y="292" width="8" height="8"/>
+				<rect x="420" y="300" width="8" height="8"/>
+				<rect x="420" y="308" width="8" height="8"/>
+				<rect x="388" y="324" width="16" height="16"/>
+				<rect x="404" y="324" width="16" height="16"/>
+				<rect x="388" y="340" width="16" height="16"/>
+				<rect x="404" y="340" width="8" height="8"/>
+				<rect x="388" y="356" width="8" height="8"/>
+				<rect x="396" y="356" width="8" height="8"/>
+				<rect x="388" y="364" width="8" height="8"/>
+				<rect x="260" y="388" width="32" height="32"/>
+				<rect x="292" y="388" width="32" height="32"/>
+				<rect x="260" y="420" width="16" height="16"/>
+				<rect x="276" y="420" width="16" height="16"/>
+				<rect x="292" y="420" width="8" height="8"/>
+				<rect x="300" y="420" width="8" height="8"/>
+				<rect x="308" y="420" width="8" height="8"/>
+				<rect x="324" y="388" width="16" height="16"/>
+				<rect x="340" y="388" width="16" height="16"/>
+				<rect x="324" y="404" width="16" height="16"/>
+				<rect x="340" y="404" width="8" height="8"/>
+				<rect x="356" y="388" width="8" height="8"/>
+				<rect x="364" y="388" width="8" height="8"/>
+				<rect x="356" y="396" width="8" height="8"/>
+				</g>
+				<g fill="#9fd0c9" stroke="#a9b8b6" stroke-width="1">
+				<rect x="172" y="92" width="8" height="8"/>
+				<rect x="180" y="92" width="8" height="8"/>
+				<rect x="188" y="92" width="8" height="8"/>
+				<rect x="148" y="108" width="8" height="8"/>
+				<rect x="156" y="108" width="8" height="8"/>
+				<rect x="140" y="116" width="8" height="8"/>
+				<rect x="132" y="124" width="8" height="8"/>
+				<rect x="140" y="124" width="8" height="8"/>
+				<rect x="148" y="116" width="8" height="8"/>
+				<rect x="164" y="100" width="8" height="8"/>
+				<rect x="172" y="100" width="8" height="8"/>
+				<rect x="164" y="108" width="8" height="8"/>
+				<rect x="220" y="76" width="8" height="8"/>
+				<rect x="196" y="84" width="8" height="8"/>
+				<rect x="204" y="84" width="8" height="8"/>
+				<rect x="196" y="92" width="8" height="8"/>
+				<rect x="212" y="84" width="8" height="8"/>
+				<rect x="220" y="84" width="8" height="8"/>
+				<rect x="228" y="76" width="8" height="8"/>
+				<rect x="236" y="76" width="8" height="8"/>
+				<rect x="244" y="76" width="8" height="8"/>
+				<rect x="252" y="76" width="8" height="8"/>
+				<rect x="124" y="132" width="8" height="8"/>
+				<rect x="116" y="140" width="8" height="8"/>
+				<rect x="124" y="140" width="8" height="8"/>
+				<rect x="108" y="148" width="8" height="8"/>
+				<rect x="108" y="156" width="8" height="8"/>
+				<rect x="116" y="148" width="8" height="8"/>
+				<rect x="92" y="172" width="8" height="8"/>
+				<rect x="92" y="180" width="8" height="8"/>
+				<rect x="92" y="188" width="8" height="8"/>
+				<rect x="100" y="164" width="8" height="8"/>
+				<rect x="108" y="164" width="8" height="8"/>
+				<rect x="100" y="172" width="8" height="8"/>
+				<rect x="84" y="196" width="8" height="8"/>
+				<rect x="92" y="196" width="8" height="8"/>
+				<rect x="84" y="204" width="8" height="8"/>
+				<rect x="76" y="220" width="8" height="8"/>
+				<rect x="84" y="212" width="8" height="8"/>
+				<rect x="84" y="220" width="8" height="8"/>
+				<rect x="76" y="228" width="8" height="8"/>
+				<rect x="76" y="236" width="8" height="8"/>
+				<rect x="76" y="244" width="8" height="8"/>
+				<rect x="76" y="252" width="8" height="8"/>
+				<rect x="132" y="132" width="8" height="8"/>
+				<rect x="260" y="76" width="8" height="8"/>
+				<rect x="268" y="76" width="8" height="8"/>
+				<rect x="276" y="76" width="8" height="8"/>
+				<rect x="284" y="76" width="8" height="8"/>
+				<rect x="292" y="76" width="8" height="8"/>
+				<rect x="292" y="84" width="8" height="8"/>
+				<rect x="300" y="84" width="8" height="8"/>
+				<rect x="308" y="84" width="8" height="8"/>
+				<rect x="316" y="84" width="8" height="8"/>
+				<rect x="316" y="92" width="8" height="8"/>
+				<rect x="324" y="92" width="8" height="8"/>
+				<rect x="332" y="92" width="8" height="8"/>
+				<rect x="340" y="92" width="8" height="8"/>
+				<rect x="340" y="100" width="8" height="8"/>
+				<rect x="348" y="100" width="8" height="8"/>
+				<rect x="348" y="108" width="8" height="8"/>
+				<rect x="356" y="108" width="8" height="8"/>
+				<rect x="364" y="108" width="8" height="8"/>
+				<rect x="364" y="116" width="8" height="8"/>
+				<rect x="372" y="116" width="8" height="8"/>
+				<rect x="372" y="124" width="8" height="8"/>
+				<rect x="380" y="124" width="8" height="8"/>
+				<rect x="380" y="132" width="8" height="8"/>
+				<rect x="388" y="132" width="8" height="8"/>
+				<rect x="388" y="140" width="8" height="8"/>
+				<rect x="396" y="140" width="8" height="8"/>
+				<rect x="396" y="148" width="8" height="8"/>
+				<rect x="404" y="148" width="8" height="8"/>
+				<rect x="404" y="156" width="8" height="8"/>
+				<rect x="404" y="164" width="8" height="8"/>
+				<rect x="412" y="164" width="8" height="8"/>
+				<rect x="412" y="172" width="8" height="8"/>
+				<rect x="420" y="172" width="8" height="8"/>
+				<rect x="420" y="180" width="8" height="8"/>
+				<rect x="420" y="188" width="8" height="8"/>
+				<rect x="420" y="196" width="8" height="8"/>
+				<rect x="428" y="196" width="8" height="8"/>
+				<rect x="428" y="204" width="8" height="8"/>
+				<rect x="428" y="212" width="8" height="8"/>
+				<rect x="428" y="220" width="8" height="8"/>
+				<rect x="436" y="220" width="8" height="8"/>
+				<rect x="436" y="228" width="8" height="8"/>
+				<rect x="436" y="236" width="8" height="8"/>
+				<rect x="436" y="244" width="8" height="8"/>
+				<rect x="436" y="252" width="8" height="8"/>
+				<rect x="76" y="260" width="8" height="8"/>
+				<rect x="76" y="268" width="8" height="8"/>
+				<rect x="76" y="276" width="8" height="8"/>
+				<rect x="76" y="284" width="8" height="8"/>
+				<rect x="76" y="292" width="8" height="8"/>
+				<rect x="84" y="292" width="8" height="8"/>
+				<rect x="84" y="300" width="8" height="8"/>
+				<rect x="84" y="308" width="8" height="8"/>
+				<rect x="84" y="316" width="8" height="8"/>
+				<rect x="92" y="316" width="8" height="8"/>
+				<rect x="92" y="324" width="8" height="8"/>
+				<rect x="92" y="332" width="8" height="8"/>
+				<rect x="92" y="340" width="8" height="8"/>
+				<rect x="100" y="340" width="8" height="8"/>
+				<rect x="100" y="348" width="8" height="8"/>
+				<rect x="108" y="348" width="8" height="8"/>
+				<rect x="108" y="356" width="8" height="8"/>
+				<rect x="108" y="364" width="8" height="8"/>
+				<rect x="116" y="364" width="8" height="8"/>
+				<rect x="116" y="372" width="8" height="8"/>
+				<rect x="124" y="372" width="8" height="8"/>
+				<rect x="124" y="380" width="8" height="8"/>
+				<rect x="132" y="380" width="8" height="8"/>
+				<rect x="132" y="388" width="8" height="8"/>
+				<rect x="140" y="388" width="8" height="8"/>
+				<rect x="140" y="396" width="8" height="8"/>
+				<rect x="148" y="396" width="8" height="8"/>
+				<rect x="148" y="404" width="8" height="8"/>
+				<rect x="156" y="404" width="8" height="8"/>
+				<rect x="164" y="404" width="8" height="8"/>
+				<rect x="164" y="412" width="8" height="8"/>
+				<rect x="172" y="412" width="8" height="8"/>
+				<rect x="172" y="420" width="8" height="8"/>
+				<rect x="180" y="420" width="8" height="8"/>
+				<rect x="188" y="420" width="8" height="8"/>
+				<rect x="196" y="420" width="8" height="8"/>
+				<rect x="196" y="428" width="8" height="8"/>
+				<rect x="204" y="428" width="8" height="8"/>
+				<rect x="212" y="428" width="8" height="8"/>
+				<rect x="220" y="428" width="8" height="8"/>
+				<rect x="220" y="436" width="8" height="8"/>
+				<rect x="228" y="436" width="8" height="8"/>
+				<rect x="236" y="436" width="8" height="8"/>
+				<rect x="244" y="436" width="8" height="8"/>
+				<rect x="252" y="436" width="8" height="8"/>
+				<rect x="380" y="380" width="8" height="8"/>
+				<rect x="436" y="260" width="8" height="8"/>
+				<rect x="436" y="268" width="8" height="8"/>
+				<rect x="436" y="276" width="8" height="8"/>
+				<rect x="436" y="284" width="8" height="8"/>
+				<rect x="428" y="292" width="8" height="8"/>
+				<rect x="428" y="300" width="8" height="8"/>
+				<rect x="436" y="292" width="8" height="8"/>
+				<rect x="428" y="308" width="8" height="8"/>
+				<rect x="420" y="316" width="8" height="8"/>
+				<rect x="428" y="316" width="8" height="8"/>
+				<rect x="412" y="340" width="8" height="8"/>
+				<rect x="404" y="348" width="8" height="8"/>
+				<rect x="412" y="348" width="8" height="8"/>
+				<rect x="420" y="324" width="8" height="8"/>
+				<rect x="420" y="332" width="8" height="8"/>
+				<rect x="420" y="340" width="8" height="8"/>
+				<rect x="396" y="364" width="8" height="8"/>
+				<rect x="404" y="356" width="8" height="8"/>
+				<rect x="404" y="364" width="8" height="8"/>
+				<rect x="388" y="372" width="8" height="8"/>
+				<rect x="396" y="372" width="8" height="8"/>
+				<rect x="388" y="380" width="8" height="8"/>
+				<rect x="260" y="436" width="8" height="8"/>
+				<rect x="268" y="436" width="8" height="8"/>
+				<rect x="276" y="436" width="8" height="8"/>
+				<rect x="284" y="436" width="8" height="8"/>
+				<rect x="292" y="428" width="8" height="8"/>
+				<rect x="300" y="428" width="8" height="8"/>
+				<rect x="316" y="420" width="8" height="8"/>
+				<rect x="308" y="428" width="8" height="8"/>
+				<rect x="316" y="428" width="8" height="8"/>
+				<rect x="292" y="436" width="8" height="8"/>
+				<rect x="348" y="404" width="8" height="8"/>
+				<rect x="340" y="412" width="8" height="8"/>
+				<rect x="348" y="412" width="8" height="8"/>
+				<rect x="364" y="396" width="8" height="8"/>
+				<rect x="372" y="388" width="8" height="8"/>
+				<rect x="380" y="388" width="8" height="8"/>
+				<rect x="372" y="396" width="8" height="8"/>
+				<rect x="356" y="404" width="8" height="8"/>
+				<rect x="364" y="404" width="8" height="8"/>
+				<rect x="324" y="420" width="8" height="8"/>
+				<rect x="332" y="420" width="8" height="8"/>
+				<rect x="340" y="420" width="8" height="8"/>
+				</g>
+				<circle cx="260" cy="260" r="179.2" fill="none" stroke="#3c3b3b" stroke-width="2.5"/>
+				<rect x="4" y="4" width="512" height="512" fill="none" stroke="#5b6b69" stroke-width="2"/>
+				</svg>
+				<figcaption>Figure 1. A quadtree, the 2D cousin of an octree, refined six levels deep wherever a circle passes. Darker squares lie on the curve at the finest size; pale squares are fully inside and white ones fully outside, each kept at the first size that made it uniform. That is 520 leaves in total, against 4,096 cells for a uniform grid at the same resolution.</figcaption>
+				</figure>
+				<h2>2. Why It Saves Memory</h2>
+				<p>A dense grid of depth \(D\) has \(8^D\) cells, because every level splits every cell into eight. Let \(S_d\) be the number of depth-\(d\) cells that a surface passes through. A surface is two-dimensional, so \(S_d\) grows like its area \(A\) divided by the cell area \(s_d^2\):</p>
+				<p class="kn-math-display">\[S_d \approx 1.5\,\frac{A}{s_d^2} \;\propto\; 4^d.\]</p>
+				<p>The factor 1.5 is how many cells a flat patch of area \(s_d^2\) cuts through, averaged over orientations: a patch with unit normal \(\mathbf{n}\) crosses about \(|n_x| + |n_y| + |n_z|\) cells, which averages 1.5. Only those \(S_d\) cells get split, and each split creates eight children, so a tree of depth \(D\) has</p>
+				<p class="kn-math-display">\[N_D = 1 + 8\sum_{d=0}^{D-1} S_d\]</p>
+				<p>nodes: the root, plus eight children for every cell that gets split. That grows like \(4^D\) while the dense grid grows like \(8^D\), so every extra level doubles the octree’s advantage.</p>
+				<p>For a concrete case, put a ball of radius 40 cm at the center of a 1 m cube and refine every cell its surface passes through. Counting exactly:</p>
+				<div class="table-wrapper"><table>
+				<thead><tr><th>depth \(D\)</th><th>4</th><th>6</th><th>8</th><th>10</th></tr></thead>
+				<tbody>
+				<tr><td>cell size</td><td>62.5 mm</td><td>15.6 mm</td><td>3.9 mm</td><td>0.98 mm</td></tr>
+				<tr><td>dense grid cells \(8^D\)</td><td>4,096</td><td>262,144</td><td>16.8 million</td><td>1.07 billion</td></tr>
+				<tr><td>surface cells \(S_D\)</td><td>776</td><td>12,368</td><td>197,624</td><td>3.16 million</td></tr>
+				<tr><td>octree nodes \(N_D\)</td><td>2,313</td><td>32,969</td><td>527,689</td><td>8.43 million</td></tr>
+				<tr><td>dense ÷ octree</td><td>1.8×</td><td>8.0×</td><td>31.8×</td><td>127×</td></tr>
+				</tbody>
+				</table></div>
+				<p>At depth 10 the dense grid needs 1 GiB even at one byte per voxel. The octree, at a generous 8 bytes per node, needs about 64 MiB. The surface count also matches the area estimate above to within 0.01%.</p>
+				<p>Two caveats keep this honest. The saving comes from the surface being thin: a volume that varies everywhere, such as fog or the inside of a CT scan, gains little, and the pointers can cost more than a flat array would. And a pointer-based tree scatters its nodes through memory, so each step down risks a cache miss. Practical implementations store each node’s eight children side by side and keep one pointer plus an 8-bit mask saying which children exist, which is how sparse voxel octrees are laid out on the GPU.</p>
+				<h2>3. Finding Things: Lookup, Neighbors and Rays</h2>
+				<p>Lookup is a walk from the root. At each node, compare the query point with the center to get the three bits, step into that child, and repeat until you reach a leaf. That costs at most \(D\) steps, one per level, and often fewer, because a large uniform leaf ends the walk early. Insertion is the same walk, creating children on the way down.</p>
+				<h3>Nearest Neighbors</h3>
+				<p>Nearest-neighbor and radius queries use the boxes to rule out whole subtrees. The distance from a query point \(\mathbf{p}\) to a cube with center \(\mathbf{c}\) and half-side \(h\) is</p>
+				<p class="kn-math-display">\[\operatorname{dist}(\mathbf{p}, \text{box})^2 = \sum_{k \in \{x, y, z\}} \max\big(0,\; |p_k - c_k| - h\big)^2,\]</p>
+				<p>which is zero when the point is inside. Visit children in order of this distance and skip any child whose box is already farther than the best point found so far, since everything inside it is at least that far too. Most subtrees are discarded without ever being opened.</p>
+				<h3>Ray Casting</h3>
+				<p>Rendering, and the free-space updates in section 5, need the cells a ray passes through. Write the ray as the points \(\mathbf{o} + t\,\mathbf{d}\) for \(t \ge 0\), where \(\mathbf{o}\) is its origin, \(\mathbf{d}\) its direction and \(t\) how far along it you are, and write the box’s lowest and highest corners as \(\mathbf{b}^{\min}\) and \(\mathbf{b}^{\max}\). For each axis \(k \in \{x, y, z\}\), the slab test computes the two values of \(t\) at which the ray crosses the pair of faces perpendicular to that axis,</p>
+				<p class="kn-math-display">\[t_k^{1} = \frac{b_k^{\min} - o_k}{d_k}, \qquad t_k^{2} = \frac{b_k^{\max} - o_k}{d_k},\]</p>
+				<p>then keeps the latest entry and the earliest exit:</p>
+				<p class="kn-math-display">\[t_{\text{near}} = \max_k \min\big(t_k^1, t_k^2\big), \qquad t_{\text{far}} = \min_k \max\big(t_k^1, t_k^2\big).\]</p>
+				<p>The ray hits the box if \(t_{\text{near}} \le t_{\text{far}}\) and \(t_{\text{far}} \ge 0\). An octree traversal applies this test to the root, then to the children the ray actually crosses, in front-to-back order, and stops at the first occupied leaf. The payoff is empty-space skipping: a large empty node is crossed in a single step. A ray that walks voxel by voxel through a \(1024^3\) grid can visit up to 3,070 cells; in an octree, a ray through open space touches a few big nodes and only descends near surfaces.</p>
+				<h2>4. Morton Codes: An Octree Without Pointers</h2>
+				<p>The octant bits along a root-to-leaf path can be read straight off a cell’s integer coordinates. At depth \(D\), give each cell coordinates \(x, y, z \in \{0, \dots, 2^D - 1\}\). The most significant bit of \(x\) says which half the cell is in along \(x\) at the first split, the next bit decides the second split, and so on. Interleaving the bits of the three coordinates therefore spells out the whole path, three bits per level:</p>
+				<p class="kn-math-display">\[m = \sum_{k=0}^{D-1} \big(x_k + 2\,y_k + 4\,z_k\big)\, 8^{k},\]</p>
+				<p>where \(x_k\) is bit \(k\) of \(x\). This is the Morton code, or Z-order index, and each of its base-8 digits is exactly the octant index \(i\) from section 1.</p>
+				<p>Take \(D = 3\), an \(8 \times 8 \times 8\) grid, and the cell \((x, y, z) = (5, 3, 6)\), which is \((101, 011, 110)\) in binary. Reading the bits from the most significant end, one level at a time:</p>
+				<div class="table-wrapper"><table>
+				<thead><tr><th>level</th><th>\(x\) bit</th><th>\(y\) bit</th><th>\(z\) bit</th><th>octant \(x + 2y + 4z\)</th></tr></thead>
+				<tbody>
+				<tr><td>1</td><td>1</td><td>0</td><td>1</td><td>5</td></tr>
+				<tr><td>2</td><td>0</td><td>1</td><td>1</td><td>6</td></tr>
+				<tr><td>3</td><td>1</td><td>1</td><td>0</td><td>3</td></tr>
+				</tbody>
+				</table></div>
+				<p>So the path from the root is octant 5, then 6, then 3, and the code is \(m = 5 \cdot 64 + 6 \cdot 8 + 3 = 371\), or 101 110 011 in binary. Following the same path with the child-center formula from section 1, starting from a unit cube, lands on \((0.6875, 0.4375, 0.8125)\), which is exactly the center of cell \((5, 3, 6)\) at side 1/8.</p>
+				<p>Two properties make Morton codes useful. Truncating a code gives an ancestor: dropping the last three bits of 371 gives 46, the depth-2 node containing the cell, and dropping six gives 5, its depth-1 octant. And sorting cells by code lists them in depth-first order of the tree, so every subtree occupies one contiguous run of the sorted array. A linear octree is exactly that, a sorted array of codes, with parent–child relations recovered by bit shifts instead of stored pointers. GPUs build octrees and bounding-volume hierarchies this way, starting from a single parallel sort.</p>
+				<figure class="kn-figure">
+				<svg viewBox="0 0 348 348" role="img" aria-labelledby="oc2-t" style="width:100%;max-width:340px;font-family:&quot;Source Sans Pro&quot;, Helvetica, sans-serif">
+				<title id="oc2-t">Z-order curve on a 4 by 4 grid: cells numbered 0 to 15 by Morton code; each run of four codes fills one quadrant.</title>
+				<rect x="6" y="6" width="84" height="84" fill="#e3f1ef" stroke="#c9d3d1" stroke-width="1"/>
+				<text x="14" y="28" font-size="18" fill="#3c3b3b">0</text>
+				<text x="82" y="81" font-size="12" text-anchor="end" fill="#646464">0000</text>
+				<rect x="90" y="6" width="84" height="84" fill="#e3f1ef" stroke="#c9d3d1" stroke-width="1"/>
+				<text x="98" y="28" font-size="18" fill="#3c3b3b">1</text>
+				<text x="166" y="81" font-size="12" text-anchor="end" fill="#646464">0001</text>
+				<rect x="6" y="90" width="84" height="84" fill="#e3f1ef" stroke="#c9d3d1" stroke-width="1"/>
+				<text x="14" y="112" font-size="18" fill="#3c3b3b">2</text>
+				<text x="82" y="165" font-size="12" text-anchor="end" fill="#646464">0010</text>
+				<rect x="90" y="90" width="84" height="84" fill="#e3f1ef" stroke="#c9d3d1" stroke-width="1"/>
+				<text x="98" y="112" font-size="18" fill="#3c3b3b">3</text>
+				<text x="166" y="165" font-size="12" text-anchor="end" fill="#646464">0011</text>
+				<rect x="174" y="6" width="84" height="84" fill="#f1f1f1" stroke="#c9d3d1" stroke-width="1"/>
+				<text x="182" y="28" font-size="18" fill="#3c3b3b">4</text>
+				<text x="250" y="81" font-size="12" text-anchor="end" fill="#646464">0100</text>
+				<rect x="258" y="6" width="84" height="84" fill="#f1f1f1" stroke="#c9d3d1" stroke-width="1"/>
+				<text x="266" y="28" font-size="18" fill="#3c3b3b">5</text>
+				<text x="334" y="81" font-size="12" text-anchor="end" fill="#646464">0101</text>
+				<rect x="174" y="90" width="84" height="84" fill="#f1f1f1" stroke="#c9d3d1" stroke-width="1"/>
+				<text x="182" y="112" font-size="18" fill="#3c3b3b">6</text>
+				<text x="250" y="165" font-size="12" text-anchor="end" fill="#646464">0110</text>
+				<rect x="258" y="90" width="84" height="84" fill="#f1f1f1" stroke="#c9d3d1" stroke-width="1"/>
+				<text x="266" y="112" font-size="18" fill="#3c3b3b">7</text>
+				<text x="334" y="165" font-size="12" text-anchor="end" fill="#646464">0111</text>
+				<rect x="6" y="174" width="84" height="84" fill="#f1f1f1" stroke="#c9d3d1" stroke-width="1"/>
+				<text x="14" y="196" font-size="18" fill="#3c3b3b">8</text>
+				<text x="82" y="249" font-size="12" text-anchor="end" fill="#646464">1000</text>
+				<rect x="90" y="174" width="84" height="84" fill="#f1f1f1" stroke="#c9d3d1" stroke-width="1"/>
+				<text x="98" y="196" font-size="18" fill="#3c3b3b">9</text>
+				<text x="166" y="249" font-size="12" text-anchor="end" fill="#646464">1001</text>
+				<rect x="6" y="258" width="84" height="84" fill="#f1f1f1" stroke="#c9d3d1" stroke-width="1"/>
+				<text x="14" y="280" font-size="18" fill="#3c3b3b">10</text>
+				<text x="82" y="333" font-size="12" text-anchor="end" fill="#646464">1010</text>
+				<rect x="90" y="258" width="84" height="84" fill="#f1f1f1" stroke="#c9d3d1" stroke-width="1"/>
+				<text x="98" y="280" font-size="18" fill="#3c3b3b">11</text>
+				<text x="166" y="333" font-size="12" text-anchor="end" fill="#646464">1011</text>
+				<rect x="174" y="174" width="84" height="84" fill="#e3f1ef" stroke="#c9d3d1" stroke-width="1"/>
+				<text x="182" y="196" font-size="18" fill="#3c3b3b">12</text>
+				<text x="250" y="249" font-size="12" text-anchor="end" fill="#646464">1100</text>
+				<rect x="258" y="174" width="84" height="84" fill="#e3f1ef" stroke="#c9d3d1" stroke-width="1"/>
+				<text x="266" y="196" font-size="18" fill="#3c3b3b">13</text>
+				<text x="334" y="249" font-size="12" text-anchor="end" fill="#646464">1101</text>
+				<rect x="174" y="258" width="84" height="84" fill="#e3f1ef" stroke="#c9d3d1" stroke-width="1"/>
+				<text x="182" y="280" font-size="18" fill="#3c3b3b">14</text>
+				<text x="250" y="333" font-size="12" text-anchor="end" fill="#646464">1110</text>
+				<rect x="258" y="258" width="84" height="84" fill="#e3f1ef" stroke="#c9d3d1" stroke-width="1"/>
+				<text x="266" y="280" font-size="18" fill="#3c3b3b">15</text>
+				<text x="334" y="333" font-size="12" text-anchor="end" fill="#646464">1111</text>
+				<path d="M174 6 V342 M6 174 H342" stroke="#5b6b69" stroke-width="2"/>
+				<rect x="6" y="6" width="336" height="336" fill="none" stroke="#5b6b69" stroke-width="2"/>
+				<polyline points="48,48 132,48 48,132 132,132 216,48 300,48 216,132 300,132 48,216 132,216 48,300 132,300 216,216 300,216 216,300 300,300" fill="none" stroke="#259a8f" stroke-width="2.5" stroke-linejoin="round"/>
+				<circle cx="48" cy="48" r="3.5" fill="#259a8f"/>
+				<circle cx="132" cy="48" r="3.5" fill="#259a8f"/>
+				<circle cx="48" cy="132" r="3.5" fill="#259a8f"/>
+				<circle cx="132" cy="132" r="3.5" fill="#259a8f"/>
+				<circle cx="216" cy="48" r="3.5" fill="#259a8f"/>
+				<circle cx="300" cy="48" r="3.5" fill="#259a8f"/>
+				<circle cx="216" cy="132" r="3.5" fill="#259a8f"/>
+				<circle cx="300" cy="132" r="3.5" fill="#259a8f"/>
+				<circle cx="48" cy="216" r="3.5" fill="#259a8f"/>
+				<circle cx="132" cy="216" r="3.5" fill="#259a8f"/>
+				<circle cx="48" cy="300" r="3.5" fill="#259a8f"/>
+				<circle cx="132" cy="300" r="3.5" fill="#259a8f"/>
+				<circle cx="216" cy="216" r="3.5" fill="#259a8f"/>
+				<circle cx="300" cy="216" r="3.5" fill="#259a8f"/>
+				<circle cx="216" cy="300" r="3.5" fill="#259a8f"/>
+				<circle cx="300" cy="300" r="3.5" fill="#259a8f"/>
+				</svg>
+				<figcaption>Figure 2. The Z-order curve in 2D, on a 4 × 4 grid with rows counted from the top. Each cell shows its Morton code in decimal and in binary. The first two bits pick the quadrant and the last two the cell inside it, so each quadrant holds one run of four consecutive codes and the curve finishes one quadrant before starting the next.</figcaption>
+				</figure>
+				<p>The price is locality at the seams. Cells that touch in space can sit far apart in the order when they straddle the boundary between large octants: cells 3 and 9 in Figure 2 share an edge, yet six codes separate them. Neighbor search in a linear octree therefore computes the neighbors’ codes with bit arithmetic instead of assuming that nearby codes mean nearby cells.</p>
+				<h2>5. A Worked Example: Occupancy Mapping with OctoMap</h2>
+				<p>A robot mapping a room with a depth camera never knows for sure whether a cell is occupied; it accumulates evidence. OctoMap, the octree mapping library that ROS and MoveIt use for 3D occupancy, keeps that evidence in each leaf as the log-odds \(l\) of the probability \(p\) that the cell is occupied,</p>
+				<p class="kn-math-display">\[l = \log\frac{p}{1 - p},\]</p>
+				<p>which turns each Bayesian update into an addition. Every depth measurement is a ray from the sensor: the cell at its endpoint receives a hit, and the cells it passed through on the way receive a miss. With OctoMap’s default sensor model, \(p_{\text{hit}} = 0.7\) and \(p_{\text{miss}} = 0.4\), the increments are</p>
+				<p class="kn-math-display">\[l_{\text{hit}} = \log\tfrac{0.7}{0.3} = +0.847, \qquad l_{\text{miss}} = \log\tfrac{0.4}{0.6} = -0.405,\]</p>
+				<p>and a cell counts as occupied while \(l &gt; 0\), that is, while \(p &gt; 0.5\).</p>
+				<h3>Why the Values Are Clamped</h3>
+				<p>Left alone, the sums grow without bound. A wall seen 100 times reaches \(l = 84.7\); if part of it then moves, say a door swings open, it takes 209 contradicting observations before the map agrees. OctoMap therefore clamps every leaf to \([l_{\min}, l_{\max}] = [-2, 3.5]\), which is \(p \in [0.12, 0.97]\). Here is one cell seen occupied six times, after which the door opens and the cell is seen free again and again:</p>
+				<div class="table-wrapper"><table>
+				<thead><tr><th>after</th><th>log-odds \(l\)</th><th>\(p\)(occupied)</th></tr></thead>
+				<tbody>
+				<tr><td>1 hit</td><td>0.847</td><td>0.700</td></tr>
+				<tr><td>2 hits</td><td>1.695</td><td>0.845</td></tr>
+				<tr><td>4 hits</td><td>3.389</td><td>0.967</td></tr>
+				<tr><td>5 hits</td><td>3.500 (clamped)</td><td>0.971</td></tr>
+				<tr><td>6 hits</td><td>3.500 (clamped)</td><td>0.971</td></tr>
+				<tr><td>then 1 miss</td><td>3.095</td><td>0.957</td></tr>
+				<tr><td>then 4 misses</td><td>1.878</td><td>0.867</td></tr>
+				<tr><td>then 8 misses</td><td>0.256</td><td>0.564</td></tr>
+				<tr><td>then 9 misses</td><td>−0.149</td><td>0.463</td></tr>
+				</tbody>
+				</table></div>
+				<p>The sixth hit changes nothing, because the cell is already pinned at \(l_{\max}\). From there, nine misses flip it to free instead of 209.</p>
+				<h3>Pruning</h3>
+				<p>Clamping has a second benefit: it makes compression possible. Once the leaves of a stable region are all pinned at the same bound, eight siblings often hold identical values, and OctoMap prunes them, deleting the children and storing the value once in the parent. A large empty room ends up as a few big free nodes instead of millions of small leaves, and nothing is lost, because the children were identical. If a later measurement disagrees with part of a pruned node, the node is expanded again before the update.</p>
+				<h2>6. Where Octrees Show Up</h2>
+				<ul><li>Rendering. Sparse voxel octrees store geometry and color for real-time ray casting. PlenOctrees made <a href="nerf.html">NeRF</a> render in real time by baking the trained radiance field into an octree whose leaves hold density and spherical-harmonic color, and Octree-GS arranges <a href="3d-gaussian-splatting.html">3D Gaussian splats</a> in octree levels so that distant regions draw coarser detail.</li><li>Robotics. OctoMap-style maps back collision checking in motion planners such as MoveIt and next-best-view planning for scanning. A grasp planner uses one to rule out gripper poses that would hit the scene before it scores the contacts themselves, as in <a href="friction-cone-antipodal-grasps.html">Friction Cone and Antipodal Grasps</a>.</li><li>Point clouds. PCL’s octree module handles radius and nearest-neighbor search, voxel-centroid downsampling and change detection between scans, and the MPEG G-PCC standard compresses point-cloud geometry by coding each node’s 8-bit child-occupancy mask.</li><li>Learning. O-CNN runs convolutions only on the octants a shape’s surface occupies, so memory follows the surface instead of the bounding volume.</li></ul>
+				<h3>Octree or Something Else?</h3>
+				<p>An octree is not the only way to avoid paying for empty space, and it is not always the best.</p>
+				<ul><li>A dense grid wins when the volume is small or busy everywhere: lookup is one array index and there are no pointers to chase.</li><li>Spatial hashing, as in voxel hashing for real-time 3D reconstruction, stores only occupied blocks with constant-time average lookup, but it has no hierarchy, so it cannot answer coarse queries or skip empty space in big strides.</li><li>A k-d tree splits at data-dependent planes, which adapts better to uneven point sets and is often faster for nearest-neighbor search, but its cells do not line up with a voxel grid, so it fits occupancy and volumes poorly.</li><li>A bounding-volume hierarchy partitions objects rather than space, which suits ray tracing triangle meshes better than voxel data.</li></ul>
+				<p>The octree’s niche is the middle ground: spatially organized data, mostly empty, needed at several resolutions at once.</p>
+				<h2>Intuitively: Twenty Questions in 3D</h2>
+				<p>Finding a spot in a room with an octree is a game of twenty questions in which every round asks three at once: left or right, front or back, up or down. Each round narrows the region to one of eight, so ten rounds, thirty yes-or-no answers, pin a point to a millimeter-sized cell of a one-meter cube, out of about a billion possibilities.</p>
+				<p>What makes it cheap is that you are allowed to stop early. Ask about the empty corner of the room and the answer after the first round is “nothing here, all the way down.” Only where something interesting sits do you keep asking. An octree is that conversation written down: short answers for empty space, long ones only where the detail lives.</p>
+				</div>
+			</article>
+		</div>
+	</div>
+	<script src="../../assets/js/jquery.min.js"></script>
+	<script src="../../assets/js/browser.min.js"></script>
+	<script src="../../assets/js/breakpoints.min.js"></script>
+	<script src="../../assets/js/util.js"></script>
+	<script src="../../assets/js/main.js"></script>
+</body>
+</html>
