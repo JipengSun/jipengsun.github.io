@@ -84,7 +84,7 @@ DEK_OVERRIDE = {
 LOCAL_ARTICLES: dict[str, str] = {
     "friction-cone-antipodal-grasps": "2026-09-14",
     "octree": "2026-09-15",
-    "jepa-world-models": "2026-09-15",
+    "jepa-world-models": "2026-09-18",
 }
 
 
