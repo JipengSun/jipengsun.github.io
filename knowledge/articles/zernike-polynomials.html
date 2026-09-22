@@ -1,0 +1,199 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<title>Zernike Polynomials — Knowledge Share — Jipeng Sun</title>
+	<!-- seo:auto:start -->
+	<meta name="description" content="Measure the wavefront coming out of a lens, a telescope or an eye and you get a map: one number for every point in the pupil. To do anything useful with it…" />
+	<meta name="author" content="Jipeng Sun" />
+	<meta name="robots" content="index, follow" />
+	<link rel="canonical" href="https://jipengsun.github.io/knowledge/articles/zernike-polynomials.html" />
+	<meta property="og:type" content="article" />
+	<meta property="og:site_name" content="Jipeng Sun — Knowledge Share" />
+	<meta property="og:title" content="Zernike Polynomials" />
+	<meta property="og:description" content="Measure the wavefront coming out of a lens, a telescope or an eye and you get a map: one number for every point in the pupil. To do anything useful with it…" />
+	<meta property="og:url" content="https://jipengsun.github.io/knowledge/articles/zernike-polynomials.html" />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Zernike Polynomials" />
+	<meta name="twitter:description" content="Measure the wavefront coming out of a lens, a telescope or an eye and you get a map: one number for every point in the pupil. To do anything useful with it…" />
+	<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Zernike Polynomials","description":"Measure the wavefront coming out of a lens, a telescope or an eye and you get a map: one number for every point in the pupil. To do anything useful with it…","url":"https://jipengsun.github.io/knowledge/articles/zernike-polynomials.html","mainEntityOfPage":"https://jipengsun.github.io/knowledge/articles/zernike-polynomials.html","inLanguage":"en","author":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"publisher":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"isPartOf":{"@type":"Blog","name":"Jipeng Sun — Knowledge Share","url":"https://jipengsun.github.io/knowledge-share.html"},"dateModified":"2026-09-22"}</script>
+	<!-- seo:auto:end -->
+	<link rel="stylesheet" href="../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="(function(){var b=document.querySelector('.kn-body');if(!b)return;b.querySelectorAll('span').forEach(function(s){if(s.children.length)return;var t=s.textContent.trim();if(/^\\\([\s\S]*\\\)$/.test(t)||/^\\\[[\s\S]*\\\]$/.test(t))s.replaceWith(document.createTextNode(t));});renderMathInElement(b,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false,ignoredTags:['script','noscript','style','textarea','pre','code']});})();"></script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-LCC4R0HD24"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'G-LCC4R0HD24');
+	</script>
+	<script src="../../assets/js/ga-events.js"></script>
+</head>
+<body class="is-preload kn-page">
+	<div id="wrapper">
+		<header id="header">
+			<p class="site-title"><a href="../../index.html">Jipeng Sun</a></p>
+			<nav class="links">
+				<ul>
+					<li><a href="../../index.html">Home</a></li>
+					<li><a href="../../research.html">Research</a></li>
+					<li class="active"><a href="../../knowledge-share.html">Knowledge Share</a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course">VR/AR Course</a></li>
+				</ul>
+			</nav>
+			<nav class="main">
+				<ul>
+					<li class="search"><a class="fa-search" href="#search">Search</a><form id="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></li>
+					<li class="menu"><a class="fa-bars" href="#menu">Menu</a></li>
+				</ul>
+			</nav>
+		</header>
+		<section id="menu">
+			<section><form class="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></section>
+			<section>
+				<ul class="links">
+					<li><a href="../../index.html"><h3>Home</h3><p>Jipeng Sun's Homepage</p></a></li>
+					<li><a href="../../research.html"><h3>Research</h3><p>Publications &amp; Papers</p></a></li>
+					<li><a href="../../knowledge-share.html"><h3>Knowledge Share</h3><p>Study notes</p></a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course"><h3>Teaching</h3><p>VR Summer Course</p></a></li>
+				</ul>
+			</section>
+		</section>
+		<div id="main">
+			<article class="post">
+				<header><div class="title"><h1>Zernike Polynomials</h1></div></header>
+				<p class="kn-back"><a href="../../knowledge-share.html">&larr; Back to Knowledge Share</a></p>
+				<div class="kn-body">
+				<p>Measure the wavefront coming out of a lens, a telescope or an eye and you get a map: one number for every point in the pupil. To do anything useful with it, compare two units, drive a deformable mirror, write a tolerance, or simply say what is wrong, that map has to become a short list of numbers. Zernike polynomials are the standard way to make the list, and have been since Fritz Zernike introduced them in the 1930s: a set of shapes on a circular pupil that are mutually orthogonal, ordered so that the first handful are the aberrations everyone already has names for.</p>
+				<p>Orthogonality is the whole point. It means each coefficient can be measured without reference to the others, that the RMS wavefront error is the square root of the sum of their squares, and that dropping the high-order terms leaves the low-order ones untouched. This note builds the basis, works through the indexing conventions that cause most of the practical trouble, connects the modes back to the <a href="seidel-aberrations.html">Seidel aberrations</a> they resemble, and ends with the ways the scheme can mislead.</p>
+				<hr />
+				<h2>1. The Basis</h2>
+				<p>A Zernike polynomial is a polynomial in the pupil radius multiplied by a sinusoid in the azimuth. Two integers label it: the radial order \(n \ge 0\), which is the highest power of \(\rho\) it contains, and the azimuthal frequency \(m\), which counts the cycles around the pupil and runs from \(-n\) to \(n\) in steps of two, so that \(n - |m|\) is always even. Writing \(\rho \in [0, 1]\) for the pupil radius normalized to the pupil edge and \(\theta\) for the azimuth,</p>
+				<p class="kn-math-display">\[Z_n^m(\rho, \theta) = N_n^m\, R_n^{|m|}(\rho) \times \begin{cases} \cos(m\theta), & m \ge 0,\\[2pt] \sin(|m|\theta), & m &lt; 0,\end{cases}\]</p>
+				<p>where \(N_n^m\) is a normalization constant, chosen below, and the radial part is the polynomial</p>
+				<p class="kn-math-display">\[R_n^{|m|}(\rho) = \sum_{k=0}^{(n-|m|)/2} \frac{(-1)^k\,(n-k)!}{k!\left(\frac{n+|m|}{2}-k\right)!\left(\frac{n-|m|}{2}-k\right)!}\;\rho^{\,n-2k}.\]</p>
+				<p>Three properties are worth more than the formula itself. \(R_n^{|m|}\) contains only the powers \(\rho^n, \rho^{n-2}, \dots, \rho^{|m|}\), so a mode with high azimuthal frequency has no low-order radial content. \(R_n^{|m|}(1) = 1\) for every \(n\) and \(m\), so the modes all reach the same value at the rim before normalization. And the number of modes through radial order \(n\) is \((n+1)(n+2)/2\): six through \(n = 2\), fifteen through \(n = 4\), forty-five through \(n = 8\), which is why wavefront reports so often stop at one of those numbers.</p>
+				<figure class="kn-figure">
+				<img src="../assets/zernike-pyramid.png" width="1100" height="1320" alt="The first fifteen Zernike modes arranged in a pyramid, one row per radial order from piston at the top to the fourth-order modes at the bottom, each drawn as a disc coloured by the sign of the wavefront error." loading="lazy" />
+				<figcaption>Figure 1. The first fifteen Zernike modes, through radial order \(n = 4\), in the usual pyramid: row \(n\) holds the modes of that radial order, with \(m\) running from \(-n\) on the left to \(+n\) on the right. Color shows the sign of the wavefront error and each disc is scaled to its own peak. The central column, \(m = 0\), holds the rotationally symmetric modes: piston, defocus, spherical aberration.</figcaption>
+				</figure>
+				<p>The normalization is the part worth pinning down, because it decides what a coefficient means. The standard choice makes every mode have unit RMS over the pupil,</p>
+				<p class="kn-math-display">\[N_n^m = \sqrt{\frac{2(n+1)}{1+\delta_{m0}}},\]</p>
+				<p>that is \(\sqrt{n+1}\) when \(m = 0\) and \(\sqrt{2(n+1)}\) otherwise, where \(\delta_{m0}\) is 1 for \(m = 0\) and 0 for every other \(m\). With this convention a coefficient is exactly the RMS wavefront error that its mode contributes, in whatever unit the wavefront is measured in, usually waves. Leave the modes unnormalized instead, as some instruments and textbooks do, and the coefficient becomes the peak value at the rim, which is a different number by a factor of \(\sqrt{n+1}\) or \(\sqrt{2(n+1)}\). Section 3 is about not mixing the two up.</p>
+				<h2>2. What Orthogonality Buys</h2>
+				<p>Any two of these modes are orthogonal over the unit disc: average their product over the pupil and the result is zero unless they are the same mode, in which case the normalization above makes it one,</p>
+				<p class="kn-math-display">\[\big\langle Z_n^m Z_{n'}^{m'} \big\rangle = \delta_{nn'}\,\delta_{mm'}, \qquad \big\langle f \big\rangle = \frac{1}{\pi}\int_0^{2\pi}\!\!\int_0^1 f(\rho, \theta)\,\rho\,d\rho\,d\theta,\]</p>
+				<p>where \(\langle f\rangle\) denotes the average of \(f\) over the unit disc and \(\delta\) is 1 when its two subscripts match and 0 otherwise. Expand a measured wavefront in the basis,</p>
+				<p class="kn-math-display">\[W(\rho, \theta) = \sum_{n, m} a_n^m\, Z_n^m(\rho, \theta),\]</p>
+				<p>with coefficients \(a_n^m\) in the same units as \(W\), and three practical things follow.</p>
+				<ul><li>Every coefficient is an independent projection, \(a_n^m = \langle W Z_n^m\rangle\), computed without knowing or caring about any other mode. Least-squares fitting over a circular pupil sampled evenly gives the same answer, which is what an interferometer or a Shack-Hartmann sensor actually does.</li><li>Errors add in quadrature. The RMS wavefront error is \(\sigma = \sqrt{\sum (a_n^m)^2}\) over every mode except piston, and usually except tip and tilt as well, since those only move the image rather than blur it. That single number is what feeds the Strehl estimate and the diffraction-limited criterion.</li><li>Truncation is safe. Fit fifteen modes or forty-five and the first fifteen come out the same; the error left behind is the root-sum-square of the coefficients that were dropped.</li></ul>
+				<p>None of this holds for the Seidel terms, which overlap: \(\rho^4\) contains \(\rho^2\), so “how much spherical aberration” a wavefront has depends on where the focus is. That is not a defect of Seidel's list, which was built to describe how a system fails rather than to fit data, but it is the reason measurement work is done in the Zernike basis. Section 4 makes the relationship between the two exact.</p>
+				<p>One caution about the fitting, since it is where the orthogonality is most often quietly lost: the integrals above assume the whole circular pupil, weighted evenly. Real data comes on a grid of samples, sometimes with a central obscuration or dead subapertures, and in that case the modes are no longer orthogonal over the sampled region. The fit still works as least squares, but the coefficients are correlated: change the number of modes and the earlier ones move. Section 6 returns to this.</p>
+				<h2>3. The Indexing Mess</h2>
+				<p>Two integers are awkward in code and in spreadsheets, so the modes are usually flattened into a single index \(j\). There are two common ways to do it and they disagree.</p>
+				<p>Noll's ordering, introduced in 1976 for atmospheric turbulence and now standard in astronomy and adaptive optics, starts at \(j = 1\) for piston. Within a radial order it takes \(|m|\) in increasing order, and for each nonzero \(|m|\) it puts the cosine mode on even \(j\) and the sine mode on odd \(j\). The OSA/ANSI ordering, standard in ophthalmic optics, starts at \(j = 0\) and has a closed form,</p>
+				<p class="kn-math-display">\[j_{\text{OSA}} = \frac{n(n+2) + m}{2},\]</p>
+				<p>which simply reads each row of the pyramid in figure 1 from left to right, \(m = -n\) up to \(m = +n\).</p>
+				<p>The two agree on defocus, which is 4 in both, and on horizontal coma, which is 8 in both, and then diverge. Astigmatism is 5 and 6 in Noll but 3 and 5 in OSA. Spherical aberration is 11 in Noll and 12 in OSA. Trefoil is 9 and 10 in Noll but 6 and 9 in OSA. Combine that with the normalized-or-not choice from section 1 and with the sign convention for the sine modes, and a sentence like “the \(Z_{11}\) coefficient is 0.06” carries no information at all. Coefficients should always travel with \((n, m)\), the normalization, and the pupil they were fitted over.</p>
+				<p>Here are the first fifteen modes in both schemes, with the normalized polynomial and the name each usually goes by:</p>
+				<div class="table-wrapper"><table>
+				<thead><tr><th>\(n\)</th><th>\(m\)</th><th>Noll \(j\)</th><th>OSA \(j\)</th><th>normalized polynomial</th><th>name</th></tr></thead>
+				<tbody>
+				<tr><td>0</td><td>0</td><td>1</td><td>0</td><td>\(1\)</td><td>piston</td></tr>
+				<tr><td>1</td><td>-1</td><td>3</td><td>1</td><td>\(2\rho\sin\theta\)</td><td>tilt (y)</td></tr>
+				<tr><td>1</td><td>+1</td><td>2</td><td>2</td><td>\(2\rho\cos\theta\)</td><td>tilt (x)</td></tr>
+				<tr><td>2</td><td>-2</td><td>5</td><td>3</td><td>\(\sqrt{6}\rho^2\sin 2\theta\)</td><td>astigmatism (45°)</td></tr>
+				<tr><td>2</td><td>0</td><td>4</td><td>4</td><td>\(\sqrt{3}(2\rho^2-1)\)</td><td>defocus</td></tr>
+				<tr><td>2</td><td>+2</td><td>6</td><td>5</td><td>\(\sqrt{6}\rho^2\cos 2\theta\)</td><td>astigmatism (0/90°)</td></tr>
+				<tr><td>3</td><td>-3</td><td>9</td><td>6</td><td>\(2\sqrt{2}\rho^3\sin 3\theta\)</td><td>trefoil</td></tr>
+				<tr><td>3</td><td>-1</td><td>7</td><td>7</td><td>\(2\sqrt{2}(3\rho^3-2\rho)\sin\theta\)</td><td>coma (y)</td></tr>
+				<tr><td>3</td><td>+1</td><td>8</td><td>8</td><td>\(2\sqrt{2}(3\rho^3-2\rho)\cos\theta\)</td><td>coma (x)</td></tr>
+				<tr><td>3</td><td>+3</td><td>10</td><td>9</td><td>\(2\sqrt{2}\rho^3\cos 3\theta\)</td><td>trefoil</td></tr>
+				<tr><td>4</td><td>-4</td><td>15</td><td>10</td><td>\(\sqrt{10}\rho^4\sin 4\theta\)</td><td>quadrafoil</td></tr>
+				<tr><td>4</td><td>-2</td><td>13</td><td>11</td><td>\(\sqrt{10}(4\rho^4-3\rho^2)\sin 2\theta\)</td><td>secondary astigmatism</td></tr>
+				<tr><td>4</td><td>0</td><td>11</td><td>12</td><td>\(\sqrt{5}(6\rho^4-6\rho^2+1)\)</td><td>spherical</td></tr>
+				<tr><td>4</td><td>+2</td><td>12</td><td>13</td><td>\(\sqrt{10}(4\rho^4-3\rho^2)\cos 2\theta\)</td><td>secondary astigmatism</td></tr>
+				<tr><td>4</td><td>+4</td><td>14</td><td>14</td><td>\(\sqrt{10}\rho^4\cos 4\theta\)</td><td>quadrafoil</td></tr>
+				</tbody>
+				</table></div>
+				<p>Two details in the table are worth a second look. The radial polynomial for \(|m| = n\) is just \(\rho^n\), which is why the outer edges of the pyramid are the pure clover shapes: trefoil, quadrafoil, and so on. And the modes with \(m = 0\) carry the \(\sqrt{n+1}\) normalization rather than \(\sqrt{2(n+1)}\), because they have no sine partner to share the pupil with.</p>
+				<h2>4. Zernike Modes Are Balanced Seidel Terms</h2>
+				<p>The names carried over from the <a href="seidel-aberrations.html">Seidel list</a> are suggestive but not equalities. Project the Seidel spherical term onto the basis and it splits into exactly three modes:</p>
+				<p class="kn-math-display">\[\rho^4 = \tfrac{1}{3}\,Z_0^0 + \tfrac{1}{2\sqrt{3}}\,Z_2^0 + \tfrac{1}{6\sqrt{5}}\,Z_4^0,\]</p>
+				<p>that is, piston plus defocus plus the mode everyone calls spherical aberration. The same happens to the other two aberrations that can be partly focused away:</p>
+				<p class="kn-math-display">\[\rho^3\cos\theta = \tfrac{1}{3}\,Z_1^1 + \tfrac{1}{6\sqrt{2}}\,Z_3^1, \qquad \rho^2\cos^2\theta = \tfrac{1}{4}\,Z_0^0 + \tfrac{1}{4\sqrt{3}}\,Z_2^0 + \tfrac{1}{2\sqrt{6}}\,Z_2^2.\]</p>
+				<p>Read the other way, \(Z_4^0 \propto 6\rho^4 - 6\rho^2 + 1\) is the Seidel \(\rho^4\) with exactly the defocus and piston that minimize its RMS already subtracted. The Zernike modes are the Seidel terms after balancing, which is why their coefficients are smaller and why they are the honest way to report a wavefront: they charge an aberration only for what refocusing cannot remove.</p>
+				<p>The coefficients above are exactly the balanced RMS values from the Seidel note, since a normalized Zernike has unit RMS:</p>
+				<div class="table-wrapper"><table>
+				<thead><tr><th>Seidel term</th><th>becomes</th><th>plus</th><th>RMS before</th><th>RMS after</th></tr></thead>
+				<tbody>
+				<tr><td>\(\rho^4\)</td><td>\(Z_4^0\) spherical</td><td>defocus, piston</td><td>0.298</td><td>0.075</td></tr>
+				<tr><td>\(\rho^3\cos\theta\)</td><td>\(Z_3^1\) coma</td><td>tilt</td><td>0.354</td><td>0.118</td></tr>
+				<tr><td>\(\rho^2\cos^2\theta\)</td><td>\(Z_2^2\) astigmatism</td><td>defocus, piston</td><td>0.250</td><td>0.204</td></tr>
+				</tbody>
+				</table></div>
+				<figure class="kn-figure">
+				<svg viewBox="0 0 620 330" role="img" aria-labelledby="zn2-t" style="width:100%;max-width:620px;font-family:&quot;Source Sans Pro&quot;, Helvetica, sans-serif">
+				<title id="zn2-t">Seidel spherical aberration rho^4 against the same aberration after the best defocus is subtracted: the peak-to-valley error drops from 1 to 0.25 and the RMS from 0.298 to 0.0745.</title>
+				<line x1="70" y1="207.7" x2="602" y2="207.7" stroke="#8a9a98" stroke-width="1"/>
+				<line x1="70" y1="24" x2="70" y2="272" stroke="#8a9a98" stroke-width="1"/>
+				<text x="62" y="211.7" font-size="12" text-anchor="end" fill="#646464">0.0</text>
+				<text x="62" y="119.9" font-size="12" text-anchor="end" fill="#646464">0.5</text>
+				<line x1="70" y1="115.9" x2="602" y2="115.9" stroke="#eceeee" stroke-width="1"/>
+				<text x="62" y="28.0" font-size="12" text-anchor="end" fill="#646464">1.0</text>
+				<line x1="70" y1="24.0" x2="602" y2="24.0" stroke="#eceeee" stroke-width="1"/>
+				<text x="62" y="257.6" font-size="12" text-anchor="end" fill="#646464">-0.25</text>
+				<text x="70.0" y="292" font-size="12" text-anchor="middle" fill="#646464">0.0</text>
+				<text x="336.0" y="292" font-size="12" text-anchor="middle" fill="#646464">0.5</text>
+				<text x="602.0" y="292" font-size="12" text-anchor="middle" fill="#646464">1.0</text>
+				<text x="336" y="318" font-size="13" text-anchor="middle" fill="#3c3b3b">pupil radius ρ</text>
+				<text x="16" y="148" font-size="13" text-anchor="middle" fill="#3c3b3b" transform="rotate(-90 16 148)">wavefront error (waves)</text>
+				<polyline points="70.0,207.7 72.7,207.7 75.3,207.7 78.0,207.7 80.6,207.7 83.3,207.7 86.0,207.7 88.6,207.7 91.3,207.7 93.9,207.7 96.6,207.7 99.3,207.7 101.9,207.7 104.6,207.7 107.2,207.7 109.9,207.7 112.6,207.7 115.2,207.7 117.9,207.7 120.5,207.7 123.2,207.7 125.9,207.7 128.5,207.7 131.2,207.7 133.8,207.7 136.5,207.7 139.2,207.7 141.8,207.6 144.5,207.6 147.1,207.6 149.8,207.6 152.5,207.6 155.1,207.6 157.8,207.6 160.4,207.6 163.1,207.5 165.8,207.5 168.4,207.5 171.1,207.5 173.7,207.4 176.4,207.4 179.1,207.4 181.7,207.3 184.4,207.3 187.0,207.3 189.7,207.2 192.4,207.2 195.0,207.1 197.7,207.1 200.3,207.0 203.0,207.0 205.7,206.9 208.3,206.9 211.0,206.8 213.6,206.7 216.3,206.7 219.0,206.6 221.6,206.5 224.3,206.4 226.9,206.3 229.6,206.2 232.3,206.1 234.9,206.0 237.6,205.9 240.2,205.8 242.9,205.7 245.6,205.5 248.2,205.4 250.9,205.2 253.5,205.1 256.2,204.9 258.9,204.8 261.5,204.6 264.2,204.4 266.8,204.3 269.5,204.1 272.2,203.9 274.8,203.7 277.5,203.5 280.1,203.2 282.8,203.0 285.5,202.8 288.1,202.5 290.8,202.3 293.4,202.0 296.1,201.7 298.8,201.4 301.4,201.1 304.1,200.8 306.7,200.5 309.4,200.2 312.1,199.8 314.7,199.5 317.4,199.1 320.0,198.7 322.7,198.4 325.4,198.0 328.0,197.5 330.7,197.1 333.3,196.7 336.0,196.2 338.7,195.8 341.3,195.3 344.0,194.8 346.6,194.3 349.3,193.7 352.0,193.2 354.6,192.7 357.3,192.1 359.9,191.5 362.6,190.9 365.3,190.3 367.9,189.6 370.6,189.0 373.2,188.3 375.9,187.6 378.6,186.9 381.2,186.2 383.9,185.4 386.5,184.7 389.2,183.9 391.9,183.1 394.5,182.3 397.2,181.4 399.8,180.6 402.5,179.7 405.2,178.8 407.8,177.8 410.5,176.9 413.1,175.9 415.8,174.9 418.5,173.9 421.1,172.8 423.8,171.8 426.4,170.7 429.1,169.6 431.8,168.4 434.4,167.3 437.1,166.1 439.7,164.8 442.4,163.6 445.1,162.3 447.7,161.0 450.4,159.7 453.0,158.3 455.7,156.9 458.4,155.5 461.0,154.1 463.7,152.6 466.3,151.1 469.0,149.6 471.7,148.0 474.3,146.4 477.0,144.8 479.6,143.1 482.3,141.4 485.0,139.7 487.6,137.9 490.3,136.2 492.9,134.3 495.6,132.5 498.3,130.6 500.9,128.6 503.6,126.7 506.2,124.6 508.9,122.6 511.6,120.5 514.2,118.4 516.9,116.2 519.5,114.0 522.2,111.8 524.9,109.5 527.5,107.2 530.2,104.9 532.8,102.5 535.5,100.0 538.2,97.5 540.8,95.0 543.5,92.4 546.1,89.8 548.8,87.2 551.5,84.5 554.1,81.7 556.8,78.9 559.4,76.1 562.1,73.2 564.8,70.3 567.4,67.3 570.1,64.3 572.7,61.2 575.4,58.1 578.1,54.9 580.7,51.7 583.4,48.4 586.0,45.1 588.7,41.7 591.4,38.3 594.0,34.8 596.7,31.2 599.3,27.6 602.0,24.0" fill="none" stroke="#259a8f" stroke-width="2.5"/>
+				<polyline points="70.0,207.7 72.7,207.7 75.3,207.7 78.0,207.7 80.6,207.8 83.3,207.8 86.0,207.9 88.6,207.9 91.3,208.0 93.9,208.1 96.6,208.2 99.3,208.3 101.9,208.4 104.6,208.5 107.2,208.6 109.9,208.7 112.6,208.9 115.2,209.0 117.9,209.2 120.5,209.3 123.2,209.5 125.9,209.7 128.5,209.9 131.2,210.1 133.8,210.3 136.5,210.5 139.2,210.8 141.8,211.0 144.5,211.2 147.1,211.5 149.8,211.7 152.5,212.0 155.1,212.3 157.8,212.6 160.4,212.9 163.1,213.2 165.8,213.5 168.4,213.8 171.1,214.1 173.7,214.4 176.4,214.8 179.1,215.1 181.7,215.4 184.4,215.8 187.0,216.2 189.7,216.5 192.4,216.9 195.0,217.3 197.7,217.7 200.3,218.1 203.0,218.5 205.7,218.9 208.3,219.3 211.0,219.7 213.6,220.1 216.3,220.5 219.0,221.0 221.6,221.4 224.3,221.9 226.9,222.3 229.6,222.7 232.3,223.2 234.9,223.7 237.6,224.1 240.2,224.6 242.9,225.1 245.6,225.5 248.2,226.0 250.9,226.5 253.5,227.0 256.2,227.5 258.9,227.9 261.5,228.4 264.2,228.9 266.8,229.4 269.5,229.9 272.2,230.4 274.8,230.9 277.5,231.4 280.1,231.9 282.8,232.4 285.5,232.9 288.1,233.4 290.8,233.9 293.4,234.4 296.1,234.9 298.8,235.4 301.4,235.9 304.1,236.4 306.7,236.9 309.4,237.4 312.1,237.9 314.7,238.4 317.4,238.8 320.0,239.3 322.7,239.8 325.4,240.3 328.0,240.8 330.7,241.2 333.3,241.7 336.0,242.1 338.7,242.6 341.3,243.1 344.0,243.5 346.6,243.9 349.3,244.4 352.0,244.8 354.6,245.2 357.3,245.7 359.9,246.1 362.6,246.5 365.3,246.9 367.9,247.2 370.6,247.6 373.2,248.0 375.9,248.4 378.6,248.7 381.2,249.1 383.9,249.4 386.5,249.7 389.2,250.0 391.9,250.3 394.5,250.6 397.2,250.9 399.8,251.2 402.5,251.4 405.2,251.7 407.8,251.9 410.5,252.1 413.1,252.3 415.8,252.5 418.5,252.7 421.1,252.9 423.8,253.0 426.4,253.1 429.1,253.3 431.8,253.4 434.4,253.5 437.1,253.5 439.7,253.6 442.4,253.6 445.1,253.6 447.7,253.6 450.4,253.6 453.0,253.6 455.7,253.5 458.4,253.4 461.0,253.3 463.7,253.2 466.3,253.1 469.0,252.9 471.7,252.7 474.3,252.5 477.0,252.3 479.6,252.0 482.3,251.8 485.0,251.5 487.6,251.1 490.3,250.8 492.9,250.4 495.6,250.0 498.3,249.6 500.9,249.2 503.6,248.7 506.2,248.2 508.9,247.6 511.6,247.1 514.2,246.5 516.9,245.9 519.5,245.2 522.2,244.5 524.9,243.8 527.5,243.1 530.2,242.3 532.8,241.5 535.5,240.7 538.2,239.8 540.8,238.9 543.5,238.0 546.1,237.0 548.8,236.0 551.5,234.9 554.1,233.9 556.8,232.7 559.4,231.6 562.1,230.4 564.8,229.2 567.4,227.9 570.1,226.6 572.7,225.3 575.4,223.9 578.1,222.4 580.7,221.0 583.4,219.5 586.0,217.9 588.7,216.3 591.4,214.7 594.0,213.0 596.7,211.3 599.3,209.5 602.0,207.7" fill="none" stroke="#c8483f" stroke-width="2.5"/>
+				<text x="347" y="178" font-size="13" fill="#259a8f">ρ⁴, as it comes</text>
+				<text x="389" y="272" font-size="13" fill="#c8483f">ρ⁴ − ρ², after refocusing</text>
+				<circle cx="446.2" cy="253.6" r="3.5" fill="#c8483f"/>
+				</svg>
+				<figcaption>Figure 2. One wave of Seidel spherical aberration across the pupil, before and after the best defocus is subtracted. Refocusing turns a wavefront that runs monotonically to a full wave at the rim into one that stays within a quarter of a wave, marked at its minimum at \(\rho = 1/\sqrt{2}\). The peak-to-valley error falls by four and so does the RMS, from 0.298 to 0.075 waves.</figcaption>
+				</figure>
+				<p>The distinction matters whenever numbers cross a boundary. A design program reporting Seidel sums and an interferometer reporting Zernike coefficients are describing the same lens with numbers that differ by a factor of four for spherical aberration, and converting between them means adding back or removing the balancing terms, not renaming a column. The safe habit is to state which is which, and for measurements to prefer the Zernike form, since it is the one whose coefficients survive a change of focus.</p>
+				<h2>5. A Worked Example</h2>
+				<p>Take a lens whose wavefront at the corner of the field, at 550 nm, carries one wave of Seidel spherical aberration, half a wave of coma and four tenths of a wave of astigmatism:</p>
+				<p class="kn-math-display">\[W(\rho, \theta) = 1.0\,\rho^4 + 0.5\,\rho^3\cos\theta + 0.4\,\rho^2\cos^2\theta \quad \text{waves}.\]</p>
+				<p>Projecting it onto the basis with the decompositions of section 4 gives six nonzero coefficients. Tilt and defocus appear even though nobody put them there: they are the balancing parts that the Seidel terms brought with them.</p>
+				<div class="table-wrapper"><table>
+				<thead><tr><th>mode</th><th>OSA \(j\)</th><th>coefficient (waves)</th><th>share of \(\sigma^2\) after refocus</th></tr></thead>
+				<tbody>
+				<tr><td>\(Z_1^1\) tilt</td><td>2</td><td>0.167</td><td>removed by recentering</td></tr>
+				<tr><td>\(Z_2^0\) defocus</td><td>4</td><td>0.346</td><td>removed by refocusing</td></tr>
+				<tr><td>\(Z_2^2\) astigmatism</td><td>5</td><td>0.082</td><td>43%</td></tr>
+				<tr><td>\(Z_3^1\) coma</td><td>8</td><td>0.059</td><td>22%</td></tr>
+				<tr><td>\(Z_4^0\) spherical</td><td>12</td><td>0.075</td><td>35%</td></tr>
+				</tbody>
+				</table></div>
+				<p>The RMS error as delivered, counting everything but piston, is 0.404 waves. Drop tilt and defocus, which cost only a shift of the image and a turn of the focus ring, and it falls to 0.125 waves. That single step removes more than two thirds of the error, which is the practical reason wavefront reports always quote the refocused number.</p>
+				<p>Now look at which aberration dominates what is left. The astigmatism started as the smallest of the three Seidel coefficients, 0.4 waves against 1.0 for spherical, yet it contributes the largest share of the residual error. The reason is section 4: refocusing removes three quarters of the spherical aberration and two thirds of the coma but only a fifth of the astigmatism. Ranking aberrations by their Seidel coefficients gets the priorities wrong; ranking them by balanced RMS gets them right.</p>
+				<p>Finally, the verdict on the lens. Maréchal's approximation gives a Strehl ratio of about 0.54 at 0.125 waves RMS, so roughly half the light that should be in the core of the image of a point is not. Diffraction-limited performance would need 0.075 waves, so this corner is off by about a factor of 1.7 in RMS. Two notes of caution about that number: the approximation is stretched at 0.125 waves, where it is an estimate rather than a prediction, and the Strehl ratio says nothing about how the missing light is distributed, which is what an MTF curve or a spot diagram is for.</p>
+				<h2>6. Where It Goes Wrong</h2>
+				<p>The basis is so convenient that its assumptions are easy to forget. Four of them bite regularly.</p>
+				<ul><li>The pupil has to be a full circle. Orthogonality is an integral over the unit disc, so a central obscuration, a segmented mirror or a rectangular aperture breaks it, and coefficients fitted there are correlated rather than independent. The fix is to orthogonalize over the actual aperture, which for an annulus gives Mahajan's annular Zernikes and in general is a Gram-Schmidt pass over the pupil you really have.</li><li>The coefficients belong to a stated pupil radius. Refit the same wavefront over a smaller pupil and every coefficient changes, and not by a simple factor: rescaling \(\rho\) mixes each mode into the lower modes of the same azimuthal frequency. A number quoted without its pupil diameter is meaningless, which is why ophthalmic prescriptions always name one, typically 6 mm.</li><li>Sampling matters. The orthogonality integrals assume even coverage of the disc; real data has a finite grid, dead subapertures and edge pixels. Least squares still returns a best fit, but the modes are no longer independent, so adding a mode to the fit moves the ones already there. Watch for that whenever a report changes its number of terms.</li><li>The modes are global, and most defects are not. A scratch, a dust shadow or a small thermal blister is a local bump, and a global polynomial basis describes it by spreading energy across dozens of coefficients that individually mean nothing. Fitting more orders to chase such a feature mostly fits noise.</li></ul>
+				<p>There is also a conceptual trap worth naming. Zernike modes are not the natural modes of anything physical. Atmospheric turbulence has its own statistically optimal basis, the Karhunen-Loève modes, which the low-order Zernikes happen to resemble; a deformable mirror has its influence functions; a lens design has whatever its degrees of freedom actually do. The Zernike basis is a convenient, orthogonal, conventional description of a wavefront on a circle, and it earns its place by being all three, not by being fundamental.</p>
+				<h2>Intuitively: A Graphic Equalizer for Wavefronts</h2>
+				<p>A graphic equalizer splits a sound into bands and gives each one a slider. The bands do not overlap, so moving one changes nothing else; the total power is the sum of the squares of the settings; and a few sliders describe the sound well enough to talk about, even though a full recording holds far more.</p>
+				<p>Zernike modes are that, for the wavefront on a round pupil. Each mode is a band, each coefficient a slider reading in waves, and the RMS error is the root of the sum of their squares. Refocusing a system is nothing more than resetting the defocus slider, and the reason the spherical-aberration band is drawn as \(6\rho^4 - 6\rho^2 + 1\) rather than \(\rho^4\) is that its band has been cleaned of everything the defocus slider can already do.</p>
+				<p>The analogy also carries the warning. An equalizer is a poor way to describe a click: a single sharp event spreads across every band at once. A wavefront with a scratch in it is the same, and no number of Zernike terms will describe it as well as simply looking at the map.</p>
+				</div>
+			</article>
+		</div>
+	</div>
+	<script src="../../assets/js/jquery.min.js"></script>
+	<script src="../../assets/js/browser.min.js"></script>
+	<script src="../../assets/js/breakpoints.min.js"></script>
+	<script src="../../assets/js/util.js"></script>
+	<script src="../../assets/js/main.js"></script>
+</body>
+</html>

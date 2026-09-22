@@ -67,6 +67,8 @@ TOPIC: dict[str, tuple[str, str, str | None]] = {
     "friction-cone-antipodal-grasps": ("Robotics", "robotics", None),
     "octree": ("Computer Graphics", "computer-graphics", None),
     "jepa-world-models": ("Machine Learning", "machine-learning", None),
+    "zernike-polynomials": ("Optics", "optics", None),
+    "seidel-aberrations": ("Optics", "optics", None),
 }
 
 
@@ -85,6 +87,8 @@ LOCAL_ARTICLES: dict[str, str] = {
     "friction-cone-antipodal-grasps": "2026-09-14",
     "octree": "2026-09-15",
     "jepa-world-models": "2026-09-18",
+    "zernike-polynomials": "2026-09-22",
+    "seidel-aberrations": "2026-09-22",
 }
 
 

@@ -1,0 +1,853 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<title>Seidel Aberrations — Knowledge Share — Jipeng Sun</title>
+	<!-- seo:auto:start -->
+	<meta name="description" content="A perfect lens would turn every point of an object into a point in the image. A real one does not. The image of a star spreads into a disc, a comet, a short…" />
+	<meta name="author" content="Jipeng Sun" />
+	<meta name="robots" content="index, follow" />
+	<link rel="canonical" href="https://jipengsun.github.io/knowledge/articles/seidel-aberrations.html" />
+	<meta property="og:type" content="article" />
+	<meta property="og:site_name" content="Jipeng Sun — Knowledge Share" />
+	<meta property="og:title" content="Seidel Aberrations" />
+	<meta property="og:description" content="A perfect lens would turn every point of an object into a point in the image. A real one does not. The image of a star spreads into a disc, a comet, a short…" />
+	<meta property="og:url" content="https://jipengsun.github.io/knowledge/articles/seidel-aberrations.html" />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Seidel Aberrations" />
+	<meta name="twitter:description" content="A perfect lens would turn every point of an object into a point in the image. A real one does not. The image of a star spreads into a disc, a comet, a short…" />
+	<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Seidel Aberrations","description":"A perfect lens would turn every point of an object into a point in the image. A real one does not. The image of a star spreads into a disc, a comet, a short…","url":"https://jipengsun.github.io/knowledge/articles/seidel-aberrations.html","mainEntityOfPage":"https://jipengsun.github.io/knowledge/articles/seidel-aberrations.html","inLanguage":"en","author":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"publisher":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"isPartOf":{"@type":"Blog","name":"Jipeng Sun — Knowledge Share","url":"https://jipengsun.github.io/knowledge-share.html"},"dateModified":"2026-09-22"}</script>
+	<!-- seo:auto:end -->
+	<link rel="stylesheet" href="../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="(function(){var b=document.querySelector('.kn-body');if(!b)return;b.querySelectorAll('span').forEach(function(s){if(s.children.length)return;var t=s.textContent.trim();if(/^\\\([\s\S]*\\\)$/.test(t)||/^\\\[[\s\S]*\\\]$/.test(t))s.replaceWith(document.createTextNode(t));});renderMathInElement(b,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false,ignoredTags:['script','noscript','style','textarea','pre','code']});})();"></script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-LCC4R0HD24"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'G-LCC4R0HD24');
+	</script>
+	<script src="../../assets/js/ga-events.js"></script>
+</head>
+<body class="is-preload kn-page">
+	<div id="wrapper">
+		<header id="header">
+			<p class="site-title"><a href="../../index.html">Jipeng Sun</a></p>
+			<nav class="links">
+				<ul>
+					<li><a href="../../index.html">Home</a></li>
+					<li><a href="../../research.html">Research</a></li>
+					<li class="active"><a href="../../knowledge-share.html">Knowledge Share</a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course">VR/AR Course</a></li>
+				</ul>
+			</nav>
+			<nav class="main">
+				<ul>
+					<li class="search"><a class="fa-search" href="#search">Search</a><form id="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></li>
+					<li class="menu"><a class="fa-bars" href="#menu">Menu</a></li>
+				</ul>
+			</nav>
+		</header>
+		<section id="menu">
+			<section><form class="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></section>
+			<section>
+				<ul class="links">
+					<li><a href="../../index.html"><h3>Home</h3><p>Jipeng Sun's Homepage</p></a></li>
+					<li><a href="../../research.html"><h3>Research</h3><p>Publications &amp; Papers</p></a></li>
+					<li><a href="../../knowledge-share.html"><h3>Knowledge Share</h3><p>Study notes</p></a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course"><h3>Teaching</h3><p>VR Summer Course</p></a></li>
+				</ul>
+			</section>
+		</section>
+		<div id="main">
+			<article class="post">
+				<header><div class="title"><h1>Seidel Aberrations</h1></div></header>
+				<p class="kn-back"><a href="../../knowledge-share.html">&larr; Back to Knowledge Share</a></p>
+				<div class="kn-body">
+				<p>A perfect lens would turn every point of an object into a point in the image. A real one does not. The image of a star spreads into a disc, a comet, a short line or a smear, and which of those you get depends on where in the field the star sits and how wide the aperture is. Seidel’s answer, now more than a century and a half old, is still the first language for describing that: five named ways a rotationally symmetric system fails.</p>
+				<p>The five are spherical aberration, coma, astigmatism, field curvature and distortion. They are not five separate physical effects that happen to occur together. They are the five terms that survive when the wavefront error of any rotationally symmetric system is expanded to the lowest interesting order, which is why every lens, telescope and microscope objective is discussed in the same vocabulary. This note builds that expansion, shows what each term does to an image, and works out how large each has to be before it matters. Their orthogonal cousins, the <a href="zernike-polynomials.html">Zernike polynomials</a>, get their own note.</p>
+				<hr />
+				<h2>1. The Wave Aberration Function</h2>
+				<p>Everything is measured at the exit pupil, the last surface where the light is still a converging wave rather than an image. If the system were perfect, the wave leaving the pupil would be a sphere centered on the ideal image point. That sphere is the reference sphere, and the wave aberration function \(W\) is the gap between it and the actual wavefront, measured along the ray as an optical path difference. A length, usually quoted in waves as \(W/\lambda\).</p>
+				<p>\(W\) depends on where the object point is and on which part of the pupil the light goes through, so it takes three dimensionless arguments:</p>
+				<ul><li>\(H\), the field coordinate: the object point’s distance from the axis divided by the largest distance the system is asked to image, so \(H = 1\) at the corner of the frame;</li><li>\(\rho\), the radial pupil coordinate: distance from the pupil center divided by the pupil radius \(a\), so \(\rho = 1\) at the rim;</li><li>\(\theta\), the azimuth around the pupil, measured from the plane containing the axis and the object point, so \(\theta = 0\) points toward the field and \(\theta = 90^\circ\) is perpendicular to it.</li></ul>
+				<figure class="kn-figure">
+				<svg viewBox="0 0 660 300" role="img" aria-labelledby="sa1-t" style="width:100%;max-width:640px;font-family:&quot;Source Sans Pro&quot;, Helvetica, sans-serif">
+				<title id="sa1-t">Upper half of the pupil: the wave aberration W is the gap along the ray between the reference sphere centred on the ideal image point and the actual wavefront, and its slope moves the ray by epsilon in the image plane.</title>
+				<defs><marker id="sa1-a" viewBox="0 0 10 10" refX="9" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#3c3b3b"/></marker><marker id="sa1-s" viewBox="0 0 10 10" refX="1" refY="5" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" orient="auto"><path d="M10 0 L0 5 L10 10 z" fill="#3c3b3b"/></marker></defs>
+				<line x1="70" y1="250.0" x2="620" y2="250.0" stroke="#646464" stroke-width="1" stroke-dasharray="6 5"/>
+				<line x1="150.0" y1="264.0" x2="150.0" y2="66.0" stroke="#8a9a98" stroke-width="2"/>
+				<line x1="510.0" y1="264.0" x2="510.0" y2="120.0" stroke="#8a9a98" stroke-width="2"/>
+				<text x="150.0" y="282.0" font-size="13" text-anchor="middle" fill="#646464">exit pupil</text>
+				<text x="510.0" y="282.0" font-size="13" text-anchor="middle" fill="#646464">image plane</text>
+				<polyline points="150.0,250.0 150.0,247.2 150.1,244.4 150.2,241.6 150.3,238.8 150.5,236.0 150.8,233.2 151.1,230.4 151.4,227.6 151.8,224.8 152.2,222.0 152.6,219.2 153.1,216.4 153.7,213.6 154.2,210.8 154.9,208.0 155.5,205.2 156.3,202.4 157.0,199.6 157.8,196.8 158.7,194.0 159.6,191.2 160.5,188.4 161.5,185.6 162.5,182.8 163.5,180.0 164.6,177.2 165.8,174.4 167.0,171.6 168.2,168.8 169.5,166.0 170.8,163.2 172.2,160.4 173.6,157.6 175.0,154.8 176.5,152.0 178.1,149.2 179.7,146.4 181.3,143.6 183.0,140.8 184.7,138.0 186.4,135.2 188.2,132.4 190.1,129.6 191.9,126.8 193.9,124.0 195.8,121.2 197.9,118.4 199.9,115.6 202.0,112.8 204.2,110.0 206.4,107.2 208.6,104.4 210.9,101.6 213.2,98.8 215.5,96.0 217.9,93.2 220.4,90.4 222.9,87.6 225.4,84.8 228.0,82.0" fill="none" stroke="#646464" stroke-width="1.8" stroke-dasharray="5 4"/>
+				<polyline points="150.0,250.0 150.0,247.2 150.1,244.4 150.2,241.6 150.3,238.8 150.5,236.0 150.8,233.2 151.1,230.4 151.4,227.6 151.7,224.8 152.1,222.0 152.6,219.2 153.0,216.4 153.6,213.6 154.1,210.8 154.7,208.0 155.3,205.2 156.0,202.4 156.7,199.6 157.4,196.8 158.1,194.0 158.9,191.2 159.7,188.4 160.5,185.6 161.4,182.8 162.2,180.0 163.1,177.2 164.0,174.4 164.9,171.6 165.8,168.8 166.8,166.0 167.7,163.2 168.6,160.4 169.6,157.6 170.5,154.8 171.4,152.0 172.4,149.2 173.3,146.4 174.2,143.6 175.1,140.8 176.0,138.0 176.8,135.2 177.7,132.4 178.5,129.6 179.2,126.8 180.0,124.0 180.6,121.2 181.3,118.4 181.9,115.6 182.4,112.8 182.9,110.0 183.4,107.2 183.8,104.4 184.1,101.6 184.3,98.8 184.5,96.0 184.6,93.2 184.6,90.4 184.5,87.6 184.3,84.8 184.0,82.0" fill="none" stroke="#259a8f" stroke-width="2.5"/>
+				<text x="240" y="84" font-size="13" fill="#646464">reference sphere</text>
+				<text x="170" y="111" font-size="13" text-anchor="end" fill="#259a8f">actual wavefront</text>
+				<line x1="184.6" y1="90.4" x2="220.4" y2="90.4" stroke="#3c3b3b" stroke-width="1.6" marker-start="url(#sa1-s)" marker-end="url(#sa1-a)"/>
+				<text x="202" y="80" font-size="15" text-anchor="middle" font-style="italic" fill="#3c3b3b">W</text>
+				<line x1="190.4" y1="129.0" x2="510.0" y2="250.0" stroke="#646464" stroke-width="1.5" stroke-dasharray="4 4"/>
+				<line x1="178.6" y1="129.0" x2="510.0" y2="198.0" stroke="#c8483f" stroke-width="2"/>
+				<circle cx="510.0" cy="250.0" r="3.5" fill="#3c3b3b"/>
+				<circle cx="510.0" cy="198.0" r="3.5" fill="#c8483f"/>
+				<line x1="522.0" y1="250.0" x2="522.0" y2="198.0" stroke="#3c3b3b" stroke-width="1.4" marker-start="url(#sa1-s)" marker-end="url(#sa1-a)"/>
+				<text x="532.0" y="229" font-size="15" font-style="italic" fill="#3c3b3b">ε</text>
+				<text x="524.0" y="262.0" font-size="13" fill="#646464">ideal image point</text>
+				<line x1="150.0" y1="250.0" x2="150.0" y2="129.0" stroke="#3c3b3b" stroke-width="1.2" marker-end="url(#sa1-a)"/>
+				<text x="140.0" y="195" font-size="15" text-anchor="end" font-style="italic" fill="#3c3b3b">ρ</text>
+				</svg>
+				<figcaption>Figure 1. The upper half of the pupil, with the curvature and the error exaggerated. The reference sphere (dashed) is centered on the ideal image point; the actual wavefront (solid) departs from it by \(W\), measured along the ray. Because the ray runs perpendicular to the wavefront, that departure lands the ray a distance \(\varepsilon\) away from the ideal point.</figcaption>
+				</figure>
+				<p>The wavefront shape matters because rays travel perpendicular to it: tilt a patch of wavefront and the ray through it lands somewhere else. To first order the transverse ray error in the image plane is the pupil gradient of \(W\),</p>
+				<p class="kn-math-display">\[\varepsilon_x = \frac{R}{n'a}\,\frac{\partial W}{\partial \rho_x}, \qquad \varepsilon_y = \frac{R}{n'a}\,\frac{\partial W}{\partial \rho_y},\]</p>
+				<p>where \(\rho_x = \rho\cos\theta\) and \(\rho_y = \rho\sin\theta\) are Cartesian pupil coordinates, \(R\) is the distance from the exit pupil to the image plane, and \(n'\) is the refractive index of image space. Signs depend on the convention chosen for \(W\); the magnitudes are what matter here. The useful consequence is that a term in \(W\) growing as \(\rho^4\) produces ray errors growing as \(\rho^3\), one power lower, which is where the older name for these five, the third-order aberrations, comes from.</p>
+				<p>One more thing is hiding in the definition. The reference sphere is centered on a point that you get to choose. Move that center sideways and \(W\) picks up a term proportional to \(\rho\cos\theta\); move it along the axis and \(W\) picks up a term proportional to \(\rho^2\). So tilt and defocus are not really aberrations, they are statements about where you decided to put the image, and any aberration can be partly hidden by refocusing. Section 4 makes that precise.</p>
+				<h2>2. Why There Are Exactly Five</h2>
+				<p>A rotationally symmetric system cannot tell one azimuth from another. Rotate the object point about the axis and the entire aberration pattern rotates rigidly with it. That one fact fixes the possible form of \(W\). Treating the field and pupil positions as vectors, the only combinations that survive an arbitrary rotation of both are</p>
+				<p class="kn-math-display">\[H^2, \qquad \rho^2, \qquad H\rho\cos\theta,\]</p>
+				<p>the squared lengths of the two vectors and their dot product. So \(W\) is a function of those three quantities and of nothing else.</p>
+				<p>Expand that function as a power series and sort the terms by their total order in \(H\) and \(\rho\). The lowest group is second order: a constant \(W_{000}\) (piston, an overall delay that no detector sees), \(W_{111}H\rho\cos\theta\) (tilt, which moves the image point) and \(W_{020}\rho^2\) (defocus, which moves the focus along the axis). None of them blurs anything; they say where the image is, which is why they belong to the system’s first-order, or Gaussian, description. The first group that actually degrades an image is fourth order, and it has exactly five members:</p>
+				<p class="kn-math-display">\[W(H, \rho, \theta) = W_{040}\,\rho^4 + W_{131}\,H\rho^3\cos\theta + W_{222}\,H^2\rho^2\cos^2\theta + W_{220}\,H^2\rho^2 + W_{311}\,H^3\rho\cos\theta.\]</p>
+				<p>The subscripts are a counting scheme, not magic: in \(W_{klm}\), \(k\) is the power of \(H\), \(l\) the power of \(\rho\) and \(m\) the power of \(\cos\theta\). Every Seidel term has \(k + l = 4\), and the five combinations above are the only ones that can be built from the three invariants at that order. Each \(W_{klm}\) is a coefficient with units of length, fixed by the glasses, curvatures, thicknesses and stop position of the particular system.</p>
+				<p>Two practical consequences follow from the expansion itself, before any optics.</p>
+				<ul><li>The coefficients add. Each surface in a system contributes its own five numbers and they sum, which is why a design program reports the five sums surface by surface and why a designer can cancel a positive contribution at one surface against a negative one at another. Lens design, to a first approximation, is the art of making five sums small at once.</li><li>The expansion is a truncation, not a law. A system that is fast or wide enough will show sixth-order and higher terms, and then the Seidel numbers stop predicting the image. They stay useful as the leading behavior and as the language designers think in.</li></ul>
+				<h2>3. What Each Term Does</h2>
+				<p>The gradient rule turns each term into a shape. Figure 2 traces a grid of rays, evenly spread over the pupil, from each aberration to the paraxial image plane; the cross marks where a perfect system would put them.</p>
+				<figure class="kn-figure">
+				<svg viewBox="0 0 568 446" role="img" aria-labelledby="sa2-t" style="width:100%;max-width:600px;font-family:&quot;Source Sans Pro&quot;, Helvetica, sans-serif">
+				<title id="sa2-t">Spot diagrams at the paraxial focus for the five Seidel aberrations: a symmetric blur for spherical, a comet for coma, a line for astigmatism, a uniform disc for field curvature and a shifted point for distortion.</title>
+				<rect x="6" y="6" width="176" height="176" fill="#fcfcfc" stroke="#8a9a98" stroke-width="1"/>
+				<path d="M85.0 94.0 H103.0 M94.0 85.0 V103.0" stroke="#646464" stroke-width="1"/>
+				<circle cx="94.0" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="94.3" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="94.1" cy="94.3" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="93.9" cy="94.3" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="93.7" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="93.9" cy="93.7" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="94.1" cy="93.7" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="96.4" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="96.1" cy="95.2" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="95.2" cy="96.1" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="94.0" cy="96.4" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="92.8" cy="96.1" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="91.9" cy="95.2" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="91.6" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="91.9" cy="92.8" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="92.8" cy="91.9" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="94.0" cy="91.6" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="95.2" cy="91.9" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="96.1" cy="92.8" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="102.0" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="101.6" cy="96.8" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="100.2" cy="99.2" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="98.0" cy="101.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="95.4" cy="101.9" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="92.6" cy="101.9" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="90.0" cy="101.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="87.8" cy="99.2" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="86.4" cy="96.8" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="86.0" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="86.4" cy="91.2" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="87.8" cy="88.8" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="90.0" cy="87.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="92.6" cy="86.1" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="95.4" cy="86.1" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="98.0" cy="87.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="100.2" cy="88.8" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="101.6" cy="91.2" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="113.1" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="112.4" cy="98.9" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="110.5" cy="103.5" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="107.5" cy="107.5" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="103.5" cy="110.5" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="98.9" cy="112.4" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="94.0" cy="113.1" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="89.1" cy="112.4" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="84.5" cy="110.5" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="80.5" cy="107.5" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="77.5" cy="103.5" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="75.6" cy="98.9" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="74.9" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="75.6" cy="89.1" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="77.5" cy="84.5" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="80.5" cy="80.5" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="84.5" cy="77.5" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="89.1" cy="75.6" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="94.0" cy="74.9" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="98.9" cy="75.6" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="103.5" cy="77.5" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="107.5" cy="80.5" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="110.5" cy="84.5" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="112.4" cy="89.1" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="131.2" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="130.4" cy="101.7" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="128.0" cy="109.1" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="124.1" cy="115.9" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="118.9" cy="121.7" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="112.6" cy="126.2" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="105.5" cy="129.4" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="97.9" cy="131.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="90.1" cy="131.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="82.5" cy="129.4" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="75.4" cy="126.2" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="69.1" cy="121.7" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="63.9" cy="115.9" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="60.0" cy="109.1" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="57.6" cy="101.7" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="56.8" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="57.6" cy="86.3" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="60.0" cy="78.9" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="63.9" cy="72.1" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="69.1" cy="66.3" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="75.4" cy="61.8" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="82.5" cy="58.6" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="90.1" cy="57.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="97.9" cy="57.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="105.5" cy="58.6" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="112.6" cy="61.8" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="118.9" cy="66.3" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="124.1" cy="72.1" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="128.0" cy="78.9" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="130.4" cy="86.3" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="158.3" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="157.4" cy="105.2" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="154.5" cy="116.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="149.7" cy="126.2" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="143.3" cy="135.4" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="135.4" cy="143.3" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="126.2" cy="149.7" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="116.0" cy="154.5" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="105.2" cy="157.4" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="94.0" cy="158.3" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="82.8" cy="157.4" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="72.0" cy="154.5" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="61.8" cy="149.7" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="52.6" cy="143.3" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="44.7" cy="135.4" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="38.3" cy="126.2" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="33.5" cy="116.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="30.6" cy="105.2" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="29.7" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="30.6" cy="82.8" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="33.5" cy="72.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="38.3" cy="61.8" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="44.7" cy="52.6" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="52.6" cy="44.7" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="61.8" cy="38.3" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="72.0" cy="33.5" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="82.8" cy="30.6" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="94.0" cy="29.7" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="105.2" cy="30.6" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="116.0" cy="33.5" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="126.2" cy="38.3" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="135.4" cy="44.7" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="143.3" cy="52.6" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="149.7" cy="61.8" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="154.5" cy="72.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="157.4" cy="82.8" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<text x="94" y="204" font-size="14" text-anchor="middle" fill="#3c3b3b">spherical</text>
+				<rect x="196" y="6" width="176" height="176" fill="#fcfcfc" stroke="#8a9a98" stroke-width="1"/>
+				<path d="M275.0 94.0 H293.0 M284.0 85.0 V103.0" stroke="#646464" stroke-width="1"/>
+				<circle cx="284.0" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="285.8" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="284.9" cy="94.5" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="284.9" cy="93.5" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="285.8" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="284.9" cy="94.5" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="284.9" cy="93.5" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="291.1" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="290.0" cy="96.1" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="287.6" cy="96.1" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="286.4" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="287.6" cy="91.9" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="290.0" cy="91.9" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="291.1" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="290.0" cy="96.1" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="287.6" cy="96.1" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="286.4" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="287.6" cy="91.9" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="290.0" cy="91.9" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="300.1" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="298.8" cy="97.4" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="295.7" cy="99.3" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="292.0" cy="98.6" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="289.7" cy="95.8" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="289.7" cy="92.2" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="292.0" cy="89.4" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="295.7" cy="88.7" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="298.8" cy="90.6" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="300.1" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="298.8" cy="97.4" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="295.7" cy="99.3" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="292.0" cy="98.6" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="289.7" cy="95.8" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="289.7" cy="92.2" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="292.0" cy="89.4" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="295.7" cy="88.7" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="298.8" cy="90.6" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="312.6" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="311.3" cy="98.8" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="307.8" cy="102.3" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="303.1" cy="103.5" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="298.3" cy="102.3" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="294.8" cy="98.8" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="293.5" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="294.8" cy="89.2" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="298.3" cy="85.7" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="303.1" cy="84.5" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="307.8" cy="85.7" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="311.3" cy="89.2" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="312.6" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="311.3" cy="98.8" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="307.8" cy="102.3" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="303.1" cy="103.5" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="298.3" cy="102.3" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="294.8" cy="98.8" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="293.5" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="294.8" cy="89.2" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="298.3" cy="85.7" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="303.1" cy="84.5" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="307.8" cy="85.7" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="311.3" cy="89.2" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="328.7" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.4" cy="100.1" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="323.8" cy="105.1" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="318.4" cy="108.2" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="312.2" cy="108.8" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="306.3" cy="106.9" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="301.7" cy="102.8" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="299.2" cy="97.1" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="299.2" cy="90.9" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="301.7" cy="85.2" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="306.3" cy="81.1" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="312.2" cy="79.2" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="318.4" cy="79.8" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="323.8" cy="82.9" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.4" cy="87.9" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="328.7" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.4" cy="100.1" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="323.8" cy="105.1" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="318.4" cy="108.2" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="312.2" cy="108.8" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="306.3" cy="106.9" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="301.7" cy="102.8" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="299.2" cy="97.1" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="299.2" cy="90.9" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="301.7" cy="85.2" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="306.3" cy="81.1" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="312.2" cy="79.2" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="318.4" cy="79.8" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="323.8" cy="82.9" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.4" cy="87.9" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="348.3" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="347.1" cy="101.3" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="343.3" cy="107.8" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="337.6" cy="112.6" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="330.6" cy="115.1" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="323.2" cy="115.1" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="316.2" cy="112.6" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="310.5" cy="107.8" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="306.7" cy="101.3" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="305.4" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="306.7" cy="86.7" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="310.5" cy="80.2" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="316.2" cy="75.4" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="323.2" cy="72.9" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="330.6" cy="72.9" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="337.6" cy="75.4" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="343.3" cy="80.2" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="347.1" cy="86.7" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="348.3" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="347.1" cy="101.3" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="343.3" cy="107.8" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="337.6" cy="112.6" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="330.6" cy="115.1" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="323.2" cy="115.1" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="316.2" cy="112.6" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="310.5" cy="107.8" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="306.7" cy="101.3" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="305.4" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="306.7" cy="86.7" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="310.5" cy="80.2" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="316.2" cy="75.4" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="323.2" cy="72.9" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="330.6" cy="72.9" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="337.6" cy="75.4" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="343.3" cy="80.2" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="347.1" cy="86.7" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<text x="284" y="204" font-size="14" text-anchor="middle" fill="#3c3b3b">coma</text>
+				<rect x="386" y="6" width="176" height="176" fill="#fcfcfc" stroke="#8a9a98" stroke-width="1"/>
+				<path d="M465.0 94.0 H483.0 M474.0 85.0 V103.0" stroke="#646464" stroke-width="1"/>
+				<circle cx="474.0" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="484.7" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="479.4" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="468.6" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="463.3" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="468.6" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="479.4" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="495.4" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="492.6" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="484.7" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="474.0" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="463.3" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="455.4" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="452.6" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="455.4" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="463.3" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="474.0" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="484.7" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="492.6" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="506.2" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="504.2" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="498.6" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="490.1" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="479.6" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="468.4" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="457.9" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="449.4" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="443.8" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="441.8" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="443.8" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="449.4" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="457.9" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="468.4" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="479.6" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="490.1" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="498.6" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="504.2" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="516.9" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="515.4" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="511.2" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="504.3" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="495.4" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="485.1" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="474.0" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="462.9" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="452.6" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="443.7" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="436.8" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="432.6" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="431.1" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="432.6" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="436.8" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="443.7" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="452.6" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="462.9" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="474.0" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="485.1" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="495.4" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="504.3" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="511.2" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="515.4" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="527.6" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="526.5" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="523.0" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="517.4" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="509.9" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="500.8" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="490.6" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="479.6" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="468.4" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="457.4" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="447.2" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="438.1" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="430.6" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="425.0" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="421.5" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="420.4" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="421.5" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="425.0" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="430.6" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="438.1" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="447.2" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="457.4" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="468.4" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="479.6" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="490.6" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="500.8" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="509.9" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="517.4" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="523.0" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="526.5" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="538.3" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="537.4" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="534.5" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="529.7" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="523.3" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="515.4" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="506.2" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="496.0" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="485.2" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="474.0" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="462.8" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="452.0" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="441.8" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="432.6" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="424.7" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="418.3" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="413.5" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="410.6" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="409.7" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="410.6" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="413.5" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="418.3" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="424.7" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="432.6" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="441.8" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="452.0" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="462.8" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="474.0" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="485.2" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="496.0" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="506.2" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="515.4" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="523.3" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="529.7" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="534.5" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="537.4" cy="94.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<text x="474" y="204" font-size="14" text-anchor="middle" fill="#3c3b3b">astigmatism</text>
+				<rect x="6" y="230" width="176" height="176" fill="#fcfcfc" stroke="#8a9a98" stroke-width="1"/>
+				<path d="M85.0 318.0 H103.0 M94.0 309.0 V327.0" stroke="#646464" stroke-width="1"/>
+				<circle cx="94.0" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="104.7" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="99.4" cy="327.3" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="88.6" cy="327.3" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="83.3" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="88.6" cy="308.7" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="99.4" cy="308.7" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="115.4" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="112.6" cy="328.7" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="104.7" cy="336.6" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="94.0" cy="339.4" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="83.3" cy="336.6" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="75.4" cy="328.7" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="72.6" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="75.4" cy="307.3" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="83.3" cy="299.4" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="94.0" cy="296.6" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="104.7" cy="299.4" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="112.6" cy="307.3" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="126.2" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="124.2" cy="329.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="118.6" cy="338.7" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="110.1" cy="345.9" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="99.6" cy="349.7" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="88.4" cy="349.7" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="77.9" cy="345.9" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="69.4" cy="338.7" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="63.8" cy="329.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="61.8" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="63.8" cy="307.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="69.4" cy="297.3" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="77.9" cy="290.1" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="88.4" cy="286.3" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="99.6" cy="286.3" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="110.1" cy="290.1" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="118.6" cy="297.3" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="124.2" cy="307.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="136.9" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="135.4" cy="329.1" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="131.2" cy="339.4" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="124.3" cy="348.3" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="115.4" cy="355.2" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="105.1" cy="359.4" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="94.0" cy="360.9" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="82.9" cy="359.4" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="72.6" cy="355.2" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="63.7" cy="348.3" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="56.8" cy="339.4" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="52.6" cy="329.1" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="51.1" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="52.6" cy="306.9" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="56.8" cy="296.6" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="63.7" cy="287.7" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="72.6" cy="280.8" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="82.9" cy="276.6" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="94.0" cy="275.1" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="105.1" cy="276.6" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="115.4" cy="280.8" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="124.3" cy="287.7" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="131.2" cy="296.6" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="135.4" cy="306.9" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="147.6" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="146.5" cy="329.1" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="143.0" cy="339.8" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="137.4" cy="349.5" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="129.9" cy="357.8" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="120.8" cy="364.4" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="110.6" cy="369.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="99.6" cy="371.3" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="88.4" cy="371.3" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="77.4" cy="369.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="67.2" cy="364.4" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="58.1" cy="357.8" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="50.6" cy="349.5" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="45.0" cy="339.8" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="41.5" cy="329.1" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="40.4" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="41.5" cy="306.9" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="45.0" cy="296.2" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="50.6" cy="286.5" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="58.1" cy="278.2" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="67.2" cy="271.6" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="77.4" cy="267.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="88.4" cy="264.7" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="99.6" cy="264.7" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="110.6" cy="267.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="120.8" cy="271.6" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="129.9" cy="278.2" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="137.4" cy="286.5" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="143.0" cy="296.2" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="146.5" cy="306.9" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="158.3" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="157.4" cy="329.2" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="154.5" cy="340.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="149.7" cy="350.2" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="143.3" cy="359.4" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="135.4" cy="367.3" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="126.2" cy="373.7" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="116.0" cy="378.5" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="105.2" cy="381.4" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="94.0" cy="382.3" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="82.8" cy="381.4" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="72.0" cy="378.5" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="61.8" cy="373.7" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="52.6" cy="367.3" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="44.7" cy="359.4" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="38.3" cy="350.2" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="33.5" cy="340.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="30.6" cy="329.2" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="29.7" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="30.6" cy="306.8" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="33.5" cy="296.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="38.3" cy="285.8" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="44.7" cy="276.6" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="52.6" cy="268.7" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="61.8" cy="262.3" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="72.0" cy="257.5" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="82.8" cy="254.6" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="94.0" cy="253.7" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="105.2" cy="254.6" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="116.0" cy="257.5" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="126.2" cy="262.3" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="135.4" cy="268.7" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="143.3" cy="276.6" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="149.7" cy="285.8" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="154.5" cy="296.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="157.4" cy="306.8" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<text x="94" y="428" font-size="14" text-anchor="middle" fill="#3c3b3b">field curvature</text>
+				<rect x="196" y="230" width="176" height="176" fill="#fcfcfc" stroke="#8a9a98" stroke-width="1"/>
+				<path d="M275.0 318.0 H293.0 M284.0 309.0 V327.0" stroke="#646464" stroke-width="1"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<circle cx="327.5" cy="318.0" r="1.7" fill="#259a8f" fill-opacity="0.75"/>
+				<text x="284" y="428" font-size="14" text-anchor="middle" fill="#3c3b3b">distortion</text>
+				</svg>
+				<figcaption>Figure 2. Spot diagrams for the five Seidel terms at the paraxial focus, each panel scaled to its own size. The rays are a hexapolar grid on the pupil, so rings of dots are rings of the pupil. Relative to a unit coefficient the spreads differ: spherical reaches \(4\), coma \(3\), astigmatism and field curvature \(2\), distortion \(1\).</figcaption>
+				</figure>
+				<h3>Spherical Aberration</h3>
+				<p>\(W_{040}\rho^4\) is the only term with no \(H\) in it. It is the same everywhere in the field, on axis included, and it is the reason a fast lens can be soft even at the center of the frame. The ray error is radial and grows as \(\rho^3\), so each pupil zone focuses at its own distance and the image of a point becomes a bright core inside a halo. The cures are the classic ones: bend or split the element, add an asphere, or stop down.</p>
+				<h3>Coma</h3>
+				<p>\(W_{131}H\rho^3\cos\theta\) is linear in field, so it vanishes on axis and grows steadily toward the corner. Working out its gradient, the ring of radius \(\rho\) in the pupil maps to a circle in the image of radius proportional to \(\rho^2\), whose center is displaced by twice its own radius. The circles therefore nest into a one-sided flare with a bright head at the ideal point, bounded by two straight lines at \(30^\circ\) either side of the axis, which is the comet the aberration is named after. Its asymmetry is what makes it nastier than its size suggests: the centroid of the blur is not the ideal image point, so coma shifts apparent positions as well as blurring them.</p>
+				<h3>Astigmatism and Field Curvature</h3>
+				<p>These two travel together, both quadratic in field. Split the astigmatism term with a double-angle identity,</p>
+				<p class="kn-math-display">\[W_{222}H^2\rho^2\cos^2\theta = \tfrac{1}{2}W_{222}H^2\rho^2 + \tfrac{1}{2}W_{222}H^2\rho^2\cos 2\theta,\]</p>
+				<p>and the first piece is plain defocus while the second is the part that cannot be focused away. The consequence is two line foci: the fan of rays in the meridional plane and the fan perpendicular to it come to focus at different distances, giving a line at one focus, a line at right angles at the other, and a small circle of least confusion between them. The two are separated along the axis by \(\delta z = 8N^2W_{222}H^2\), with \(N\) the working f-number.</p>
+				<p>\(W_{220}H^2\rho^2\) is the same \(\rho^2\) shape without the azimuthal part: defocus that grows with field, that is, a curved image surface. Even a system with every other aberration removed has one, set by the Petzval sum of the glasses and curvatures, and a flat sensor can only cut through it. When astigmatism is also present there are two such surfaces, one for each fan, sitting either side of the Petzval surface with the tangential one three times as far from it as the sagittal.</p>
+				<h3>Distortion</h3>
+				<p>\(W_{311}H^3\rho\cos\theta\) is linear in \(\rho\), and a wavefront error linear in pupil coordinate is a tilt. It does not blur anything: the image of a point stays sharp and simply lands in the wrong place, displaced by an amount growing as \(H^3\). Straight lines bow outward (barrel) or inward (pincushion) depending on the sign. Because the information is all still there, it is the one Seidel aberration a computer can undo after the fact by resampling, which is why phone cameras ship with heavy distortion and correct it in software.</p>
+				<div class="table-wrapper"><table>
+				<thead><tr><th>aberration</th><th>wave term</th><th>field</th><th>pupil radius</th><th>image of a point</th></tr></thead>
+				<tbody>
+				<tr><td>spherical</td><td>\(W_{040}\,\rho^4\)</td><td>none</td><td>\(a^4\)</td><td>core plus halo</td></tr>
+				<tr><td>coma</td><td>\(W_{131}\,H\rho^3\cos\theta\)</td><td>\(H\)</td><td>\(a^3\)</td><td>one-sided comet</td></tr>
+				<tr><td>astigmatism</td><td>\(W_{222}\,H^2\rho^2\cos^2\theta\)</td><td>\(H^2\)</td><td>\(a^2\)</td><td>two line foci</td></tr>
+				<tr><td>field curvature</td><td>\(W_{220}\,H^2\rho^2\)</td><td>\(H^2\)</td><td>\(a^2\)</td><td>disc off a curved surface</td></tr>
+				<tr><td>distortion</td><td>\(W_{311}\,H^3\rho\cos\theta\)</td><td>\(H^3\)</td><td>\(a\)</td><td>sharp point, wrong place</td></tr>
+				</tbody>
+				</table></div>
+				<p>The last two columns are how each coefficient itself scales, with \(a\) the pupil radius, once the normalized coordinates are unwrapped. They are the reason the five behave so differently when a lens is stopped down or a sensor is made larger, which is section 4.</p>
+				<h2>4. How Much Does Each One Cost?</h2>
+				<p>Peak wavefront error is the wrong currency, because an error confined to the very rim of the pupil matters less than one spread over half of it. The standard measure is the root-mean-square wavefront error over the pupil,</p>
+				<p class="kn-math-display">\[\sigma^2 = \big\langle W^2 \big\rangle - \big\langle W \big\rangle^2, \qquad \big\langle f \big\rangle = \frac{1}{\pi}\int_0^{2\pi}\!\!\int_0^1 f(\rho, \theta)\,\rho\,d\rho\,d\theta,\]</p>
+				<p>where \(\langle f\rangle\) is the average of \(f\) over the unit pupil disc and \(\sigma\) is in the same units as \(W\), usually waves. Subtracting the mean discards piston, which no measurement sees. Two properties make \(\sigma\) the number to quote: independent contributions add in quadrature, and for small errors it predicts how much light stays in the core of the image of a point through the Maréchal approximation to the Strehl ratio,</p>
+				<p class="kn-math-display">\[S \approx \exp\!\left[-\left(\frac{2\pi\sigma}{\lambda}\right)^{2}\right],\]</p>
+				<p>with \(S\) the peak intensity of the real image of a point divided by the peak a perfect system of the same aperture would give, and \(\lambda\) the wavelength. The approximation holds while \(\sigma \lesssim \lambda/10\). It also supplies the usual meaning of “diffraction limited”: \(\sigma = \lambda/14\) gives \(S \approx 0.8\), the Maréchal criterion.</p>
+				<p>Since refocusing and recentering the image cost nothing, each aberration should be charged at its best focus rather than at the paraxial one. The difference is large, and not the same for every term:</p>
+				<div class="table-wrapper"><table>
+				<thead><tr><th>aberration</th><th>RMS at paraxial focus</th><th>RMS at best focus</th><th>what was subtracted</th></tr></thead>
+				<tbody>
+				<tr><td>spherical</td><td>\(0.298\,W_{040}\)</td><td>\(0.075\,W_{040}\)</td><td>defocus \(-W_{040}\rho^2\)</td></tr>
+				<tr><td>coma</td><td>\(0.354\,W_{131}H\)</td><td>\(0.118\,W_{131}H\)</td><td>tilt \(-\tfrac{2}{3}W_{131}H\rho\cos\theta\)</td></tr>
+				<tr><td>astigmatism</td><td>\(0.250\,W_{222}H^2\)</td><td>\(0.204\,W_{222}H^2\)</td><td>defocus \(-\tfrac{1}{2}W_{222}H^2\rho^2\)</td></tr>
+				<tr><td>field curvature</td><td>\(0.289\,W_{220}H^2\)</td><td>\(0\)</td><td>defocus: it is defocus</td></tr>
+				<tr><td>distortion</td><td>\(0.500\,W_{311}H^3\)</td><td>\(0\)</td><td>tilt: it is tilt</td></tr>
+				</tbody>
+				</table></div>
+				<p>Three things worth reading off it. Refocusing buys a factor of four on spherical and three on coma, but only a fifth on astigmatism, because the two line foci cannot both sit in the image plane. Field curvature and distortion cost nothing in this accounting: one is defocus that varies with field and the other is tilt that varies with field, and they are problems only because sensors are flat and mappings are supposed to be linear. And the coefficients are per unit of \(W\), so one wave of \(W_{040}\) is \(0.075\) waves RMS at best focus, that is \(\lambda/13.4\): one wave of Seidel spherical aberration is almost exactly the most a system can carry and still pass the Maréchal criterion.</p>
+				<h3>Aperture and Field</h3>
+				<p>Because \(\rho\) and \(H\) are normalized, all the dependence on how fast and how wide the system is sits inside the coefficients. Unwrapping it for a fixed focal length, where the pupil radius \(a\) is inversely proportional to the working f-number \(N\), gives</p>
+				<p class="kn-math-display">\[W_{040} \propto N^{-4}, \qquad W_{131} \propto N^{-3}H, \qquad W_{222},\, W_{220} \propto N^{-2}H^2, \qquad W_{311} \propto N^{-1}H^3.\]</p>
+				<p>Stopping down one stop, which multiplies \(N\) by \(\sqrt{2}\), therefore cuts spherical aberration by four, coma by 2.8 and astigmatism by two, and barely touches distortion. Going from f/8 to f/4 runs it the other way: sixteen times the spherical aberration.</p>
+				<p>Defocus obeys a useful companion relation. Shifting the image plane by \(\delta z\) adds \(W_{020} = \delta z / (8N^2)\) waves of defocus, so the classical quarter-wave depth of focus is \(\delta z = \pm 2\lambda N^2\), which at f/4 and 550 nm is \(\pm 17.6\) µm. The same relation converts any of the focus shifts above into millimetres on a focusing ring.</p>
+				<h2>5. A Worked Example: Stopping Down</h2>
+				<p>Take a fast lens that leaves two waves of Seidel spherical aberration wide open at f/2.8, at 550 nm. Spherical is the term that matters here because it does not care about field: this is what the center of the frame looks like. Everything needed to follow the iris closing is already above. The coefficient falls as \(N^{-4}\), the RMS at best focus is \(W_{040}/(6\sqrt{5})\), the Strehl ratio follows from the Maréchal approximation, the best focus sits \(\delta z = 8N^2W_{040}\) from the paraxial one, and the Airy radius of a perfect system of the same aperture is \(1.22\lambda N\).</p>
+				<div class="table-wrapper"><table>
+				<thead><tr><th>aperture</th><th>\(W_{040}\) (waves)</th><th>RMS at best focus</th><th>Strehl</th><th>focus shift</th><th>Airy radius</th></tr></thead>
+				<tbody>
+				<tr><td>f/2.8</td><td>2.000</td><td>0.149 waves</td><td>0.42</td><td>69.0 µm</td><td>1.88 µm</td></tr>
+				<tr><td>f/4</td><td>0.480</td><td>0.036 waves</td><td>0.95</td><td>33.8 µm</td><td>2.68 µm</td></tr>
+				<tr><td>f/5.6</td><td>0.125</td><td>0.009 waves</td><td>0.997</td><td>17.2 µm</td><td>3.76 µm</td></tr>
+				<tr><td>f/8</td><td>0.030</td><td>0.002 waves</td><td>1.000</td><td>8.5 µm</td><td>5.37 µm</td></tr>
+				</tbody>
+				</table></div>
+				<p>Read across the rows and the whole behavior of a fast lens falls out. Wide open it is nowhere near diffraction limited: 0.149 waves RMS is twice the Maréchal allowance and well under half the light stays in the core. One stop down the aberration has dropped by a factor of four, the Strehl is 0.95, and the lens has become, for practical purposes, perfect. Two stops down the wavefront error is \(\lambda/107\), which buys nothing, because by then the Airy radius has grown to 3.8 µm: the image is softer than at f/4 for a reason that has nothing to do with aberration. The best working aperture is the crossover, around f/4 here, the first stop at which aberration is no longer what limits the image.</p>
+				<p>The focus-shift column is the practical trap in the table. Best focus for spherical aberration is not the paraxial focus, and as the aperture closes it slides back toward it: 69 µm at f/2.8, half that at f/4, half again at f/5.6. A camera focused wide open and then stopped down to shoot is focused in the wrong place by tens of microns, which is the familiar focus shift of fast lenses, and it is why a lens is tested at the aperture it will be used at.</p>
+				<p>One caveat before generalizing: this is the center of the frame. At the corner, coma and astigmatism take over, and they fall only as \(N^{-3}\) and \(N^{-2}\). Stopping down two stops divides spherical aberration by sixteen but astigmatism only by four, so the corner keeps improving long after the center has stopped, which is exactly the pattern lens tests show.</p>
+				<h2>6. Where the Five Stop Working</h2>
+				<p>The Seidel expansion earns its place by being the lowest-order truth about a symmetric system. Each of those words is a limit.</p>
+				<ul><li>Rotationally symmetric. Tilt or decenter one element and the derivation collapses, because the aberration pattern no longer rotates with the object point. Such systems are described by nodal aberration theory, in which each Seidel term acquires a node that wanders around the field, and freeform optics lives outside the list entirely.</li><li>Lowest order. A fast or wide system shows sixth-order terms next, among them zonal spherical aberration, which leaves a residual ring after the fourth-order part is corrected. A design with its five Seidel sums driven to zero can still have a visibly imperfect image.</li><li>Monochromatic. Color is not in the list. Axial and lateral chromatic aberration are their own pair of first-order defects and usually dominate a simple lens long before the five do.</li><li>Geometric. The expansion counts optical path, not diffraction. Once the aberrations get small the image of a point stops being a ray pattern and becomes an Airy disc, which is why section 4 switched from spot sizes to RMS and Strehl.</li></ul>
+				<p>There is one more limitation, subtler and more practical. The five terms, together with defocus and tilt, are not orthogonal over the pupil. Section 4 already showed the symptom: how much spherical aberration a wavefront “has” depends on where the focus is put, because \(\rho^4\) and \(\rho^2\) overlap. Fit a measured wavefront to Seidel terms and every coefficient shifts when a term is added or dropped, which makes the numbers hard to compare between instruments or across a design’s history. Rebuilding the same information on an orthogonal basis fixes that, and the standard choice is the subject of the companion note on <a href="zernike-polynomials.html">Zernike polynomials</a>.</p>
+				<h2>Intuitively: Symmetry Writes the List</h2>
+				<p>The five aberrations are not five separate discoveries that happened to fill the list. They are the complete inventory of ways a rotationally symmetric system is allowed to fail at the lowest order, and the field dependence of each one counts how much of the symmetry has been given up.</p>
+				<p>On axis, the system looks identical from every direction around the pupil. An error that depends on the azimuth would have to point somewhere, and there is nowhere to point, so the only defect available depends on \(\rho\) alone: spherical aberration, the same across the whole field. Move the object off axis and the pupil acquires a direction, namely toward the field, and an error linear in that direction becomes possible: coma, and it grows in proportion to how far off axis you have gone. Go further and the pupil is seen obliquely, foreshortened along one axis and not the other, and the error can differ between those two axes: astigmatism, quadratic in field, with field curvature as the part of the same quadratic that does not care about azimuth. Furthest along, the mapping from object to image can stretch without blurring at all: distortion, cubic in field.</p>
+				<p>That is the whole story of the list. One term for the symmetric case, then one more for each step away from symmetry, each carrying one more power of the field. Seidel's contribution was not to notice five phenomena but to prove that there are no others to notice, at least until the next order.</p>
+				</div>
+			</article>
+		</div>
+	</div>
+	<script src="../../assets/js/jquery.min.js"></script>
+	<script src="../../assets/js/browser.min.js"></script>
+	<script src="../../assets/js/breakpoints.min.js"></script>
+	<script src="../../assets/js/util.js"></script>
+	<script src="../../assets/js/main.js"></script>
+</body>
+</html>

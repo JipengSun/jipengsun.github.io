@@ -2,27 +2,27 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 	<url>
 		<loc>https://jipengsun.github.io/</loc>
-		<lastmod>2026-09-18</lastmod>
+		<lastmod>2026-09-22</lastmod>
 	</url>
 	<url>
 		<loc>https://jipengsun.github.io/research.html</loc>
-		<lastmod>2026-09-18</lastmod>
+		<lastmod>2026-09-22</lastmod>
 	</url>
 	<url>
 		<loc>https://jipengsun.github.io/projects.html</loc>
-		<lastmod>2026-09-18</lastmod>
+		<lastmod>2026-09-22</lastmod>
 	</url>
 	<url>
 		<loc>https://jipengsun.github.io/single.html</loc>
-		<lastmod>2026-09-18</lastmod>
+		<lastmod>2026-09-22</lastmod>
 	</url>
 	<url>
 		<loc>https://jipengsun.github.io/knowledge-share.html</loc>
-		<lastmod>2026-09-18</lastmod>
+		<lastmod>2026-09-22</lastmod>
 	</url>
 	<url>
 		<loc>https://jipengsun.github.io/blog/index.html</loc>
-		<lastmod>2026-09-18</lastmod>
+		<lastmod>2026-09-22</lastmod>
 	</url>
 	<url>
 		<loc>https://jipengsun.github.io/knowledge/articles/3d-gaussian-splatting.html</loc>
@@ -201,6 +201,10 @@
 		<lastmod>2026-03-31</lastmod>
 	</url>
 	<url>
+		<loc>https://jipengsun.github.io/knowledge/articles/seidel-aberrations.html</loc>
+		<lastmod>2026-09-22</lastmod>
+	</url>
+	<url>
 		<loc>https://jipengsun.github.io/knowledge/articles/self-attention.html</loc>
 		<lastmod>2026-06-07</lastmod>
 	</url>
@@ -223,5 +227,9 @@
 	<url>
 		<loc>https://jipengsun.github.io/knowledge/articles/vision-transformer-vit.html</loc>
 		<lastmod>2026-04-07</lastmod>
+	</url>
+	<url>
+		<loc>https://jipengsun.github.io/knowledge/articles/zernike-polynomials.html</loc>
+		<lastmod>2026-09-22</lastmod>
 	</url>
 </urlset>
