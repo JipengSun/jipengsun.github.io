@@ -233,15 +233,24 @@ def person_jsonld() -> dict:
         "@context": "https://schema.org",
         "@type": "Person",
         "name": AUTHOR,
+        "alternateName": "JP Sun",  # the YouTube channel's name
         "url": BASE_URL + "/",
         "jobTitle": "PhD Researcher",
+        "affiliation": {"@type": "CollegeOrUniversity", "name": "Princeton University"},
         "knowsAbout": [
             "Computational Imaging",
             "Optics",
             "Machine Learning",
             "Computer Vision",
         ],
-        "sameAs": [BASE_URL + "/knowledge-share.html"],
+        # Profiles that are the same person; Google uses these to group results for the name.
+        "sameAs": [
+            "https://www.youtube.com/@JPSun-science",
+            "https://github.com/JipengSun",
+            "https://www.linkedin.com/in/jipeng-sun-2400bb115/",
+            "https://scholar.google.com/citations?user=eKkSQiEAAAAJ",
+            BASE_URL + "/knowledge-share.html",
+        ],
     }
 
 
