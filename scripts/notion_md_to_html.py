@@ -66,6 +66,7 @@ NOTION_TO_SLUG: dict[str, str] = {
     "38d01d9f52878072be3bccd6ec6e4fdd": "surrogate-gradient-learning",
     "39501d9f5287800b9f51c679ab4c2d9e": "neural-tangent-kernel-ntk",
     "39601d9f528780b1a951e74bf5bb4ff6": "nano-optical-polarization-control",
+    "3ff01d9f5287818f8f62f8215f27b5b2": "flat-optics",
 }
 
 
@@ -257,6 +258,11 @@ def replace_notion_math(md: str) -> str:
     def inl(m: re.Match[str]) -> str:
         return inline_math(m.group(1), from_escaped_dollar=True)
 
+    def block(m: re.Match[str]) -> str:
+        return "\n" + display_math(" ".join(line.strip() for line in m.group(1).splitlines())) + "\n"
+
+    # Notion equation blocks export as a "$$" line, the TeX, and a closing "$$" line.
+    md = re.sub(r"^\$\$[ \t]*\n([\s\S]*?)\n[ \t]*\$\$[ \t]*$", block, md, flags=re.M)
     md = NOTION_BACKTICK_MATH.sub(notion_bt, md)
     md = re.sub(r"\\\$\\\$((?:[^\\]|\\.)+?)\\\$\\\$", disp, md, flags=re.S)
     md = re.sub(r"\\\$((?:[^\\]|\\.)+?)\\\$", inl, md)

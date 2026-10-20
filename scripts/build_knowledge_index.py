@@ -62,6 +62,7 @@ TOPIC: dict[str, tuple[str, str, str | None]] = {
     "diffraction-grating-formula": ("Optics", "optics", None),
     "orthographic-images-to-hologram": ("Optics", "optics", None),
     "nano-optical-polarization-control": ("Optics", "optics", None),
+    "flat-optics": ("Optics", "optics", None),
     "neural-tangent-kernel-ntk": ("Machine Learning", "machine-learning", None),
     "classifier-free-guidance": ("Machine Learning", "machine-learning", None),
     "friction-cone-antipodal-grasps": ("Robotics", "robotics", None),

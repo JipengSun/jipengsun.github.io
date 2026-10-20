@@ -347,7 +347,13 @@
       "title": "Nano-Optical Polarization Control",
       "notion_fetched_at": "2026-07-08T15:15:21.742000+00:00",
       "synced_at": "2026-08-14T16:08:12.591721+00:00"
+    },
+    "3ff01d9f5287818f8f62f8215f27b5b2": {
+      "slug": "flat-optics",
+      "title": "Flat Optics: DOEs and Metasurfaces",
+      "notion_fetched_at": "2026-10-20T18:21:17.257000+00:00",
+      "synced_at": "2026-10-20T18:24:13.876251+00:00"
     }
   },
-  "updated_at": "2026-08-14T16:08:12.591751+00:00"
+  "updated_at": "2026-10-20T18:24:13.876265+00:00"
 }
