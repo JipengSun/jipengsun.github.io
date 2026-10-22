@@ -217,7 +217,8 @@ def inline_format_text(text: str) -> str:
     return "".join(result)
 
 
-IMG_LINE = re.compile(r"^!\[\]\(([^)]+)\)$")
+IMG_LINE = re.compile(r"^!\[([^\]]*)\]\(([^)]+)\)$")  # ![caption](src); Notion exports leave the caption empty
+COLUMN_TAG = re.compile(r"^</?columns?>$")
 LINK_ONLY = re.compile(r"^\[[^\]]*\]\(([^)]+\.html)\)$")
 
 
@@ -343,6 +344,7 @@ def notion_body_to_html(md: str, title: str = "") -> str:
     # Notion exports images as bare ![](url) with no alt text, so the best available
     # description is where the figure sits: the section it follows, plus the article.
     last_heading = ""
+    row_start: int | None = None
     while i < n:
         line = lines[i]
         st = line.strip()
@@ -364,14 +366,28 @@ def notion_body_to_html(md: str, title: str = "") -> str:
             blocks.append(f'<p class="kn-math-display">{display_math(math_tex)}</p>')
             i += 1
             continue
+        mcol = COLUMN_TAG.match(st)
+        if mcol:
+            # Notion columns: the figures between <columns> and </columns> sit side by side
+            flush_para(buf)
+            buf = []
+            if st == "<columns>":
+                row_start = len(blocks)
+            elif st == "</columns>" and row_start is not None:
+                blocks[row_start:] = ['<div class="kn-figure-row">' + "".join(blocks[row_start:]) + "</div>"]
+                row_start = None
+            i += 1
+            continue
         mimg = IMG_LINE.match(st)
         if mimg:
             flush_para(buf)
             buf = []
-            src = html.escape(mimg.group(1).strip(), quote=True)
-            alt = html.escape(figure_alt(last_heading, title), quote=True)
+            caption, src = mimg.group(1).strip(), html.escape(mimg.group(2).strip(), quote=True)
+            plain = re.sub(r"\$`([^`]+)`\$", r"\1", caption)
+            alt = html.escape(plain or figure_alt(last_heading, title), quote=True)
+            figcaption = f"<figcaption>{inline_format_text(caption)}</figcaption>" if caption else ""
             blocks.append(
-                f'<figure class="kn-figure"><img src="{src}" alt="{alt}" loading="lazy" /></figure>'
+                f'<figure class="kn-figure"><img src="{src}" alt="{alt}" loading="lazy" />{figcaption}</figure>'
             )
             i += 1
             continue

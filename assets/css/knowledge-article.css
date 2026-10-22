@@ -83,6 +83,11 @@ body.kn-page #main .post {
 	margin: 1em 0;
 }
 
+/* headings are uppercased by the theme; math inside them keeps its case (t is not T) */
+.kn-body .katex {
+	text-transform: none;
+}
+
 .kn-body .kn-math-display {
 	text-align: center;
 	margin: 1em 0;
@@ -106,6 +111,21 @@ body.kn-page #main .post {
 	max-width: 100%;
 	height: auto;
 	margin: 0 auto;
+}
+
+/* Notion columns: figures side by side, stacked on narrow screens */
+.kn-figure-row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 1.25em;
+	justify-content: center;
+	align-items: flex-start;
+	margin: 1.25em 0;
+}
+
+.kn-figure-row > .kn-figure {
+	flex: 1 1 16rem;
+	margin: 0;
 }
 
 .kn-figure figcaption {
