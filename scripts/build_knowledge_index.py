@@ -70,6 +70,7 @@ TOPIC: dict[str, tuple[str, str, str | None]] = {
     "jepa-world-models": ("Machine Learning", "machine-learning", None),
     "zernike-polynomials": ("Optics", "optics", None),
     "seidel-aberrations": ("Optics", "optics", None),
+    "optical-waveguides": ("Optics", "optics", None),
 }
 
 

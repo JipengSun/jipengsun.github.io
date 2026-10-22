@@ -67,6 +67,7 @@ NOTION_TO_SLUG: dict[str, str] = {
     "39501d9f5287800b9f51c679ab4c2d9e": "neural-tangent-kernel-ntk",
     "39601d9f528780b1a951e74bf5bb4ff6": "nano-optical-polarization-control",
     "3ff01d9f5287818f8f62f8215f27b5b2": "flat-optics",
+    "40101d9f528781f88727c41cab9ae359": "optical-waveguides",
 }
 
 
