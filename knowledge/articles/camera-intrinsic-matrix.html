@@ -55,6 +55,7 @@
 				<div class="kn-body">
 				<p>The camera intrinsic matrix is the fundamental mathematical bridge between the 3D physical world (in the camera's local coordinate system) and the 2D pixel grid of the image sensor. It is one half of the camera model: the <a href="camera-extrinsic-matrix.html">extrinsic matrix</a> first places the camera in the world, and the intrinsic matrix then turns what the camera sees into pixels.</p>
 				<p>In the context of computational imaging and hardware design, the intrinsic matrix defines the <strong>ideal paraxial geometric projection</strong>. Any physical diffraction, optical aberrations, or engineered meta-optics behaviors are modeled as deviations or convolutions on top of this baseline geometric mapping.</p>
+				<p>Video: <a href="https://youtu.be/NIMCCD4j2m4" target="_blank" rel="noopener">Camera Intrinsics and Extrinsics: From a 3D Point to a Pixel</a>, a four-minute visual explainer of this note and its companion, <a href="camera-extrinsic-matrix.html">Camera Extrinsic Matrix</a>.</p>
 				<p>Here is the mathematical breakdown of how it works.</p>
 				<h3>1. The Pinhole Camera Model</h3>
 				<p>To map a 3D point in space to a 2D pixel, we use the pinhole camera model: every ray from the scene passes through one point, the camera center (the pinhole), on its way to the image plane. Let's define our points:</p>

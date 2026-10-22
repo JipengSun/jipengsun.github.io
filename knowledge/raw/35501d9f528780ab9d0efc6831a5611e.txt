@@ -9,6 +9,7 @@ The camera extrinsic matrix describes where a camera is and which way it points.
 $`P_c = R \, P_w + t`$
 where $`P_w`$ is a point's position in world coordinates and $`P_c = [X, Y, Z]^T`$ is the same point in camera coordinates (origin at the camera center, $`Z`$ along the viewing direction, as in [Camera Intrinsic Matrix](camera-intrinsic-matrix.html)). Estimating the extrinsic matrix is a fundamental problem in 3D vision.
 The extrinsic matrix is typically represented as a $`3 \times 4`$ matrix, $`E = [R | t]`$, where $`R \in SO(3)`$ is a $`3 \times 3`$ rotation matrix and $`t \in \mathbb{R}^3`$ is a $`3 \times 1`$ translation vector.
+Video: [Camera Intrinsics and Extrinsics: From a 3D Point to a Pixel](https://youtu.be/NIMCCD4j2m4), a four-minute visual explainer of this note and its companion, [Camera Intrinsic Matrix](camera-intrinsic-matrix.html).
 ### What $`R`$ and $`t`$ Mean
 - $`R`$ has nine entries but only three degrees of freedom. $`SO(3)`$ is the set of rotation matrices, those with $`R^T R = I`$ and $`\det R = 1`$. The rows of $`R`$ are the camera's $`X`$, $`Y`$ and $`Z`$ axes written in world coordinates, so $`R`$ turns world directions into the camera's directions.
 - $`t`$ is not the camera's position. Setting $`P_w = 0`$ shows that $`t`$ is the world origin expressed in camera coordinates. The camera center $`C`$, in world coordinates, is the point that maps to $`P_c = 0`$: $`C = -R^T t`$, or equivalently $`t = -R\,C`$.
