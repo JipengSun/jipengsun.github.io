@@ -1,4 +1,4 @@
-Here is the result of "fetch" for the Page with URL https://app.notion.com/p/40101d9f52878101ab35fe262d146050 as of 2026-10-22T17:28:23.388Z:
+Here is the result of "fetch" for the Page with URL https://app.notion.com/p/40101d9f52878101ab35fe262d146050 as of 2026-10-23T18:05:15.669Z:
 <page url="https://app.notion.com/p/40101d9f52878101ab35fe262d146050">
 <ancestor-path></ancestor-path>
 <properties>
@@ -7,6 +7,7 @@ Here is the result of "fetch" for the Page with URL https://app.notion.com/p/401
 <iconMetadata>null</iconMetadata>
 <content>
 Polarization is the direction in which the electric field of a light wave oscillates. Light is a transverse wave: its field swings across the direction of travel, never along it, and the polarization is the shape the tip of the field traces in that cross-section, a straight line, a circle or an ellipse. Our eyes barely notice it, yet polarized sunglasses, LCD screens, 3D cinema glasses and the polarizing filters on cameras all work by sorting light by its polarization. This note describes polarized light with Jones vectors, shows how polarizers and wave plates act on them as 2×2 Jones matrices, and ends with metasurfaces, flat sheets that put a different tiny wave plate at every point.
+Video: [Polarization: How Light Wiggles](https://youtu.be/gEOGMXFMMsA), a four-minute visual explainer of the first half of this note, from Jones vectors to Malus's law.
 ## The field of a light wave
 Take a light wave of wavelength $`\lambda`$ traveling along $`z`$. Its electric field lies in the $`x`$-$`y`$ plane. Throughout this note the field is described as seen by an observer who looks toward the source, with the light coming toward them: $`x`$ points to their right and $`y`$ up. A wave of a single wavelength is written with complex amplitudes,
 $$

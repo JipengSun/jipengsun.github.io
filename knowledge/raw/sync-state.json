@@ -357,8 +357,8 @@
     "40101d9f52878101ab35fe262d146050": {
       "slug": "polarization",
       "title": "Polarization and Jones Calculus",
-      "notion_fetched_at": "2026-10-22T17:28:23.388000+00:00",
-      "synced_at": "2026-10-22T17:28:39.691959+00:00"
+      "notion_fetched_at": "2026-10-23T18:05:15.669000+00:00",
+      "synced_at": "2026-10-23T18:05:26.098326+00:00"
     },
     "40101d9f528781f88727c41cab9ae359": {
       "slug": "optical-waveguides",
@@ -367,5 +367,5 @@
       "synced_at": "2026-10-22T20:48:31.532646+00:00"
     }
   },
-  "updated_at": "2026-10-22T20:48:31.532656+00:00"
+  "updated_at": "2026-10-23T18:05:26.098350+00:00"
 }
