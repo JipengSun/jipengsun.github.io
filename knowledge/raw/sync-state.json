@@ -369,8 +369,8 @@
     "40501d9f528781519eedf6c8979dd90f": {
       "slug": "3d-rotations",
       "title": "3D Rotations: Matrices, Euler Angles and Quaternions",
-      "notion_fetched_at": "2026-10-26T05:54:59.478000+00:00",
-      "synced_at": "2026-10-26T05:55:18.364547+00:00"
+      "notion_fetched_at": "2026-10-26T19:30:12.359000+00:00",
+      "synced_at": "2026-10-26T19:31:18.484362+00:00"
     },
     "40501d9f5287817eb5c4dcbb3e7b7cc2": {
       "slug": "manipulator-jacobian",
@@ -391,5 +391,5 @@
       "synced_at": "2026-10-26T05:50:17.593960+00:00"
     }
   },
-  "updated_at": "2026-10-26T05:55:19.498852+00:00"
+  "updated_at": "2026-10-26T19:31:18.484369+00:00"
 }

@@ -1,4 +1,4 @@
-Here is the result of "fetch" for the Page with URL https://app.notion.com/p/40501d9f528781519eedf6c8979dd90f as of 2026-10-26T05:54:59.478Z:
+Here is the result of "fetch" for the Page with URL https://app.notion.com/p/40501d9f528781519eedf6c8979dd90f as of 2026-10-26T19:30:12.359Z:
 <page url="https://app.notion.com/p/40501d9f528781519eedf6c8979dd90f">
 <ancestor-path></ancestor-path>
 <properties>
@@ -8,6 +8,7 @@ Here is the result of "fetch" for the Page with URL https://app.notion.com/p/405
 <content>
 A robot has to keep track of which way things face: its gripper, its camera, the part on the table, its own body. Position is the easy half: three numbers that add like ordinary vectors. Orientation also takes three numbers, but rotations do not add, the order in which they are applied matters, and every way of writing one with three numbers breaks down somewhere. This note goes through the four standard descriptions, rotation matrices, Euler angles, axis-angle and quaternions: what each one is, how to convert between them, and where each one fails.
 This is the first of four notes on robot arms, followed by <mention-page url="https://app.notion.com/p/40501d9f528781ea9889c9e1169e6858"/>, <mention-page url="https://app.notion.com/p/40501d9f52878187ade0e5ca96b148c5"/> and <mention-page url="https://app.notion.com/p/40501d9f5287817eb5c4dcbb3e7b7cc2"/>. Rotation matrices also appear in <mention-page url="https://app.notion.com/p/35501d9f528780ab9d0efc6831a5611e"/>, where they turn world coordinates into camera coordinates.
+Video: [Quaternions: How Computers Speak 3D Rotation](https://youtu.be/HJkFCLJtEjA), a four-and-a-half-minute visual explainer of this note, from rotation matrices and gimbal lock to quaternions and slerp.
 ## Frames and rotation matrices
 An orientation is always relative: it says how one coordinate frame is turned with respect to another. A frame is an origin plus three unit-length axes $`\hat{x}`$, $`\hat{y}`$, $`\hat{z}`$ at right angles to each other, ordered by the right-hand rule, $`\hat{x} \times \hat{y} = \hat{z}`$. The usual setup fixes a space frame \{s\} to the world and attaches a body frame \{b\} to the moving object, here an airplane with $`\hat{x}_b`$ along its nose, $`\hat{y}_b`$ along its left wing and $`\hat{z}_b`$ up through its tail fin.
 Write each body axis in space-frame coordinates and stack the three as columns:
