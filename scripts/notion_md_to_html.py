@@ -69,6 +69,10 @@ NOTION_TO_SLUG: dict[str, str] = {
     "3ff01d9f5287818f8f62f8215f27b5b2": "flat-optics",
     "40101d9f52878101ab35fe262d146050": "polarization",
     "40101d9f528781f88727c41cab9ae359": "optical-waveguides",
+    "40501d9f528781519eedf6c8979dd90f": "3d-rotations",
+    "40501d9f528781ea9889c9e1169e6858": "forward-kinematics",
+    "40501d9f52878187ade0e5ca96b148c5": "inverse-kinematics",
+    "40501d9f5287817eb5c4dcbb3e7b7cc2": "manipulator-jacobian",
 }
 
 
@@ -178,6 +182,14 @@ def is_standalone_math_line(line: str) -> str | None:
     return None
 
 
+PLAIN_ESCAPE = re.compile(r"\\([\[\]{}_*#|~])")
+
+
+def unescape_plain(text: str) -> str:
+    """Notion escapes markdown punctuation in plain text (\\{s\\}, SERIES\\_LINE); drop the backslashes."""
+    return PLAIN_ESCAPE.sub(r"\1", text)
+
+
 def inline_format_text(text: str) -> str:
     """Inline **bold**, `code`, [text](url), $`tex`$ → HTML (math passed through for KaTeX)."""
     result: list[str] = []
@@ -185,14 +197,14 @@ def inline_format_text(text: str) -> str:
     for m in INLINE_TOK.finditer(text):
         if m.start() > pos:
             plain = text[pos : m.start()]
-            plain = plain.replace(r"\[", "[").replace(r"\]", "]")
+            plain = unescape_plain(plain)
             result.append(html.escape(plain, quote=False))
         tok = m.group(1)
         if tok.startswith("$`") and tok.endswith("`$"):
             tex = tok[2:-2].strip()
             result.append(inline_math(tex))
         elif tok.startswith("**") and tok.endswith("**"):
-            inner = tok[2:-2].replace(r"\[", "[").replace(r"\]", "]")
+            inner = unescape_plain(tok[2:-2])
             result.append("<strong>" + html.escape(inner, quote=False) + "</strong>")
         elif tok.startswith("`") and tok.endswith("`"):
             result.append("<code>" + html.escape(tok[1:-1], quote=False) + "</code>")
@@ -214,7 +226,7 @@ def inline_format_text(text: str) -> str:
             result.append(html.escape(tok, quote=False))
         pos = m.end()
     if pos < len(text):
-        tail = text[pos:].replace(r"\[", "[").replace(r"\]", "]")
+        tail = unescape_plain(text[pos:])
         result.append(html.escape(tail, quote=False))
     return "".join(result)
 

@@ -1,0 +1,164 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<title>3D Rotations: Matrices, Euler Angles and Quaternions — Knowledge Share — Jipeng Sun</title>
+	<!-- seo:auto:start -->
+	<meta name="description" content="A robot has to keep track of which way things face: its gripper, its camera, the part on the table, its own body. Position is the easy half: three numbers…" />
+	<meta name="author" content="Jipeng Sun" />
+	<meta name="robots" content="index, follow" />
+	<link rel="canonical" href="https://jipengsun.github.io/knowledge/articles/3d-rotations.html" />
+	<meta property="og:type" content="article" />
+	<meta property="og:site_name" content="Jipeng Sun — Knowledge Share" />
+	<meta property="og:title" content="3D Rotations: Matrices, Euler Angles and Quaternions" />
+	<meta property="og:description" content="A robot has to keep track of which way things face: its gripper, its camera, the part on the table, its own body. Position is the easy half: three numbers…" />
+	<meta property="og:url" content="https://jipengsun.github.io/knowledge/articles/3d-rotations.html" />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="3D Rotations: Matrices, Euler Angles and Quaternions" />
+	<meta name="twitter:description" content="A robot has to keep track of which way things face: its gripper, its camera, the part on the table, its own body. Position is the easy half: three numbers…" />
+	<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"3D Rotations: Matrices, Euler Angles and Quaternions","description":"A robot has to keep track of which way things face: its gripper, its camera, the part on the table, its own body. Position is the easy half: three numbers…","url":"https://jipengsun.github.io/knowledge/articles/3d-rotations.html","mainEntityOfPage":"https://jipengsun.github.io/knowledge/articles/3d-rotations.html","inLanguage":"en","author":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"publisher":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"isPartOf":{"@type":"Blog","name":"Jipeng Sun — Knowledge Share","url":"https://jipengsun.github.io/knowledge-share.html"},"dateModified":"2026-10-26"}</script>
+	<!-- seo:auto:end -->
+	<link rel="stylesheet" href="../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="(function(){var b=document.querySelector('.kn-body');if(!b)return;b.querySelectorAll('span').forEach(function(s){if(s.children.length)return;var t=s.textContent.trim();if(/^\\\([\s\S]*\\\)$/.test(t)||/^\\\[[\s\S]*\\\]$/.test(t))s.replaceWith(document.createTextNode(t));});renderMathInElement(b,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false,ignoredTags:['script','noscript','style','textarea','pre','code']});})();"></script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-LCC4R0HD24"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'G-LCC4R0HD24');
+	</script>
+	<script src="../../assets/js/ga-events.js"></script>
+</head>
+<body class="is-preload kn-page">
+	<div id="wrapper">
+		<header id="header">
+			<p class="site-title"><a href="../../index.html">Jipeng Sun</a></p>
+			<nav class="links">
+				<ul>
+					<li><a href="../../index.html">Home</a></li>
+					<li><a href="../../research.html">Research</a></li>
+					<li class="active"><a href="../../knowledge-share.html">Knowledge Share</a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course">VR/AR Course</a></li>
+				</ul>
+			</nav>
+			<nav class="main">
+				<ul>
+					<li class="search"><a class="fa-search" href="#search">Search</a><form id="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></li>
+					<li class="menu"><a class="fa-bars" href="#menu">Menu</a></li>
+				</ul>
+			</nav>
+		</header>
+		<section id="menu">
+			<section><form class="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></section>
+			<section>
+				<ul class="links">
+					<li><a href="../../index.html"><h3>Home</h3><p>Jipeng Sun's Homepage</p></a></li>
+					<li><a href="../../research.html"><h3>Research</h3><p>Publications &amp; Papers</p></a></li>
+					<li><a href="../../knowledge-share.html"><h3>Knowledge Share</h3><p>Study notes</p></a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course"><h3>Teaching</h3><p>VR Summer Course</p></a></li>
+				</ul>
+			</section>
+		</section>
+		<div id="main">
+			<article class="post">
+				<header><div class="title"><h1>3D Rotations: Matrices, Euler Angles and Quaternions</h1></div></header>
+				<p class="kn-back"><a href="../../knowledge-share.html">&larr; Back to Knowledge Share</a></p>
+				<div class="kn-body">
+				<p>A robot has to keep track of which way things face: its gripper, its camera, the part on the table, its own body. Position is the easy half: three numbers that add like ordinary vectors. Orientation also takes three numbers, but rotations do not add, the order in which they are applied matters, and every way of writing one with three numbers breaks down somewhere. This note goes through the four standard descriptions, rotation matrices, Euler angles, axis-angle and quaternions: what each one is, how to convert between them, and where each one fails.</p>
+				<p>This is the first of four notes on robot arms, followed by <a href="forward-kinematics.html">Forward Kinematics</a>, <a href="inverse-kinematics.html">Inverse Kinematics</a> and <a href="manipulator-jacobian.html">The Manipulator Jacobian</a>. Rotation matrices also appear in <a href="camera-extrinsic-matrix.html">Camera Extrinsic Matrix</a>, where they turn world coordinates into camera coordinates.</p>
+				<h2>Frames and rotation matrices</h2>
+				<p>An orientation is always relative: it says how one coordinate frame is turned with respect to another. A frame is an origin plus three unit-length axes \(\hat{x}\), \(\hat{y}\), \(\hat{z}\) at right angles to each other, ordered by the right-hand rule, \(\hat{x} \times \hat{y} = \hat{z}\). The usual setup fixes a space frame {s} to the world and attaches a body frame {b} to the moving object, here an airplane with \(\hat{x}_b\) along its nose, \(\hat{y}_b\) along its left wing and \(\hat{z}_b\) up through its tail fin.</p>
+				<p>Write each body axis in space-frame coordinates and stack the three as columns:</p>
+				<p class="kn-math-display">\[R_{sb} = \begin{bmatrix} \hat{x}_b & \hat{y}_b & \hat{z}_b \end{bmatrix}\]</p>
+				<p>This 3×3 matrix is the rotation matrix of {b} relative to {s}, and its subscripts read "b as seen from s". It holds the whole orientation: the first column says where the nose points, the second where the left wing points, the third where the fin points, all in world coordinates.</p>
+				<figure class="kn-figure"><img src="../assets/b241616d-b44f-4179-896c-b7f44c9192aa.png" alt="Figure from “Frames and rotation matrices” in 3D Rotations: Matrices, Euler Angles and Quaternions" loading="lazy" /></figure>
+				<p>Figure 1. The space frame {s} at the origin and the body frame {b} attached to an airplane. The columns of \(R_{sb}\) are the body axes written in space coordinates, and \(p_{sb}\) is the position of the body frame's origin.</p>
+				<p>Because its columns have length one and are perpendicular to each other, a rotation matrix satisfies \(R^{\mathsf T} R = I\), where \(R^{\mathsf T}\) is the transpose and \(I\) the 3×3 identity matrix. Because the axes are right-handed, \(\det R = +1\). The matrices with these two properties form the special orthogonal group SO(3), and every one of them is a rotation. Nine entries tied by six constraints, three unit lengths and three right angles, leave three degrees of freedom: the three independent ways an object can turn.</p>
+				<p>The inverse of a rotation matrix is its transpose, \(R_{bs} = R_{sb}^{-1} = R_{sb}^{\mathsf T}\), so undoing a rotation costs nothing.</p>
+				<h2>What a rotation matrix does</h2>
+				<p>The same matrix does three jobs.</p>
+				<ul><li>It represents an orientation, as above.</li><li>It changes coordinates. A point fixed to the body has coordinates \(p_b\) in the body frame. Its coordinates in the space frame are \(p_s = R_{sb}\, p_b + p_{sb}\), where \(p_{sb}\) is the position of the body frame's origin in {s}. For a direction rather than a point, such as a velocity, the shift is left out: \(v_s = R_{sb}\, v_b\).</li><li>It rotates. Applied to a vector, \(v' = R\,v\) turns the vector while keeping its length.</li></ul>
+				<p>Frames chain by matrix multiplication, \(R_{sc} = R_{sb}\, R_{bc}\), the orientation of a third frame {c} given the middle frame {b}. The inner subscripts match and cancel, a quick check that a product is written in the right order.</p>
+				<p>The building blocks are the turns by an angle \(\theta\) about the three coordinate axes:</p>
+				<p class="kn-math-display">\[R_x(\theta) = \begin{bmatrix} 1 & 0 & 0 \\ 0 & \cos\theta & -\sin\theta \\ 0 & \sin\theta & \cos\theta \end{bmatrix}, \quad R_y(\theta) = \begin{bmatrix} \cos\theta & 0 & \sin\theta \\ 0 & 1 & 0 \\ -\sin\theta & 0 & \cos\theta \end{bmatrix}, \quad R_z(\theta) = \begin{bmatrix} \cos\theta & -\sin\theta & 0 \\ \sin\theta & \cos\theta & 0 \\ 0 & 0 & 1 \end{bmatrix}\]</p>
+				<p>A positive angle turns counterclockwise when the axis points at you: with the right thumb along the axis, the fingers curl in the positive direction.</p>
+				<p>Unlike vectors, rotations do not commute: \(R_1 R_2 \neq R_2 R_1\) in general. Turning an airplane 90° about x and then 90° about z leaves it facing a different way than making the same two turns in the opposite order (Figure 2).</p>
+				<figure class="kn-figure"><img src="../assets/812e487a-0cbb-42dd-8afc-de33f55cf33b.png" alt="Figure from “What a rotation matrix does” in 3D Rotations: Matrices, Euler Angles and Quaternions" loading="lazy" /></figure>
+				<p>Figure 2. The same two 90° turns, about the space frame's x and z axes, in two orders. Top: x first, then z, which is the product \(R_z R_x\). Bottom: z first, then x, which is \(R_x R_z\). The small axes beside each airplane are the space frame.</p>
+				<p>The figure also shows which side a turn multiplies on. A turn about one of the space frame's fixed axes multiplies on the left, \(R_{sb}' = \mathrm{Rot}\; R_{sb}\), where Rot is the elementary rotation, such as \(R_x(\theta)\). A turn about one of the body's own axes, the way a pilot thinks (pitch the nose up, then roll), multiplies on the right, \(R_{sb}' = R_{sb}\; \mathrm{Rot}\). So a list of turns about the moving body axes, applied in the order 1, 2, 3, gives the same result as the same turns about the fixed axes applied in the order 3, 2, 1.</p>
+				<h2>Euler angles</h2>
+				<p>A rotation matrix spends nine numbers on three degrees of freedom. Euler angles use exactly three: the orientation is built from three turns about coordinate axes. The usual choice in robotics and aviation is yaw, pitch and roll. Turn by the yaw angle \(\alpha\) about z, which sets the heading; then by the pitch angle \(\beta\) about the new y axis, which tips the nose; then by the roll angle \(\gamma\) about the newest x axis, which banks the wings. Each turn is about the body's current axis, so the factors multiply on the right:</p>
+				<p class="kn-math-display">\[R = R_z(\alpha)\, R_y(\beta)\, R_x(\gamma) = \begin{bmatrix} c_\alpha c_\beta & c_\alpha s_\beta s_\gamma - s_\alpha c_\gamma & c_\alpha s_\beta c_\gamma + s_\alpha s_\gamma \\ s_\alpha c_\beta & s_\alpha s_\beta s_\gamma + c_\alpha c_\gamma & s_\alpha s_\beta c_\gamma - c_\alpha s_\gamma \\ -s_\beta & c_\beta s_\gamma & c_\beta c_\gamma \end{bmatrix}\]</p>
+				<p>where \(c_\alpha = \cos\alpha\), \(s_\alpha = \sin\alpha\), and likewise for the other angles. With the z axis pointing up, a positive pitch tips the nose down, because \(R_y\) turns x toward \(-z\).</p>
+				<p>Reading the angles back out of a rotation matrix with entries \(r_{ij}\) (row i, column j):</p>
+				<p class="kn-math-display">\[\beta = \operatorname{atan2}\big(-r_{31},\, \sqrt{r_{11}^2 + r_{21}^2}\big), \qquad \alpha = \operatorname{atan2}(r_{21}, r_{11}), \qquad \gamma = \operatorname{atan2}(r_{32}, r_{33})\]</p>
+				<p>Here atan2(y, x) is the angle of the point (x, y) measured from the x axis, with the quadrant taken into account. This picks \(\beta\) between −90° and 90°; the angles \((\alpha + 180^\circ,\; 180^\circ - \beta,\; \gamma + 180^\circ)\) describe the same orientation, so every orientation has two sets of yaw, pitch and roll.</p>
+				<p>Yaw-pitch-roll is one of 12 possible sequences of axes: six with three different axes, such as z-y-x (Tait–Bryan angles), and six that repeat the first axis at the end, such as z-x-z (proper Euler angles, used for spinning tops and for some robot wrists). Each sequence can also be read as turns about fixed axes or about moving ones. Software libraries disagree about the default, so the convention has to be stated next to the numbers.</p>
+				<h3>Gimbal lock</h3>
+				<p>Euler angles fail when the pitch reaches ±90° and the nose points straight down or straight up. Substituting \(\beta = 90^\circ\) into the matrix gives</p>
+				<p class="kn-math-display">\[R = \begin{bmatrix} 0 & \sin(\gamma - \alpha) & \cos(\gamma - \alpha) \\ 0 & \cos(\gamma - \alpha) & -\sin(\gamma - \alpha) \\ -1 & 0 & 0 \end{bmatrix}\]</p>
+				<p>which depends on yaw and roll only through their difference. Both have become turns about the same vertical line, so a change of one can be undone by the other, and one way of turning, about the horizontal axis at right angles to the pitch axis, cannot be produced by a small change of any of the three angles. This is gimbal lock. Close to it, a small turn of the object can demand large, fast swings of \(\alpha\) and \(\gamma\), and angles read back from a matrix jump around.</p>
+				<p>The name comes from gimbal mounts, three nested rings that each turn about one axis, the way a gyroscope or a camera stabilizer is hung. At a pitch of 90° the roll axis lines up with the yaw axis, the outer two rings fold into one plane, and the mount can no longer follow a turn about the missing axis (Figure 3). The inertial platform of the Apollo spacecraft hung in three gimbals, and its guidance computer warned the crew when the middle gimbal drifted toward this angle.</p>
+				<figure class="kn-figure"><img src="../assets/07044095-34a0-45f3-a67f-34a401d673d6.png" alt="Figure from “Gimbal lock” in 3D Rotations: Matrices, Euler Angles and Quaternions" loading="lazy" /></figure>
+				<p>Figure 3. A gimbal mount for yaw, pitch and roll. The outer ring (yellow) turns about the vertical yaw axis, the middle ring (teal) about the pitch axis, and the inner ring (purple) about the airplane's nose, the roll axis. Left: at a pitch of 22° the three axes point three different ways. Right: with the nose pitched up 90°, the roll axis lines up with the yaw axis and the outer and middle rings lie in one plane.</p>
+				<p>Gimbal lock belongs to the three-angle description, not to the object: the airplane itself can still turn any way it likes. It is also unavoidable in some form, because no description of 3D rotations by three numbers is free of singular points; the choice of axes only decides where they sit. Euler angles stay the right tool for showing an orientation to a person, for typing one in, and for motions that keep well away from the lock, such as a camera that tilts by a few tens of degrees.</p>
+				<h2>Axis-angle and Rodrigues' formula</h2>
+				<p>Euler's rotation theorem says that any rotation, however it was built up, is a single turn by some angle \(\theta\) about some fixed axis, given by a unit vector \(\hat{\omega}\). The axis is the one direction the rotation leaves unchanged, an eigenvector of \(R\) with eigenvalue 1.</p>
+				<p>To turn a vector \(v\) about \(\hat{\omega}\) by \(\theta\), split it into a part along the axis and a part across it:</p>
+				<p class="kn-math-display">\[v_\parallel = (\hat{\omega} \cdot v)\, \hat{\omega}, \qquad v_\perp = v - v_\parallel\]</p>
+				<p>The turn leaves \(v_\parallel\) alone and swings \(v_\perp\) around a circle in the plane perpendicular to the axis. In that plane, \(v_\perp\) and \(\hat{\omega} \times v\) are two perpendicular vectors of the same length (the cross product with the unit vector \(\hat\omega\) turns \(v_\perp\) by 90° and keeps its length), so the turned vector is</p>
+				<p class="kn-math-display">\[v' = v_\parallel + v_\perp \cos\theta + (\hat{\omega} \times v) \sin\theta\]</p>
+				<p>This is Rodrigues' rotation formula (Figure 4).</p>
+				<figure class="kn-figure"><img src="../assets/dd25cd5a-846e-488e-bc90-17f97c21c553.png" alt="Figure from “Axis-angle and Rodrigues&#x27; formula” in 3D Rotations: Matrices, Euler Angles and Quaternions" loading="lazy" /></figure>
+				<p>Figure 4. Rodrigues' formula. The part of \(v\) along the axis \(\hat{\omega}\) stays put; the part across it, \(v_\perp\), turns by \(\theta\) in the plane perpendicular to the axis, which is spanned by \(v_\perp\) and \(\hat{\omega} \times v\).</p>
+				<p>The cross product with \(\hat{\omega} = (\omega_1, \omega_2, \omega_3)\) is a matrix product, \(\hat{\omega} \times v = [\hat{\omega}]\, v\), with the skew-symmetric matrix</p>
+				<p class="kn-math-display">\[[\hat{\omega}] = \begin{bmatrix} 0 & -\omega_3 & \omega_2 \\ \omega_3 & 0 & -\omega_1 \\ -\omega_2 & \omega_1 & 0 \end{bmatrix}\]</p>
+				<p>Using \([\hat{\omega}]^2 v = \hat{\omega} \times (\hat{\omega} \times v) = -v_\perp\), Rodrigues' formula becomes a rotation matrix:</p>
+				<p class="kn-math-display">\[R = I + \sin\theta\, [\hat{\omega}] + (1 - \cos\theta)\, [\hat{\omega}]^2\]</p>
+				<p>Going back from a matrix to an axis and an angle uses the trace (the sum of the diagonal entries), \(\operatorname{tr} R = 1 + 2\cos\theta\), and the antisymmetric part of \(R\):</p>
+				<p class="kn-math-display">\[\theta = \arccos\frac{\operatorname{tr} R - 1}{2}, \qquad \hat{\omega} = \frac{1}{2\sin\theta} \begin{bmatrix} r_{32} - r_{23} \\ r_{13} - r_{31} \\ r_{21} - r_{12} \end{bmatrix}\]</p>
+				<p>The formula breaks down at \(\theta = 0\), where nothing turns and any axis will do, and loses accuracy near \(\theta = 180^\circ\), where a half turn about \(\hat{\omega}\) and one about \(-\hat{\omega}\) coincide; there the axis is read from the diagonal of \(R\) instead.</p>
+				<p>Axis and angle pack into one vector, the rotation vector \(\theta\, \hat{\omega}\), whose direction is the axis and whose length is the angle. Rodrigues' formula is then the matrix exponential of its skew matrix, \(R = \exp(\theta\, [\hat{\omega}])\), which is why the rotation vector is also called the exponential coordinates of \(R\), and the way back from \(R\) to \(\theta\, \hat{\omega}\) is the matrix logarithm. The rotation vector is the natural description of small rotations and of spinning. A body turning with a constant angular velocity \(\omega\), a vector along the spin axis whose length is the rate in radians per second, is turned by \(\exp([\omega]\, t)\) after a time \(t\). Programs that estimate orientations, such as bundle adjustment and visual odometry, update a rotation by composing it with a small rotation \(\exp([\delta])\), for a three-number correction \(\delta\), instead of editing the nine entries, so every step stays a valid rotation.</p>
+				<h2>Quaternions</h2>
+				<p>Quaternions describe a rotation with four numbers and avoid the problems of the descriptions above. A quaternion is \(q = w + x\,i + y\,j + z\,k\), a scalar part \(w\) plus a vector part \(u = (x, y, z)\), where the imaginary units obey \(i^2 = j^2 = k^2 = ijk = -1\). Written as a pair \(q = (w, u)\), the product of two quaternions is</p>
+				<p class="kn-math-display">\[q_1 q_2 = (w_1 w_2 - u_1 \cdot u_2,\;\; w_1 u_2 + w_2 u_1 + u_1 \times u_2)\]</p>
+				<p>The cross product makes the result depend on the order, just as for rotations.</p>
+				<p>The turn by \(\theta\) about the unit axis \(\hat{\omega}\) is the unit quaternion</p>
+				<p class="kn-math-display">\[q = \Big(\cos\frac{\theta}{2},\;\; \sin\frac{\theta}{2}\, \hat{\omega}\Big)\]</p>
+				<p>whose four entries satisfy \(w^2 + x^2 + y^2 + z^2 = 1\). To rotate a vector \(v\), treat it as a quaternion with zero scalar part and multiply on both sides:</p>
+				<p class="kn-math-display">\[(0, v') = q\, (0, v)\, q^{*}\]</p>
+				<p>where \(q^{*} = (w, -u)\) is the conjugate, which for a unit quaternion is also the inverse. Rotations compose by multiplication in the same order as matrices: \(q_{sc} = q_{sb}\, q_{bc}\).</p>
+				<p>The half angle appears because \(q\) acts twice, once from each side of \(v\), and each multiplication contributes half of the turn. A consequence is that \(q\) and \(-q\) give the same rotation, since the two sign changes cancel; turning by an extra full circle, \(\theta + 360^\circ\), about the same axis flips the sign of every entry. Unit quaternions therefore cover each rotation exactly twice, and code that compares, averages or interpolates quaternions must first make their dot product non-negative, flipping the sign of one of them if needed.</p>
+				<p>The rotation matrix of a unit quaternion \(q = (w, x, y, z)\) is</p>
+				<p class="kn-math-display">\[R(q) = \begin{bmatrix} 1 - 2(y^2 + z^2) & 2(xy - wz) & 2(xz + wy) \\ 2(xy + wz) & 1 - 2(x^2 + z^2) & 2(yz - wx) \\ 2(xz - wy) & 2(yz + wx) & 1 - 2(x^2 + y^2) \end{bmatrix}\]</p>
+				<p>Going the other way, the scalar part comes from the trace, \(w = \tfrac{1}{2}\sqrt{1 + \operatorname{tr} R}\), and then \(x = (r_{32} - r_{23})/(4w)\), \(y = (r_{13} - r_{31})/(4w)\) and \(z = (r_{21} - r_{12})/(4w)\). When \(w\) is close to zero, robust code starts from the largest diagonal entry instead.</p>
+				<p>Why quaternions are the usual way to store orientation:</p>
+				<ul><li>Four numbers and one constraint. Rounding errors pull a quaternion off unit length, and dividing by its length puts it back; a rotation matrix that drifts has to be re-orthogonalized, which is more work.</li><li>No singularity. Every orientation has a smooth neighborhood of quaternions around it, so there is no gimbal lock.</li><li>Cheap composition. Multiplying two quaternions takes 16 multiplications, against 27 for two 3×3 matrices.</li><li>Smooth interpolation, described next.</li></ul>
+				<p>To move smoothly from an orientation \(q_0\) to another, \(q_1\), spherical linear interpolation, or slerp, walks along the shortest arc between them on the sphere of unit quaternions at a constant rate:</p>
+				<p class="kn-math-display">\[\operatorname{slerp}(q_0, q_1; t) = \frac{\sin((1 - t)\Omega)}{\sin\Omega}\, q_0 + \frac{\sin(t\,\Omega)}{\sin\Omega}\, q_1, \qquad \cos\Omega = q_0 \cdot q_1\]</p>
+				<p>for \(t\) running from 0 to 1, where \(q_0 \cdot q_1\) is the dot product of the four entries and \(\Omega\) is the angle between the two quaternions on that sphere, half the angle of the turn from one orientation to the other. Along the way the object turns about one fixed axis at a steady rate, the short way. Interpolating the three Euler angles one by one instead gives a path that bends and changes speed, and that swings wildly near the lock (Figure 5). Animation software and robot motion planners blend orientations with slerp.</p>
+				<figure class="kn-figure"><img src="../assets/394fe552-04d2-4500-9449-4cc083b2b291.png" alt="Figure from “Quaternions” in 3D Rotations: Matrices, Euler Angles and Quaternions" loading="lazy" /></figure>
+				<p>Figure 5. Where the airplane's nose points while its orientation moves from start to end, drawn on a sphere of directions; the dots mark equal steps of \(t\). Slerp (teal) turns at a constant rate the short way. Interpolating yaw, pitch and roll one by one (red) takes a longer, uneven path, here because the end orientation points almost straight up, close to gimbal lock.</p>
+				<p>Two conventions cause most quaternion bugs. One is the storage order: many papers and Eigen's constructor write (w, x, y, z), while ROS messages, SciPy and Unity store (x, y, z, w). The other is the multiplication rule: the Hamilton convention used here has \(ij = k\), while the JPL convention found in some spacecraft and state-estimation code has \(ij = -k\), which reverses the order of every product.</p>
+				<h2>Which description to use</h2>
+				<ul><li>Rotation matrix: nine numbers. Composes by multiplication, transforms vectors directly, and has no singularities, but drifts off SO(3) under rounding. Use it to transform points and to chain frames.</li><li>Euler angles: three numbers. Easy to read and to type, but gimbal lock, twelve conventions and poor interpolation. Use them for display and input.</li><li>Rotation vector (axis-angle): three numbers. The natural form for small rotations, angular velocity and optimizer updates, but it wraps around at 180°.</li><li>Quaternion: four numbers. No singularity, cheap to normalize, compose and interpolate; \(q\) and \(-q\) are the same rotation. Use it to store, integrate and interpolate orientation, as IMU filters, game engines and ROS do.</li></ul>
+				<p>A typical program stores quaternions, converts to a matrix when it has many points to transform, shows Euler angles to people, and uses rotation vectors for small corrections.</p>
+				<h2>Adding translation</h2>
+				<p>An orientation is half of a pose. The full pose of the body frame is the rotation \(R_{sb}\) together with the position \(p_{sb}\) of its origin, and points change coordinates as \(p_s = R_{sb}\, p_b + p_{sb}\). Writing points with an extra 1 at the end turns this into a single multiplication by a 4×4 homogeneous transformation matrix,</p>
+				<p class="kn-math-display">\[\begin{bmatrix} p_s \\ 1 \end{bmatrix} = T_{sb} \begin{bmatrix} p_b \\ 1 \end{bmatrix}, \qquad T_{sb} = \begin{bmatrix} R_{sb} & p_{sb} \\ 0 & 1 \end{bmatrix}\]</p>
+				<p>where the 0 is a row of three zeros, and poses chain the same way rotations do, \(T_{sc} = T_{sb}\, T_{bc}\). Chaining one such transform per joint is all of forward kinematics, the subject of the next note.</p>
+				</div>
+			</article>
+		</div>
+	</div>
+	<script src="../../assets/js/jquery.min.js"></script>
+	<script src="../../assets/js/browser.min.js"></script>
+	<script src="../../assets/js/breakpoints.min.js"></script>
+	<script src="../../assets/js/util.js"></script>
+	<script src="../../assets/js/main.js"></script>
+</body>
+</html>

@@ -365,7 +365,31 @@
       "title": "Optical Waveguides",
       "notion_fetched_at": "2026-10-22T20:48:17.155000+00:00",
       "synced_at": "2026-10-22T20:48:31.532646+00:00"
+    },
+    "40501d9f528781519eedf6c8979dd90f": {
+      "slug": "3d-rotations",
+      "title": "3D Rotations: Matrices, Euler Angles and Quaternions",
+      "notion_fetched_at": "2026-10-26T05:54:59.478000+00:00",
+      "synced_at": "2026-10-26T05:55:18.364547+00:00"
+    },
+    "40501d9f5287817eb5c4dcbb3e7b7cc2": {
+      "slug": "manipulator-jacobian",
+      "title": "The Manipulator Jacobian",
+      "notion_fetched_at": "2026-10-26T05:55:00.409000+00:00",
+      "synced_at": "2026-10-26T05:55:19.498839+00:00"
+    },
+    "40501d9f52878187ade0e5ca96b148c5": {
+      "slug": "inverse-kinematics",
+      "title": "Inverse Kinematics",
+      "notion_fetched_at": "2026-10-26T05:48:14.873000+00:00",
+      "synced_at": "2026-10-26T05:50:16.179339+00:00"
+    },
+    "40501d9f528781ea9889c9e1169e6858": {
+      "slug": "forward-kinematics",
+      "title": "Forward Kinematics",
+      "notion_fetched_at": "2026-10-26T05:48:14.068000+00:00",
+      "synced_at": "2026-10-26T05:50:17.593960+00:00"
     }
   },
-  "updated_at": "2026-10-23T18:05:26.098350+00:00"
+  "updated_at": "2026-10-26T05:55:19.498852+00:00"
 }

@@ -72,6 +72,10 @@ TOPIC: dict[str, tuple[str, str, str | None]] = {
     "zernike-polynomials": ("Optics", "optics", None),
     "seidel-aberrations": ("Optics", "optics", None),
     "optical-waveguides": ("Optics", "optics", None),
+    "3d-rotations": ("Robotics", "robotics", None),
+    "forward-kinematics": ("Robotics", "robotics", None),
+    "inverse-kinematics": ("Robotics", "robotics", None),
+    "manipulator-jacobian": ("Robotics", "robotics", None),
 }
 
 
