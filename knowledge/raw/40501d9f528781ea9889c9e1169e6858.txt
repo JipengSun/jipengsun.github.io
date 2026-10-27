@@ -1,4 +1,4 @@
-Here is the result of "fetch" for the Page with URL https://app.notion.com/p/40501d9f528781ea9889c9e1169e6858 as of 2026-10-26T05:48:14.068Z:
+Here is the result of "fetch" for the Page with URL https://app.notion.com/p/40501d9f528781ea9889c9e1169e6858 as of 2026-10-27T17:02:08.644Z:
 <page url="https://app.notion.com/p/40501d9f528781ea9889c9e1169e6858">
 <ancestor-path></ancestor-path>
 <properties>
@@ -8,6 +8,7 @@ Here is the result of "fetch" for the Page with URL https://app.notion.com/p/405
 <content>
 A robot arm is a chain of rigid links joined by motorized joints. Each motor knows one number, the angle of its own joint, but tasks are described in space: where the gripper is and which way it points. Forward kinematics is the map from the joint angles to that pose. It is the easy direction of the problem: attach a coordinate frame to every link, write down the transform from each link's frame to the next one, which depends on a single joint angle, and multiply the transforms along the chain.
 This is the second of four notes on robot arms, after <mention-page url="https://app.notion.com/p/40501d9f528781519eedf6c8979dd90f"/> and before <mention-page url="https://app.notion.com/p/40501d9f52878187ade0e5ca96b148c5"/> and <mention-page url="https://app.notion.com/p/40501d9f5287817eb5c4dcbb3e7b7cc2"/>.
+Video: [Forward Kinematics: Where Is the Hand?](https://youtu.be/GMD_QNT5yM8), a four-minute visual explainer of this note, from a single joint in the plane to the Denavit–Hartenberg parameters and the chain of transforms.
 ## Joints, configurations and the task space
 The two common joints are revolute joints, which turn about an axis by an angle $`\theta`$, and prismatic joints, which slide along an axis by a distance $`d`$. An arm with $`n`$ joints has $`n`$ joint variables. For an arm with only revolute joints they form the joint vector $`\theta = (\theta_1, \dots, \theta_n)`$, the arm's configuration, and the set of all configurations is the joint space.
 The end-effector, the gripper or tool at the end of the chain, has a pose: a position and an orientation. In a plane that is three numbers, the position $`(x, y)`$ and a heading angle $`\varphi`$; in space it is six, three for the position and three for the orientation. The set of these poses is the task space, and forward kinematics is a function from joint space to task space,
