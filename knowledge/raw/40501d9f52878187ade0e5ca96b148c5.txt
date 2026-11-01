@@ -1,4 +1,4 @@
-Here is the result of "fetch" for the Page with URL https://app.notion.com/p/40501d9f52878187ade0e5ca96b148c5 as of 2026-10-26T05:48:14.873Z:
+Here is the result of "fetch" for the Page with URL https://app.notion.com/p/40501d9f52878187ade0e5ca96b148c5 as of 2026-11-01T04:02:55.506Z:
 <page url="https://app.notion.com/p/40501d9f52878187ade0e5ca96b148c5">
 <ancestor-path></ancestor-path>
 <properties>
@@ -8,6 +8,7 @@ Here is the result of "fetch" for the Page with URL https://app.notion.com/p/405
 <content>
 Inverse kinematics (IK) runs forward kinematics backward: given where the hand should be, find joint angles that put it there. Tasks are described in space (grasp the cup at this position, keep the camera pointed at the table), but motors take angles, so nearly every arm controller solves IK all the time. Unlike forward kinematics, the answer can be no solution at all, a few solutions or a whole continuous family of them, and apart from arms designed to allow it there is no formula. IK is therefore solved in one of two ways: analytically, for arms whose geometry permits a closed form, or numerically, by iteration.
 This is the third of four notes on robot arms, after <mention-page url="https://app.notion.com/p/40501d9f528781519eedf6c8979dd90f"/> and <mention-page url="https://app.notion.com/p/40501d9f528781ea9889c9e1169e6858"/>, and before <mention-page url="https://app.notion.com/p/40501d9f5287817eb5c4dcbb3e7b7cc2"/>.
+Video: [Inverse Kinematics: From Hand to Angles](https://youtu.be/FKeQIw2yz1I), a four-and-a-half-minute visual explainer of this note, from the two-link arm's triangle and the law of cosines to Newton's method and damped steps.
 ## The two-link arm and the law of cosines
 Take the planar arm from <mention-page url="https://app.notion.com/p/40501d9f528781ea9889c9e1169e6858"/>, with link lengths $`L_1`$ and $`L_2`$, joint angles $`\theta_1`$ (first link from the x axis) and $`\theta_2`$ (second link from the first), and a target position $`(x, y)`$ for the hand. The base, the elbow and the hand form a triangle with sides $`L_1`$, $`L_2`$ and $`r`$, where $`r = \sqrt{x^2 + y^2}`$ is the target's distance from the base (Figure 1). The triangle's angle at the elbow is $`180^\circ - \theta_2`$, so the law of cosines, $`r^2 = L_1^2 + L_2^2 - 2 L_1 L_2 \cos(180^\circ - \theta_2)`$, gives
 $$
