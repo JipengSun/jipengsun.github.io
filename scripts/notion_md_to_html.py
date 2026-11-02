@@ -73,6 +73,7 @@ NOTION_TO_SLUG: dict[str, str] = {
     "40501d9f528781ea9889c9e1169e6858": "forward-kinematics",
     "40501d9f52878187ade0e5ca96b148c5": "inverse-kinematics",
     "40501d9f5287817eb5c4dcbb3e7b7cc2": "manipulator-jacobian",
+    "40b01d9f5287815ca44cd88a6e0c7215": "discriminative-vs-generative",
 }
 
 

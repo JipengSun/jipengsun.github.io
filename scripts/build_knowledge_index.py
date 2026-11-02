@@ -76,6 +76,7 @@ TOPIC: dict[str, tuple[str, str, str | None]] = {
     "forward-kinematics": ("Robotics", "robotics", None),
     "inverse-kinematics": ("Robotics", "robotics", None),
     "manipulator-jacobian": ("Robotics", "robotics", None),
+    "discriminative-vs-generative": ("Machine Learning", "machine-learning", None),
 }
 
 
