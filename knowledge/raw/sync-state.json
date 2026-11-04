@@ -369,33 +369,39 @@
     "40501d9f528781519eedf6c8979dd90f": {
       "slug": "3d-rotations",
       "title": "3D Rotations: Matrices, Euler Angles and Quaternions",
-      "notion_fetched_at": "2026-10-26T19:30:12.359000+00:00",
-      "synced_at": "2026-10-26T19:31:18.484362+00:00"
+      "notion_fetched_at": "2026-11-03T15:25:39.968000+00:00",
+      "synced_at": "2026-11-03T15:26:21.780092+00:00"
     },
     "40501d9f5287817eb5c4dcbb3e7b7cc2": {
       "slug": "manipulator-jacobian",
       "title": "The Manipulator Jacobian",
-      "notion_fetched_at": "2026-10-26T05:55:00.409000+00:00",
-      "synced_at": "2026-10-26T05:55:19.498839+00:00"
+      "notion_fetched_at": "2026-11-03T15:25:42.598000+00:00",
+      "synced_at": "2026-11-03T15:26:23.154328+00:00"
     },
     "40501d9f52878187ade0e5ca96b148c5": {
       "slug": "inverse-kinematics",
       "title": "Inverse Kinematics",
-      "notion_fetched_at": "2026-11-01T04:02:55.506000+00:00",
-      "synced_at": "2026-11-01T04:03:15.599284+00:00"
+      "notion_fetched_at": "2026-11-03T15:25:41.638000+00:00",
+      "synced_at": "2026-11-03T15:26:24.900540+00:00"
     },
     "40501d9f528781ea9889c9e1169e6858": {
       "slug": "forward-kinematics",
       "title": "Forward Kinematics",
-      "notion_fetched_at": "2026-10-27T17:02:08.644000+00:00",
-      "synced_at": "2026-10-27T17:02:56.000201+00:00"
+      "notion_fetched_at": "2026-11-03T15:25:40.779000+00:00",
+      "synced_at": "2026-11-03T15:26:28.303371+00:00"
     },
     "40b01d9f5287815ca44cd88a6e0c7215": {
       "slug": "discriminative-vs-generative",
       "title": "Discriminative vs. Generative Models",
       "notion_fetched_at": "2026-11-02T19:34:55.401000+00:00",
       "synced_at": "2026-11-02T19:35:38.959052+00:00"
+    },
+    "40d01d9f528781e3983bcdaad476a6a4": {
+      "slug": "robot-arm-dynamics",
+      "title": "Robot Arm Dynamics",
+      "notion_fetched_at": "2026-11-03T15:23:03.964000+00:00",
+      "synced_at": "2026-11-03T15:26:31.429963+00:00"
     }
   },
-  "updated_at": "2026-11-02T19:35:38.959075+00:00"
+  "updated_at": "2026-11-03T15:26:31.429975+00:00"
 }

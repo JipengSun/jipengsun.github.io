@@ -2,27 +2,27 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 	<url>
 		<loc>https://jipengsun.github.io/</loc>
-		<lastmod>2026-11-02</lastmod>
+		<lastmod>2026-11-03</lastmod>
 	</url>
 	<url>
 		<loc>https://jipengsun.github.io/research.html</loc>
-		<lastmod>2026-11-02</lastmod>
+		<lastmod>2026-11-03</lastmod>
 	</url>
 	<url>
 		<loc>https://jipengsun.github.io/projects.html</loc>
-		<lastmod>2026-11-02</lastmod>
+		<lastmod>2026-11-03</lastmod>
 	</url>
 	<url>
 		<loc>https://jipengsun.github.io/single.html</loc>
-		<lastmod>2026-11-02</lastmod>
+		<lastmod>2026-11-03</lastmod>
 	</url>
 	<url>
 		<loc>https://jipengsun.github.io/knowledge-share.html</loc>
-		<lastmod>2026-11-02</lastmod>
+		<lastmod>2026-11-03</lastmod>
 	</url>
 	<url>
 		<loc>https://jipengsun.github.io/blog/index.html</loc>
-		<lastmod>2026-11-02</lastmod>
+		<lastmod>2026-11-03</lastmod>
 	</url>
 	<url>
 		<loc>https://jipengsun.github.io/knowledge/articles/3d-gaussian-splatting.html</loc>
@@ -30,7 +30,7 @@
 	</url>
 	<url>
 		<loc>https://jipengsun.github.io/knowledge/articles/3d-rotations.html</loc>
-		<lastmod>2026-10-26</lastmod>
+		<lastmod>2026-11-03</lastmod>
 	</url>
 	<url>
 		<loc>https://jipengsun.github.io/knowledge/articles/admm.html</loc>
@@ -122,7 +122,7 @@
 	</url>
 	<url>
 		<loc>https://jipengsun.github.io/knowledge/articles/forward-kinematics.html</loc>
-		<lastmod>2026-10-27</lastmod>
+		<lastmod>2026-11-03</lastmod>
 	</url>
 	<url>
 		<loc>https://jipengsun.github.io/knowledge/articles/friction-cone-antipodal-grasps.html</loc>
@@ -154,7 +154,7 @@
 	</url>
 	<url>
 		<loc>https://jipengsun.github.io/knowledge/articles/inverse-kinematics.html</loc>
-		<lastmod>2026-11-01</lastmod>
+		<lastmod>2026-11-03</lastmod>
 	</url>
 	<url>
 		<loc>https://jipengsun.github.io/knowledge/articles/jepa-world-models.html</loc>
@@ -178,7 +178,7 @@
 	</url>
 	<url>
 		<loc>https://jipengsun.github.io/knowledge/articles/manipulator-jacobian.html</loc>
-		<lastmod>2026-10-26</lastmod>
+		<lastmod>2026-11-03</lastmod>
 	</url>
 	<url>
 		<loc>https://jipengsun.github.io/knowledge/articles/mean-flow.html</loc>
@@ -231,6 +231,10 @@
 	<url>
 		<loc>https://jipengsun.github.io/knowledge/articles/raft.html</loc>
 		<lastmod>2026-03-31</lastmod>
+	</url>
+	<url>
+		<loc>https://jipengsun.github.io/knowledge/articles/robot-arm-dynamics.html</loc>
+		<lastmod>2026-11-03</lastmod>
 	</url>
 	<url>
 		<loc>https://jipengsun.github.io/knowledge/articles/seidel-aberrations.html</loc>
