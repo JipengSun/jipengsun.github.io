@@ -1,4 +1,4 @@
-Here is the result of "fetch" for the Page with URL https://app.notion.com/p/40501d9f5287817eb5c4dcbb3e7b7cc2 as of 2026-11-03T15:25:42.598Z:
+Here is the result of "fetch" for the Page with URL https://app.notion.com/p/40501d9f5287817eb5c4dcbb3e7b7cc2 as of 2026-11-04T16:14:26.921Z:
 <page url="https://app.notion.com/p/40501d9f5287817eb5c4dcbb3e7b7cc2">
 <ancestor-path></ancestor-path>
 <properties>
@@ -12,6 +12,7 @@ $$
 $$
 Here $`\theta`$ is the vector of joint angles, $`\dot\theta`$ their rates of change (a dot means the derivative with respect to time), $`\dot x`$ the hand's velocity, and $`J(\theta)`$ the Jacobian, a matrix that changes with the configuration. This one matrix answers several practical questions about an arm: in which directions the hand moves easily, where it cannot move at all (the singularities), how joint torques turn into forces at the hand, and how to drive the hand along a straight line.
 This is the fourth of five notes on robot arms, after <mention-page url="https://app.notion.com/p/40501d9f528781519eedf6c8979dd90f"/>, <mention-page url="https://app.notion.com/p/40501d9f528781ea9889c9e1169e6858"/> and <mention-page url="https://app.notion.com/p/40501d9f52878187ade0e5ca96b148c5"/>, and before <mention-page url="https://app.notion.com/p/40d01d9f528781e3983bcdaad476a6a4"/>.
+Video: [The Jacobian: Speed and Strength](https://youtu.be/7mieSImcSMk), a five-minute visual explainer of this note, from one column per joint and steering the hand in a straight line to singularities and the joint torques that hold a push in balance.
 ## From joint speeds to hand velocity
 Write forward kinematics for the hand position as $`x = f(\theta)`$, with $`m`$ task coordinates (2 for a position in a plane, 3 in space) and $`n`$ joints. By the chain rule,
 $$

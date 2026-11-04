@@ -4,6 +4,21 @@
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 	<title>Robot Arm Dynamics — Knowledge Share — Jipeng Sun</title>
+	<!-- seo:auto:start -->
+	<meta name="description" content="Kinematics describes how a robot arm moves, but not what makes it move. A motor does not set its joint&#x27;s angle or speed directly: it applies a torque, and the…" />
+	<meta name="author" content="Jipeng Sun" />
+	<meta name="robots" content="index, follow" />
+	<link rel="canonical" href="https://jipengsun.github.io/knowledge/articles/robot-arm-dynamics.html" />
+	<meta property="og:type" content="article" />
+	<meta property="og:site_name" content="Jipeng Sun — Knowledge Share" />
+	<meta property="og:title" content="Robot Arm Dynamics" />
+	<meta property="og:description" content="Kinematics describes how a robot arm moves, but not what makes it move. A motor does not set its joint&#x27;s angle or speed directly: it applies a torque, and the…" />
+	<meta property="og:url" content="https://jipengsun.github.io/knowledge/articles/robot-arm-dynamics.html" />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Robot Arm Dynamics" />
+	<meta name="twitter:description" content="Kinematics describes how a robot arm moves, but not what makes it move. A motor does not set its joint&#x27;s angle or speed directly: it applies a torque, and the…" />
+	<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Robot Arm Dynamics","description":"Kinematics describes how a robot arm moves, but not what makes it move. A motor does not set its joint's angle or speed directly: it applies a torque, and the…","url":"https://jipengsun.github.io/knowledge/articles/robot-arm-dynamics.html","mainEntityOfPage":"https://jipengsun.github.io/knowledge/articles/robot-arm-dynamics.html","inLanguage":"en","author":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"publisher":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"isPartOf":{"@type":"Blog","name":"Jipeng Sun — Knowledge Share","url":"https://jipengsun.github.io/knowledge-share.html"},"dateModified":"2026-11-04"}</script>
+	<!-- seo:auto:end -->
 	<link rel="stylesheet" href="../../assets/css/main.css" />
 	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
@@ -57,6 +72,7 @@
 				<p class="kn-math-display">\[M(\theta)\, \ddot{\theta} + C(\theta, \dot{\theta})\, \dot{\theta} + G(\theta) = \tau\]</p>
 				<p>Here \(\theta\) is the vector of the \(n\) joint angles, \(\dot\theta\) and \(\ddot\theta\) are its first and second derivatives with respect to time (the joint speeds and accelerations), and \(\tau\) is the vector of torques that the motors apply at the joints. The left side splits that torque by what it pays for. \(M(\theta)\ddot\theta\) accelerates the links: the \(n \times n\) mass matrix \(M(\theta)\) plays the part that mass plays in \(F = ma\), except that it changes with the arm's posture. \(C(\theta, \dot\theta)\dot\theta\) collects the centrifugal and Coriolis torques that appear when the joints move, and \(G(\theta)\) holds the arm up against its own weight. Read from left to right, the equation gives the torques that produce a desired motion (inverse dynamics, used to control an arm); solved for \(\ddot\theta\), it gives the motion that given torques produce (forward dynamics, used to simulate one).</p>
 				<p>This is the fifth of five notes on robot arms, after <a href="3d-rotations.html">3D Rotations: Matrices, Euler Angles and Quaternions</a>, <a href="forward-kinematics.html">Forward Kinematics</a>, <a href="inverse-kinematics.html">Inverse Kinematics</a> and <a href="manipulator-jacobian.html">The Manipulator Jacobian</a>.</p>
+				<p>Video: <a href="https://youtu.be/S63x8aZGPkc" target="_blank" rel="noopener">Build a Robot Arm from Scratch (4): How to Decide Motor Forces</a>, a six-minute visual explainer of this note, from the torque that holds one link up against gravity to the mass matrix, the velocity torques and computed-torque control.</p>
 				<h2>The two-link arm, standing up</h2>
 				<p>All examples use the two-link arm of the earlier notes, now moving in a vertical plane so that gravity matters, with \(y\) pointing up. The shoulder angle \(\theta_1\) is measured from the horizontal and the elbow angle \(\theta_2\) from the line of the upper arm; \(L_1\) and \(L_2\) are the link lengths. Link \(i\) has the mass \(m_i\), its center of mass lies on the link at the distance \(r_i\) from joint \(i\), and \(I_i\) is its moment of inertia about that center, which measures how hard the link alone is to spin about its own middle. For a uniform rod, \(r_i = L_i / 2\) and \(I_i = m_i L_i^2 / 12\). Finally, \(g \approx 9.81\ \mathrm{m/s^2}\) is the acceleration of gravity.</p>
 				<h2>Gravity: holding still</h2>
