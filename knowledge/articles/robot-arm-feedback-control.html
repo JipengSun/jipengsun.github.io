@@ -1,0 +1,135 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<title>Feedback Control for Robot Arms — Knowledge Share — Jipeng Sun</title>
+	<!-- seo:auto:start -->
+	<meta name="description" content="A model of an arm&#x27;s dynamics turns a planned motion into motor torques, but no model is exact. The arm picks up a cup whose weight nobody entered, its gears…" />
+	<meta name="author" content="Jipeng Sun" />
+	<meta name="robots" content="index, follow" />
+	<link rel="canonical" href="https://jipengsun.github.io/knowledge/articles/robot-arm-feedback-control.html" />
+	<meta property="og:type" content="article" />
+	<meta property="og:site_name" content="Jipeng Sun — Knowledge Share" />
+	<meta property="og:title" content="Feedback Control for Robot Arms" />
+	<meta property="og:description" content="A model of an arm&#x27;s dynamics turns a planned motion into motor torques, but no model is exact. The arm picks up a cup whose weight nobody entered, its gears…" />
+	<meta property="og:url" content="https://jipengsun.github.io/knowledge/articles/robot-arm-feedback-control.html" />
+	<meta name="twitter:card" content="summary" />
+	<meta name="twitter:title" content="Feedback Control for Robot Arms" />
+	<meta name="twitter:description" content="A model of an arm&#x27;s dynamics turns a planned motion into motor torques, but no model is exact. The arm picks up a cup whose weight nobody entered, its gears…" />
+	<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Feedback Control for Robot Arms","description":"A model of an arm's dynamics turns a planned motion into motor torques, but no model is exact. The arm picks up a cup whose weight nobody entered, its gears…","url":"https://jipengsun.github.io/knowledge/articles/robot-arm-feedback-control.html","mainEntityOfPage":"https://jipengsun.github.io/knowledge/articles/robot-arm-feedback-control.html","inLanguage":"en","author":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"publisher":{"@type":"Person","name":"Jipeng Sun","url":"https://jipengsun.github.io/"},"isPartOf":{"@type":"Blog","name":"Jipeng Sun — Knowledge Share","url":"https://jipengsun.github.io/knowledge-share.html"},"dateModified":"2026-11-04"}</script>
+	<!-- seo:auto:end -->
+	<link rel="stylesheet" href="../../assets/css/main.css" />
+	<link rel="stylesheet" href="../../assets/css/knowledge-article.css" />
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous" />
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+	<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="(function(){var b=document.querySelector('.kn-body');if(!b)return;b.querySelectorAll('span').forEach(function(s){if(s.children.length)return;var t=s.textContent.trim();if(/^\\\([\s\S]*\\\)$/.test(t)||/^\\\[[\s\S]*\\\]$/.test(t))s.replaceWith(document.createTextNode(t));});renderMathInElement(b,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}],throwOnError:false,ignoredTags:['script','noscript','style','textarea','pre','code']});})();"></script>
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-LCC4R0HD24"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	  gtag('config', 'G-LCC4R0HD24');
+	</script>
+	<script src="../../assets/js/ga-events.js"></script>
+</head>
+<body class="is-preload kn-page">
+	<div id="wrapper">
+		<header id="header">
+			<p class="site-title"><a href="../../index.html">Jipeng Sun</a></p>
+			<nav class="links">
+				<ul>
+					<li><a href="../../index.html">Home</a></li>
+					<li><a href="../../research.html">Research</a></li>
+					<li class="active"><a href="../../knowledge-share.html">Knowledge Share</a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course">VR/AR Course</a></li>
+				</ul>
+			</nav>
+			<nav class="main">
+				<ul>
+					<li class="search"><a class="fa-search" href="#search">Search</a><form id="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></li>
+					<li class="menu"><a class="fa-bars" href="#menu">Menu</a></li>
+				</ul>
+			</nav>
+		</header>
+		<section id="menu">
+			<section><form class="search" method="get" action="#"><input type="text" name="query" placeholder="Search" /></form></section>
+			<section>
+				<ul class="links">
+					<li><a href="../../index.html"><h3>Home</h3><p>Jipeng Sun's Homepage</p></a></li>
+					<li><a href="../../research.html"><h3>Research</h3><p>Publications &amp; Papers</p></a></li>
+					<li><a href="../../knowledge-share.html"><h3>Knowledge Share</h3><p>Study notes</p></a></li>
+					<li><a href="https://sites.northwestern.edu/cs396vrsystems/" data-ga-event="vr_ar_course"><h3>Teaching</h3><p>VR Summer Course</p></a></li>
+				</ul>
+			</section>
+		</section>
+		<div id="main">
+			<article class="post">
+				<header><div class="title"><h1>Feedback Control for Robot Arms</h1></div></header>
+				<p class="kn-back"><a href="../../knowledge-share.html">&larr; Back to Knowledge Share</a></p>
+				<div class="kn-body">
+				<p>A model of an arm's dynamics turns a planned motion into motor torques, but no model is exact. The arm picks up a cup whose weight nobody entered, its gears have friction, its link masses are off by a few percent, and people bump into it. Torques worked out in advance then produce a slightly different motion, and nothing in them notices. Feedback control closes the loop: sensors measure what the joints actually do, and the controller corrects the torque from the difference between the plan and the measurement, many times a second. The workhorse is the PID controller, which at every joint applies</p>
+				<p class="kn-math-display">\[\tau = K_p\, e + K_d\, \dot e + K_i \int_0^t e\, dt, \qquad e = \theta_d - \theta\]</p>
+				<p>Here \(\theta_d(t)\) is the angle the plan wants for the joint at time \(t\), \(\theta\) the measured angle, and \(e\) the tracking error, their difference. \(\dot e\) is the error's rate of change and \(\int_0^t e\, dt\) its running sum since the start. The three gains \(K_p\), \(K_d\) and \(K_i\) are positive numbers that the engineer chooses: the proportional term pushes against the error like a spring, the derivative term brakes like a damper, and the integral term keeps pushing for as long as any error remains. \(\tau\) is the motor's torque, as in <a href="robot-arm-dynamics.html">Robot Arm Dynamics</a>. This note builds the controller up one term at a time on a single joint, then combines it with the arm's model for the two-link arm.</p>
+				<p>This is the sixth of six notes on robot arms, after <a href="3d-rotations.html">3D Rotations: Matrices, Euler Angles and Quaternions</a>, <a href="forward-kinematics.html">Forward Kinematics</a>, <a href="inverse-kinematics.html">Inverse Kinematics</a>, <a href="manipulator-jacobian.html">The Manipulator Jacobian</a> and <a href="robot-arm-dynamics.html">Robot Arm Dynamics</a>.</p>
+				<h2>The feedback loop</h2>
+				<p>Figure 1 shows the loop. A planner, using inverse kinematics and the Jacobian, supplies the joint angles \(\theta_d(t)\) the arm should follow. Encoders on the motors measure the actual angles \(\theta\) to a small fraction of a degree. The controller subtracts the two and turns the error into a feedback torque \(\tau_{fb}\); the motor drives apply it, the arm moves, and the encoders measure again, typically a thousand times a second. Above the loop, the arm's model turns the plan into the torques it should take, the feedforward torque \(\tau_{ff}\), before the motion happens. The motors receive the sum, \(\tau = \tau_{ff} + \tau_{fb}\): the model does most of the work, and feedback corrects what the model gets wrong. Feedforward alone is open-loop control, blind to every error; feedback alone works, but it has to wait for an error to appear before it acts.</p>
+				<figure class="kn-figure"><img src="../assets/a8434a9e-76d7-42db-ae70-1d9c831ccc6d.png" alt="Figure from “The feedback loop” in Feedback Control for Robot Arms" loading="lazy" /></figure>
+				<p>Figure 1. The control loop of one joint, or of all the joints at once when the angles and torques are vectors. The feedforward path (gold) computes torques from the plan with the arm's model; the feedback path (teal) measures the joint angles, compares them with the plan and corrects. Their sum goes to the motors.</p>
+				<h2>Proportional: a spring</h2>
+				<p>Start with one motor turning one link of mass \(m\) and length \(L\) that lies flat on a table, so that gravity plays no part. Its dynamics is the one-link case of <a href="robot-arm-dynamics.html">Robot Arm Dynamics</a>, \(M \ddot\theta = \tau\), where \(\ddot\theta\) is the angular acceleration and \(M = m L^2 / 3\) the link's inertia about the joint. The simplest feedback is a torque proportional to the error, \(\tau = K_p\, e\). For a fixed target \(\theta_d\) the error's acceleration is \(\ddot e = -\ddot\theta\), so the loop obeys</p>
+				<p class="kn-math-display">\[M \ddot e + K_p\, e = 0\]</p>
+				<p>the equation of a mass on a spring, with \(K_p\) as the spring's stiffness, in newton meters per radian. The error does not die out: it oscillates forever at the natural frequency \(\omega_n = \sqrt{K_p / M}\), in radians per second. Told to turn by 60°, the link overshoots to 120°, swings back to 0° and keeps going (Figure 2, red). Nothing in \(K_p\, e\) knows how fast the link is already moving, so the push toward the target is still on when the link arrives at full speed. Friction in a real joint would slowly calm the swing, but a controller should not rely on it.</p>
+				<h2>Derivative: a damper</h2>
+				<p>The derivative term adds a torque against the error's rate of change. With the target fixed, \(\dot e = -\dot\theta\), so \(K_d\, \dot e\) brakes the joint in proportion to its speed, like a shock absorber, and the loop becomes a mass on a spring and a damper:</p>
+				<p class="kn-math-display">\[M \ddot e + K_d\, \dot e + K_p\, e = 0\]</p>
+				<p>How it settles depends on one number, the damping ratio</p>
+				<p class="kn-math-display">\[\zeta = \frac{K_d}{2 \sqrt{K_p M}}\]</p>
+				<p>Below 1 the error still oscillates, but each swing is smaller than the last. At \(\zeta = 1\), critical damping, it returns to zero as fast as it can without overshooting. Above 1 it creeps back slowly (Figure 2). Most joint controllers aim near \(\zeta = 1\). The two formulas also turn the choice of gains around: decide how fast the joint should respond, \(\omega_n\), and how damped, \(\zeta\), and set</p>
+				<p class="kn-math-display">\[K_p = M \omega_n^2, \qquad K_d = 2 \zeta \omega_n M\]</p>
+				<p>A critically damped loop gets within 2 percent of its target in about \(6 / \omega_n\) seconds, under a second for \(\omega_n = 2\pi\) rad/s (one oscillation per second).</p>
+				<figure class="kn-figure"><img src="../assets/285eaba8-942a-486a-8e81-ba24fc6c0c28.png" alt="Figure from “Derivative: a damper” in Feedback Control for Robot Arms" loading="lazy" /></figure>
+				<p>Figure 2. A link lying flat (seen from above, left) is told at time zero to turn from 0° to 60°. All four controllers have the same stiffness, \(\omega_n = 2\pi\) rad/s: proportional only, which swings between 0° and 120° forever, and PD with damping ratios 0.2, 1 and 3. Simulated for a uniform link with \(m = 1\) kg and \(L = 1\) m.</p>
+				<p>Higher gains make a stiffer, faster joint, but they cannot grow without limit. The derivative amplifies the noise in the measured speed, the loop runs in discrete ticks and reacts a little late, the gearbox and the links are slightly elastic, and the motor can deliver only so much torque. Push \(\omega_n\) toward any of these limits and the arm starts to buzz or shake, so the loop's speed is kept well below the sampling rate and the lowest natural frequency of the structure.</p>
+				<h2>Gravity and the sag</h2>
+				<p>Stand the link up in a vertical plane and the motor has to carry its weight as well. With \(\theta\) measured from the horizontal, the dynamics becomes \(M \ddot\theta + G(\theta) = \tau\), where \(G(\theta) = m g \tfrac{L}{2} \cos\theta\) is the weight \(m g\) times its lever arm, as in <a href="robot-arm-dynamics.html">Robot Arm Dynamics</a>, and \(g\) is the acceleration of gravity. A PD loop holding the link level pushes only when there is an error, so it cannot hold the weight on target: the link sags until the spring term balances gravity,</p>
+				<p class="kn-math-display">\[K_p\, e_{ss} = G(\theta)\]</p>
+				<p>where \(e_{ss}\) is the steady-state error, the error left once everything has stopped moving. Quadrupling \(K_p\) cuts the sag to a quarter but never removes it, and the gains cannot grow without limit. The direct fix uses the model: add the gravity torque the model predicts, \(\tau = K_p\, e + K_d\, \dot e + \hat G(\theta)\), where the hat marks a quantity computed from the model rather than measured. With an exact model the link holds level. But the model only knows the link. Hang a half-kilogram cup at its tip, a load nobody entered, and the sag returns, now set by the cup's weight alone (Figure 3, blue).</p>
+				<h2>Integral: removing the steady error</h2>
+				<p>The integral term \(K_i \int_0^t e\, dt\) grows for as long as any error remains, so a sagging joint pushes harder and harder until the sag is gone. The integral stops changing only when \(e = 0\), so the joint can come to rest only exactly on target, whatever constant torque is pulling it away: an unknown cup, steady friction, a gravity model that is slightly off. In Figure 3 the PID loop dips by about 12° when the cup is hung on, then lifts the link back to level within two seconds.</p>
+				<figure class="kn-figure"><img src="../assets/98d08039-aeb1-45da-8e3b-88e6afcb4c33.png" alt="Figure from “Integral: removing the steady error” in Feedback Control for Robot Arms" loading="lazy" /></figure>
+				<p>Figure 3. A link held level against gravity (\(m = 1\) kg, \(L = 1\) m); at \(t = 1\) s a 0.5 kg cup is hung at its tip. Plain PD (red) already sags 14° under the link's own weight and 26° with the cup. PD plus the model's gravity torque (blue) holds level until the cup arrives, then sags 14°, as much as plain PD did without it. PID plus the gravity model (teal) dips and returns to level. All three use the same \(K_p\) and \(K_d\). Left: the three final poses.</p>
+				<p>The integral has costs. It builds up slowly, so it removes steady errors rather than fast ones. It also adds lag to the loop, which brings back overshoot, and too large a \(K_i\) makes the joint oscillate or even go unstable. With the gravity model in place and a constant unmodeled torque \(d\), such as the cup's, the loop obeys \(M \ddot e + K_d\, \dot e + K_p\, e + K_i \int_0^t e\, dt = d\). Differentiating once removes both the integral and \(d\), leaving</p>
+				<p class="kn-math-display">\[M \dddot e + K_d\, \ddot e + K_p\, \dot e + K_i\, e = 0\]</p>
+				<p>where three dots mark the third derivative, and this is stable only if</p>
+				<p class="kn-math-display">\[K_i < \frac{K_p K_d}{M}\]</p>
+				<p>A heavier load raises \(M\) and lowers the limit, which is why a PID loop tuned for an empty gripper can start to oscillate when the gripper holds something heavy. A safe starting point puts all three roots of the loop's characteristic equation at one frequency \(\omega\), which gives \(K_p = 3 M \omega^2\), \(K_d = 3 M \omega\) and \(K_i = M \omega^3\), a ninth of the limit; Figure 3 uses \(\omega = 2\pi \cdot 0.7\) rad/s. The third cost is integral windup. When the motor is at its torque limit, or an obstacle blocks the arm, the error persists, the integral keeps growing, and once the arm is free the stored-up integral drives it far past the target. Controllers therefore stop integrating while the motor is saturated, or clamp the integral, which is called anti-windup.</p>
+				<h2>Model plus feedback: the two-link arm</h2>
+				<p>Everything so far carries over to an arm, one loop per joint: \(\theta\), \(\theta_d\) and \(e\) become vectors, and the gains become diagonal matrices, \(K_p = \mathrm{diag}(K_{p,1}, \dots, K_{p,n})\) for \(n\) joints, and likewise \(K_d\) and \(K_i\). Each joint's gains can be set from the formulas above with \(M\) replaced by that joint's diagonal entry of the mass matrix, \(M_{jj}\), the inertia its own motor feels. But the joints are not alone. Through the mass matrix's off-diagonal entries, the velocity torques and gravity, every joint's motion pushes on the others; separate loops see these couplings as disturbances, which grow with speed, and on fast motions they fall behind the plan.</p>
+				<p>The cure is to let the model carry the motion and leave only the errors to feedback, the two paths of Figure 1:</p>
+				<p class="kn-math-display">\[\tau = \underbrace{\hat M(\theta_d)\, \ddot\theta_d + \hat C(\theta_d, \dot\theta_d)\, \dot\theta_d + \hat G(\theta_d)}_{\tau_{ff}} + \underbrace{K_p\, e + K_d\, \dot e + K_i \int_0^t e\, dt}_{\tau_{fb}}\]</p>
+				<p>The feedforward torque \(\tau_{ff}\) is the inverse dynamics of the plan, computed with the model (the hats) from the planned angles, speeds and accelerations alone, so it can even be computed ahead of time. If the model were exact and the arm started on the plan, \(\tau_{ff}\) would be all the torque the motion takes and the error would stay zero. In practice it supplies the bulk of the torque, and feedback only has to correct the model's mistakes, which are small and slow. That is why the gains can stay moderate, well below the limits above.</p>
+				<p>Figure 4 shows a fast lift of the two-link arm holding a cup that its model knows nothing about. Feedforward alone, with no feedback, cannot even hold the cup up: the arm swings down away from the plan. Separate PD loops trail the plan by up to 27 cm and settle 13 cm off it. Adding the model's feedforward cuts the lag by more than half, but the unknown cup still holds the hand 5 cm off. Adding integral action removes that offset within a second of the end of the motion. The bump at the end of the move is the integral, built up while the cup made the arm lag, briefly overshooting.</p>
+				<figure class="kn-figure"><img src="../assets/41b08d6f-8c59-466b-9a5c-ba5fa2f9eadd.png" alt="Figure from “Model plus feedback: the two-link arm” in Feedback Control for Robot Arms" loading="lazy" /></figure>
+				<p>Figure 4. The two-link arm of <a href="robot-arm-dynamics.html">Robot Arm Dynamics</a> (two uniform links of 1 m and 1 kg) raises its hand 1.4 m in one second while holding a 0.5 kg cup that is not in its model. Left: the planned path of the hand (dashed) and its paths under three controllers. Right: the hand's distance from where the plan wants it at each moment. All three use the same \(K_p\) and \(K_d\), set per joint from the model's inertia; the PID adds a moderate \(K_i\).</p>
+				<p>The computed-torque controller of <a href="robot-arm-dynamics.html">Robot Arm Dynamics</a> combines the two another way: it evaluates the model at the measured state and multiplies the feedback terms by \(\hat M(\theta)\), so that with an exact model every joint's error obeys exactly \(\ddot e + K_d\, \dot e + K_p\, e = 0\), independent of the others. It needs an accurate model and a fast processor; the feedforward form above is more forgiving, and common in industrial arms. Either way, an integral term or a correction learned from data takes care of what the model misses.</p>
+				<h2>Learning the model</h2>
+				<p>Why not correct the model whenever an error appears, with the cup's real mass or the gears' real friction? Arms do this too. Many weigh a new tool or load by moving it through a few poses and reading their motor torques, and adaptive control keeps refining such numbers while the arm moves. Both rely on a property of the dynamics: they are linear in these unknowns,</p>
+				<p class="kn-math-display">\[\tau = Y(\theta, \dot\theta, \ddot\theta)\, a\]</p>
+				<p>where the vector \(a\) collects the unknown numbers, such as masses, inertias and friction coefficients, and the matrix \(Y\), computed from the motion alone, says how much each of them adds to each joint's torque. Every measured motion and torque is then one more linear equation for \(a\), and an adaptive controller corrects each estimate from the tracking errors as the arm moves, in proportion to how much it affects the torques at that moment.</p>
+				<p>Learning the model adds to feedback instead of replacing it. It needs the measured error just as feedback does, so it is a second, slower loop around the first, and it can learn only what its numbers describe. An error does not say what caused it: a heavier cup, more friction in the gears and a weaker motor can all make the same sag. Telling them apart takes varied motion, because a load's weight acts differently in each pose, friction only while a joint moves and inertia only while it accelerates; this requirement is called persistent excitation. Some errors have no number to learn at all, such as a bump or a cable dragging on the arm, and noisy data can teach the model a wrong value. Feedback answers all of these on the next tick.</p>
+				<p>The integral term is a small version of the same idea. In Figure 3 it ends up supplying exactly the cup's torque, \(m_c g L = 4.9\) newton meters, where \(m_c = 0.5\) kg is the cup's mass, so it has learned something about the cup, but only as a torque at one pose. The cup's torque is \(m_c g L \cos\theta\), so at \(\theta = 60^\circ\) it is half as large, yet the integral keeps pushing with the full 4.9 newton meters until it unlearns the difference, and nothing in the loop accounts for the cup's inertia either. With feedforward from a model of the empty link and the gains of Figure 3, raising the link from level to 60° over two seconds carries it 11° past 60°, and it takes about five more seconds to settle. Put the cup's mass into the model and the same controller stays on the plan, since the model now gives the right torque at every angle and speed. Adaptive control is, in this sense, an integral term that learns causes instead of torques.</p>
+				<h2>Feedback control in practice</h2>
+				<ul><li>Cascaded loops. A joint's drive usually runs three loops, one inside the other: a current loop at 10 to 20 kHz, which makes the motor produce the commanded torque (a motor's torque is proportional to its current), a velocity loop at a few kHz, and the position loop at about 1 kHz. Each inner loop is much faster than the loop around it, so the outer loop can treat it as instant. Many industrial arms accept only position commands and close all three loops themselves; torque-controlled arms, such as those built to work next to people, also accept torques.</li><li>Measuring speed. Encoders measure angles. Speeds come from differencing successive readings, which amplifies their quantization noise, so the derivative term uses a filtered speed, and the filter's delay is one of the limits on the gains.</li><li>Sampling. The controller computes a new torque at each tick and holds it until the next, which delays its reaction by about half a tick, so the loop's speed is kept far below the sampling rate.</li><li>Saturation. Motors have torque and speed limits. A plan that asks for more than they can deliver leaves an error that no gain can remove, so plans are made within the motors' limits, and the integral is protected against windup.</li><li>Tuning. Without a model, gains are found by experiment: raise \(K_p\) until the joint responds quickly but rings, add \(K_d\) until the ringing stops, then add a little \(K_i\) to remove the remaining offset. Rules such as Ziegler–Nichols turn a measured oscillation into gains. With a model, the formulas above give a starting point from the desired \(\omega_n\) and \(\zeta\).</li><li>Stability. With gravity compensation, PD brings an arm to rest at any target for any positive gains (Takegaki and Arimoto, 1981): the controller acts like a spring and a damper, so the arm's kinetic energy plus the energy stored in the spring can only decrease. PID's guarantees are weaker, and its gains must respect limits like the one above.</li><li>Beyond PID. Impedance control makes the hand, rather than each joint, behave like a spring and a damper toward its target, by computing a hand force \(F\) and applying it through \(\tau = J^{\mathsf T} F\) from <a href="manipulator-jacobian.html">The Manipulator Jacobian</a>, where \(J\) is the Jacobian; it is the basis of safe contact with people and objects. Model predictive control plans the torques a short time ahead at every tick, and learned policies, for instance in legged robots, usually output joint targets that a PD loop then tracks.</li></ul>
+				<p>Together the six notes describe how an arm's motion is computed: how its parts are oriented, where its hand is, which angles put it there, how fast and how hard the hand can move, which torques the motion takes, and how feedback keeps it on the plan.</p>
+				</div>
+			</article>
+		</div>
+	</div>
+	<script src="../../assets/js/jquery.min.js"></script>
+	<script src="../../assets/js/browser.min.js"></script>
+	<script src="../../assets/js/breakpoints.min.js"></script>
+	<script src="../../assets/js/util.js"></script>
+	<script src="../../assets/js/main.js"></script>
+</body>
+</html>
