@@ -405,8 +405,8 @@
     "40e01d9f5287813b801dd0e32f9845c7": {
       "slug": "robot-arm-feedback-control",
       "title": "Feedback Control for Robot Arms",
-      "notion_fetched_at": "2026-11-04T19:03:10.503000+00:00",
-      "synced_at": "2026-11-04T19:03:55.755418+00:00"
+      "notion_fetched_at": "2026-11-06T16:07:15.372000+00:00",
+      "synced_at": "2026-11-06T16:08:04.879889+00:00"
     },
     "40e01d9f52878122985fc2caaf5fccc1": {
       "slug": "reinforcement-learning",
@@ -415,5 +415,5 @@
       "synced_at": "2026-11-04T20:41:32.394087+00:00"
     }
   },
-  "updated_at": "2026-11-04T20:41:32.394257+00:00"
+  "updated_at": "2026-11-06T16:08:04.880055+00:00"
 }
