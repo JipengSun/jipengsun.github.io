@@ -1,4 +1,4 @@
-Here is the result of "fetch" for the Page with URL https://app.notion.com/p/41201d9f528781ff93a1e7304d12a774 as of 2026-11-09T21:09:30.431Z:
+Here is the result of "fetch" for the Page with URL https://app.notion.com/p/41201d9f528781ff93a1e7304d12a774 as of 2026-11-09T21:30:00.399Z:
 <page url="https://app.notion.com/p/41201d9f528781ff93a1e7304d12a774">
 <ancestor-path></ancestor-path>
 <properties>
@@ -8,6 +8,7 @@ Here is the result of "fetch" for the Page with URL https://app.notion.com/p/412
 <content>
 A variational autoencoder, or VAE, is a generative model: after training, it turns a few random numbers into a new sample that looks like its training data, here a handwritten digit that nobody wrote. It is also a working part of larger systems. Stable Diffusion's VAE compresses a 512 × 512 image into a 64 × 64 × 4 grid, 16,384 numbers, runs its diffusion there, and decodes the result back to pixels.
 This note builds the VAE from the plain autoencoder it grows out of, one concrete training step at a time, with a model small enough to draw: every code has two numbers. Every number quoted was computed from our own models, trained on MNIST (60,000 training digits of 28 × 28 pixels) with fixed seeds.
+Video: [Understand VAE from First Principles](https://youtu.be/SYlV8Sa7LKk), a six-minute visual explainer of this note, from the autoencoder's gaps to a cloud around each code, the KL that pulls all the clouds together into the standard bell, and the blur that comes with it.
 ## The autoencoder: a codebook
 An autoencoder is trained on what looks like a pointless task: given an image, give back the very same image. The point is the middle. The network narrows there to a few numbers, so it has to compress the image into those numbers and rebuild it from them alone. And if any numbers put into the middle came out as a sensible image, the second half alone would be a generator; that hope is what the rest of this note works toward.
 An autoencoder has two networks. The encoder $`f`$ maps an image $`x`$, its 784 pixel values in $`[0, 1]`$, to a short code $`z = f(x)`$; the decoder $`g`$ maps the code back to an image $`\hat x = g(z)`$. Training adjusts both networks so that $`\hat x`$ matches $`x`$ pixel by pixel. Our rebuild error is the binary cross-entropy summed over the pixels,
