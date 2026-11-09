@@ -80,6 +80,7 @@ TOPIC: dict[str, tuple[str, str, str | None]] = {
     "robot-arm-dynamics": ("Robotics", "robotics", None),
     "robot-arm-feedback-control": ("Robotics", "robotics", None),
     "reinforcement-learning": ("Machine Learning", "machine-learning", None),
+    "variational-autoencoder": ("Machine Learning", "machine-learning", None),
 }
 
 

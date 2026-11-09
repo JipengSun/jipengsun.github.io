@@ -412,8 +412,14 @@
       "slug": "reinforcement-learning",
       "title": "Reinforcement Learning",
       "notion_fetched_at": "2026-11-04T20:40:58.675000+00:00",
-      "synced_at": "2026-11-04T20:41:32.394087+00:00"
+      "synced_at": "2026-11-04T20:41:16.823566+00:00"
+    },
+    "41201d9f528781ff93a1e7304d12a774": {
+      "slug": "variational-autoencoder",
+      "title": "Variational Autoencoder (VAE)",
+      "notion_fetched_at": "2026-11-09T18:48:23+00:00",
+      "synced_at": "2026-11-09T18:48:23.615174+00:00"
     }
   },
-  "updated_at": "2026-11-06T16:08:04.880055+00:00"
+  "updated_at": "2026-11-09T18:48:23.615346+00:00"
 }

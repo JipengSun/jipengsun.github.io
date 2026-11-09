@@ -77,6 +77,7 @@ NOTION_TO_SLUG: dict[str, str] = {
     "40d01d9f528781e3983bcdaad476a6a4": "robot-arm-dynamics",
     "40e01d9f5287813b801dd0e32f9845c7": "robot-arm-feedback-control",
     "40e01d9f52878122985fc2caaf5fccc1": "reinforcement-learning",
+    "41201d9f528781ff93a1e7304d12a774": "variational-autoencoder",
 }
 
 
