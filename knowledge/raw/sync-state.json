@@ -419,7 +419,13 @@
       "title": "Variational Autoencoder (VAE)",
       "notion_fetched_at": "2026-11-09T21:30:00.399000+00:00",
       "synced_at": "2026-11-09T21:30:35.955132+00:00"
+    },
+    "41401d9f5287816a934afc1a3ccf2ca7": {
+      "slug": "generative-adversarial-network",
+      "title": "Generative Adversarial Network (GAN)",
+      "notion_fetched_at": "2026-11-11T03:03:22.634000+00:00",
+      "synced_at": "2026-11-11T03:04:08.603366+00:00"
     }
   },
-  "updated_at": "2026-11-09T21:30:35.955147+00:00"
+  "updated_at": "2026-11-11T03:04:08.603376+00:00"
 }
