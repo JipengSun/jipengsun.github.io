@@ -226,3 +226,13 @@ body.kn-page #main .post {
 		padding-top: 2em;
 	}
 }
+
+/* Site footer: the homepage's icon row (GitHub, LinkedIn, YouTube, Scholar, Email) under the page */
+body.kn-page #footer {
+	text-align: center;
+	margin: 2.5em 0 0.5em 0;
+}
+
+body.kn-page #footer ul.icons li:last-child {
+	padding-right: 0;
+}

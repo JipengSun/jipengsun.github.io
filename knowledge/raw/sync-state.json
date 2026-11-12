@@ -425,7 +425,13 @@
       "title": "Generative Adversarial Network (GAN)",
       "notion_fetched_at": "2026-11-11T05:00:10.027000+00:00",
       "synced_at": "2026-11-11T05:00:35.117062+00:00"
+    },
+    "41501d9f528781d884fff90dcbe3a49c": {
+      "slug": "maxwell-equations",
+      "title": "Maxwell's Equations",
+      "notion_fetched_at": "2026-11-11T06:56:58.801000+00:00",
+      "synced_at": "2026-11-11T06:59:41.185238+00:00"
     }
   },
-  "updated_at": "2026-11-11T05:00:35.117078+00:00"
+  "updated_at": "2026-11-11T06:59:41.185249+00:00"
 }

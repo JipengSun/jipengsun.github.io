@@ -64,6 +64,7 @@ TOPIC: dict[str, tuple[str, str, str | None]] = {
     "nano-optical-polarization-control": ("Optics", "optics", None),
     "flat-optics": ("Optics", "optics", None),
     "polarization": ("Optics", "optics", None),
+    "maxwell-equations": ("Optics", "optics", None),
     "neural-tangent-kernel-ntk": ("Machine Learning", "machine-learning", None),
     "classifier-free-guidance": ("Machine Learning", "machine-learning", None),
     "friction-cone-antipodal-grasps": ("Robotics", "robotics", None),
@@ -87,6 +88,7 @@ TOPIC: dict[str, tuple[str, str, str | None]] = {
 
 DEK_OVERRIDE = {
     "camera-intrinsic-matrix": "Intrinsics K, focal length, principal point, and pixel skew.",
+    "maxwell-equations": "Maxwell's equations are four equations for the electric field E and the magnetic field B. For each field, one equation says where it spreads out from and one says what makes it swirl.",
     "pnp-with-diffusion": "Plug-and-play priors with diffusion models for computational imaging inverse problems.",
     "mean-flow": "Notes on mean-flow generative modeling and its connection to flow matching.",
     "improved-mean-flow-imf": "Improved mean flow (iMF) — faster sampling and training for flow-based generative models.",
@@ -115,14 +117,14 @@ def extract(slug: str) -> tuple[str, str]:
     title_m = re.search(r'<header><div class="title"><h2>([^<]+)', text) or re.search(
         r"<title>([^—<]+)", text
     )
-    title = clean_title(title_m.group(1) if title_m else slug.replace("-", " ").title())
+    title = clean_title(html.unescape(title_m.group(1)) if title_m else slug.replace("-", " ").title())
     if slug in DEK_OVERRIDE:
         return title, DEK_OVERRIDE[slug]
     body_m = re.search(r'<div class="kn-body">\s*(.*?)</div>', text, re.S)
     dek = ""
     if body_m:
         for p_m in re.finditer(r"<p>(.*?)</p>", body_m.group(1), re.S):
-            raw = re.sub(r"<[^>]+>", "", p_m.group(1))
+            raw = html.unescape(re.sub(r"<[^>]+>", "", p_m.group(1)))  # the page text is already escaped once
             raw = re.sub(r"\s+", " ", raw).strip()
             if len(raw) < 25 or raw.lower().startswith("notes on") or re.match(r"^\d+\.", raw):
                 continue

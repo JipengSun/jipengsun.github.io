@@ -286,3 +286,13 @@ body.ks-page #main {
 		max-width: none;
 	}
 }
+
+/* Site footer: the homepage's icon row (GitHub, LinkedIn, YouTube, Scholar, Email) under the page */
+body.ks-page #footer {
+	text-align: center;
+	margin: 2.5em 0 0.5em 0;
+}
+
+body.ks-page #footer ul.icons li:last-child {
+	padding-right: 0;
+}
